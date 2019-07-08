@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+    <title>Samples</title>
+    <keydef keys="image" href="image.png" format="png"/>
+    <keydef keys="google" href="http://www.google.com" format="html" scope="external"/>
+    <keydef keys="myPDF" href="test.pdf" format="pdf"/>
+    <topicref href="sample.dita"/>
+    <topicref href="sample2.dita" keys="sample2"/>
+</map>
