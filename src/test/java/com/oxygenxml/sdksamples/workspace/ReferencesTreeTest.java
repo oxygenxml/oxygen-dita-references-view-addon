@@ -254,12 +254,67 @@ public class ReferencesTreeTest extends TestCase {
 		System.err.println("PATH " + path);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 4, true);
-		assertEquals("../concepts/oil.dita", firstRowRenderLabel.getText());
+		assertEquals("../concepts/oil.dita", secondRowRenderLabel.getText());
+
+		// DITA topic opened in Text mode with ALL reference categories inside
+		// of it
+		final String ditaTopicAllContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
+				+ "    <title class=\"- topic/title \">sample</title>\n" + "    <body>\n"
+				+ "            <image class='- topic/image '\n" + "href=\"image.png\"/>                  \n"
+				+ "            <p><xref  class='- topic/xref' \n"
+				+ "href=\"https://www.oxygenxml.com/InstData/Editor/SDK/javadoc/ro/sync/exml/workspace/api/editor/WSEditor.html#getCurrentPage--\" format=\"html\"\n"
+				+ "                            scope=\"external\"/></p>           \n"
+				+ "            <p>Link to external resource <xref keyref=\"google\"/> </p>          \n"
+				+ "            <p conref=\"sample2.dita#sample2/i1\"/>\n"
+				+ "            <p conkeyref=\"sample2/i1\" conrefend=\"bla.dita#test/i3\"/> \n" + "       \n"
+				+ "    </body>\n" + "    <related-links>\n" + "            <link class='- topic/link ' \n"
+				+ "href=\"http://www.google.com\" format=\"html\"\n" + "                scope=\"external\"/>\n"
+				+ "            <link class='- topic/link ' \n" + "href=\"sample2.dita\"/>\n"
+				+ "            <link class='- topic/link ' \n"
+				+ "href=\"test.pdf\" format=\"pdf\"><linktext>binary resource</linktext></link>\n"
+				+ "            <link class='- topic/link ' \n" + "keyref=\"google\"/>\n"
+				+ "            <link class='- topic/link ' \n" + "keyref=\"sample2\"/>           \n"
+				+ "    </related-links>\n" + "</topic>";
+
+		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
+			@Override
+			public String getCurrentPageID() {
+				return PAGE_TEXT;
+			}
+
+			@Override
+			public WSEditorPage getCurrentPage() {
+				return new WSXMLTextEditorPageForTests() {
+					@Override
+					public Object[] evaluateXPath(String xpathExpression) throws XPathException {
+						return evaluateAllRefsExpression(ditaTopicAllContent);
+					}
+
+					@Override
+					public WSXMLTextNodeRange[] findElementsByXPath(String xpathExpression) throws XPathException {
+						return new WSXMLTextNodeRange[] { new WSXMLTextNodeRangeForTests(),
+								new WSXMLTextNodeRangeForTests(), new WSXMLTextNodeRangeForTests(),
+								new WSXMLTextNodeRangeForTests(), new WSXMLTextNodeRangeForTests(),
+								new WSXMLTextNodeRangeForTests(), new WSXMLTextNodeRangeForTests(),
+								new WSXMLTextNodeRangeForTests(), new WSXMLTextNodeRangeForTests(),
+								new WSXMLTextNodeRangeForTests(), new WSXMLTextNodeRangeForTests() };
+					}
+				};
+			}
+		});
+
+		path = tree.getPathForRow(3);
+		
+		System.err.println("PATH " + path);
+		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
+				path.getLastPathComponent(), true, true, true, 0, true);
+		// no more than 20 characters from the node value shown
+		assertEquals("... ple2.dita#sample2/i1", secondRowRenderLabel.getText());
 
 	}
 
 	/**
-	 * Evaluate the xpath expression in case of a DITA topic.
+	 * Evaluate the xPath expression in case of a DITA topic.
 	 * 
 	 * @param ditaContent
 	 * @return
