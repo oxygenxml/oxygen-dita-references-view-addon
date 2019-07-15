@@ -32,11 +32,6 @@ public class ReferencesTree extends JTree {
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	
 	/**
-	 * The translator of the DITA reference categories.
-	 */
-	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
-	
-	/**
 	 * The constructor.
 	 * @param pluginWorkspaceAccess
 	 */
@@ -64,7 +59,6 @@ public class ReferencesTree extends JTree {
 					// Preliminary refresh
 					this.setPreliminaryTextTree(textPage);
 				} else {
-					// TODO cleanup tree.
 					// CSS is opened or XML is opened in Grid mode.
 					this.setNoRefsAvailableTree();
 				}
@@ -83,9 +77,9 @@ public class ReferencesTree extends JTree {
 	 * mode.
 	 */
 	private void setNoRefsAvailableTree() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation("Root_references"));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
 		ReferencesTreeModel referencesTreeModel = new ReferencesTreeModel();
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation("Outgoing_references_not_available"));
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 		root.add(noReferencesAvailable);
 		referencesTreeModel.setRoot(root);
 		this.setModel(referencesTreeModel);
@@ -100,7 +94,7 @@ public class ReferencesTree extends JTree {
 	 */
 	private void setPreliminaryTextTree(WSXMLTextEditorPage textPage) throws XPathExpressionException, XPathException {
 		ReferencesTreeModel referencesTreeModel = new ReferencesTreeModel();
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation("Root_references"));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
 		addAllReferences(textPage, root);
 
 		referencesTreeModel.setRoot(root);
@@ -119,12 +113,12 @@ public class ReferencesTree extends JTree {
 	 */
 	private void addAllReferences(WSXMLTextEditorPage textPage, DefaultMutableTreeNode root) throws XPathException {
 
-		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.IMAGE_REFERENCES));
-		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.CROSS_REFERENCES));
-		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.CONTENT_REFERENCES));
-		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(translator.getTranslation(Tags.RELATED_LINKS));
-		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND));
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE));
+		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(Tags.IMAGE_REFERENCES);
+		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(Tags.CROSS_REFERENCES);
+		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);
+		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(Tags.RELATED_LINKS);
+		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(Tags.NO_OUTGOING_REFERENCES_FOUND);
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 
 		Object[] referenceNodes = textPage.evaluateXPath(ALL_REFS_XPATH_EXPRESSION);
 		WSXMLTextNodeRange[] referenceNodeRanges = textPage.findElementsByXPath(ALL_REFS_XPATH_EXPRESSION);
@@ -199,7 +193,7 @@ public class ReferencesTree extends JTree {
 	}
 
 	/**
-	 * Expand all the nodes from the very beginning
+	 * Expand all the nodes from the very beginning.
 	 * 
 	 * @param tree
 	 * @param startingIndex

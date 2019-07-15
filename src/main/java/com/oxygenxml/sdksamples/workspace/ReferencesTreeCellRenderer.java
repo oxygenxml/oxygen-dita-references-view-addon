@@ -82,8 +82,8 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (value instanceof DefaultMutableTreeNode) {
 			// Attribute nodes
+			String toDisplayString = null;
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
-				String toDisplayString = null;
 				Node node = ((NodeRange) ((DefaultMutableTreeNode) value).getUserObject()).getNode();
 
 				if (node.getAttributes().getNamedItem("href") != null) {
@@ -96,24 +96,29 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 					toDisplayString = setDisplayNodeValue(node, "conkeyref");
 				}
 
-				label.setText(toDisplayString);
 			} else // Reference categories nodes
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
 				label.setForeground(Color.blue);
-				if (((DefaultMutableTreeNode) value).getUserObject()
-						.equals(translator.getTranslation(Tags.IMAGE_REFERENCES))) {
+				if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
+					toDisplayString = translator.getTranslation(Tags.IMAGE_REFERENCES);
 					label.setIcon(imageIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject()
-						.equals(translator.getTranslation(Tags.CROSS_REFERENCES))) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
+					toDisplayString = translator.getTranslation(Tags.CROSS_REFERENCES);
 					label.setIcon(crossIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject()
-						.equals(translator.getTranslation(Tags.CONTENT_REFERENCES))) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
+					toDisplayString = translator.getTranslation(Tags.CONTENT_REFERENCES);
 					label.setIcon(contentIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject()
-						.equals(translator.getTranslation(Tags.RELATED_LINKS))) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
+					toDisplayString = translator.getTranslation(Tags.RELATED_LINKS);
 					label.setIcon(linkIcon);
+				} else if (((DefaultMutableTreeNode) value).getUserObject()
+						.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
+					toDisplayString = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
+					toDisplayString = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
 				}
 			}
+			label.setText(toDisplayString);
 		}
 		return label;
 	}
