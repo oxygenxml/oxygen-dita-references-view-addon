@@ -4,14 +4,13 @@ import java.net.URL;
 
 import javax.swing.JScrollPane;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
+import com.oxygenxml.sdksamples.translator.Tags;
+
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
-import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.editor.WSEditor;
-import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer;
@@ -21,8 +20,6 @@ import ro.sync.exml.workspace.api.standalone.ViewInfo;
  * Plugin extension - workspace access extension.
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
-
-	private static final String DITA_REFERENCES = "DITA References";
 
 	/**
 	 * The logger used for logging in this class
@@ -35,6 +32,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 * The tree with the outgoing references.
 	 */
 	private ReferencesTree refTree;
+	
+	/**
+	 * The DITA references translator for the side-view label.
+	 */
+	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
 
 	/**
 	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationStarted(ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace)
@@ -43,7 +45,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.refTree = new ReferencesTree(pluginWorkspaceAccess);
 
-		PluginResourceBundle resourceBundle = pluginWorkspaceAccess.getResourceBundle();
+		//PluginResourceBundle resourceBundle = pluginWorkspaceAccess.getResourceBundle();
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 			@Override
@@ -108,7 +110,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				// The view ID defined in the "plugin.xml"
 				"ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
 					viewInfo.setComponent(new JScrollPane(refTree));
-					viewInfo.setTitle(DITA_REFERENCES);
+					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
 					// You can have images located inside the JAR library and use them...
 //				  viewInfo.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/customMessage.png").toString()));
 				}

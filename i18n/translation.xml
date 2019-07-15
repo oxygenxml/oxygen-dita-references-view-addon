@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translation>
+    <languageList>
+        <language description="English" lang="en_US" localeDescription="English"/>
+        <language description="German" lang="de_DE" localeDescription="Deutsch"/>
+        <language description="French" lang="fr_FR" localeDescription="French"/>
+        <language description="Japanese" lang="ja_JP" localeDescription="Japanese"/>
+        <language description="Dutch" lang="nl_NL" localeDescription="Dutch"/>
+    </languageList>
+    <key value="DITA_references">
+        <comment>The DITA outgoing references side-view.</comment>
+        <val lang="en_US">DITA References</val>
+        <val lang="de_DE">DITA Referenzen</val>
+        <val lang="fr_FR">DITA References</val>
+        <val lang="ja_JP">DITA References</val>
+        <val lang="nl_NL">DITA References</val>
+    </key>  
+    <key value="Outgoing_references_not_available">
+        <comment>There are no references available for that type of file.</comment>
+        <val lang="en_US">Outgoing references not available.</val>
+        <val lang="de_DE">Ausgehende Verknüpfungen nicht verfügbar.</val>
+        <val lang="fr_FR">Outgoing references not available.</val>
+        <val lang="ja_JP">Outgoing references not available.</val>
+        <val lang="nl_NL">Outgoing references not available.</val>        
+    </key>  
+    <key value="No_outgoing_references_found">
+        <comment>The File/New action. Creates a new document.</comment>
+        <val lang="en_US">No outgoing references found.</val>
+        <val lang="de_DE">Keine ausgehende Verknüpfungen gefunden.</val>
+        <val lang="fr_FR">No outgoing references found.</val>
+        <val lang="ja_JP">No outgoing references found.</val>
+        <val lang="nl_NL">No outgoing references found.</val>        
+    </key>
+    <key value="Root_references">
+        <comment>The File/New action. Creates a new document.</comment>
+        <val lang="en_US">Root</val>
+        <val lang="de_DE">Wurzel</val>
+        <val lang="fr_FR">Root</val>
+        <val lang="ja_JP">Root</val>
+        <val lang="nl_NL">Root</val>        
+    </key> 
+    <key value="Image_references">
+        <comment>Image references (direct or indirect).</comment>
+        <val lang="en_US">Image references</val>
+        <val lang="de_DE">Bildreferenzen</val> 
+        <val lang="fr_FR">Image references</val>
+        <val lang="ja_JP">Image references</val>
+        <val lang="nl_NL">Image references</val>
+    </key> 
+    <key value="Content_references">
+        <comment>The content references.</comment>
+        <val lang="en_US">Content references</val>
+        <val lang="de_DE">Inhaltsreferenzen</val>
+        <val lang="fr_FR">Content references</val>
+        <val lang="ja_JP">Content references</val>
+        <val lang="nl_NL">Content references</val>        
+    </key> 
+    <key value="Cross_references">
+        <comment>Cross references = internal links.</comment>
+        <val lang="en_US">Cross references</val>
+        <val lang="de_DE">Kreuzreferenzen</val>
+        <val lang="fr_FR">Cross references</val>
+        <val lang="ja_JP">Cross references</val>
+        <val lang="nl_NL">Cross references</val>        
+    </key> 
+    <key value="Related_links">
+        <comment>Related links to the context.</comment>
+        <val lang="en_US">Related links</val>
+        <val lang="de_DE">Ähnliche Verknüpfungen</val>
+        <val lang="fr_FR">Related links</val>
+        <val lang="ja_JP">Related links</val>
+        <val lang="nl_NL">Related links</val>        
+    </key> 
+
+</translation>

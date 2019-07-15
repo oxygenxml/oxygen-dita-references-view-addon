@@ -13,17 +13,32 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
+import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
+import com.oxygenxml.sdksamples.translator.Tags;
+
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeCellRenderer.class);
+	/**
+	 * The translator of the DITA reference categories.
+	 */
+	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
 
+	/**
+	 * The Image Icons for the reference categories.
+	 */
 	private ImageIcon imageIcon = null;
 	private ImageIcon linkIcon = null;
 	private ImageIcon contentIcon = null;
 	private ImageIcon crossIcon = null;
 
+	/**
+	 * The constructor including the image icon for the categories.
+	 * 
+	 * @param pluginWorkspaceAccess
+	 */
 	public ReferencesTreeCellRenderer(StandalonePluginWorkspace pluginWorkspaceAccess) {
 		super();
 
@@ -66,7 +81,7 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 		label.setIcon(null);
 
 		if (value instanceof DefaultMutableTreeNode) {
-			// attribute nodes
+			// Attribute nodes
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				String toDisplayString = null;
 				Node node = ((NodeRange) ((DefaultMutableTreeNode) value).getUserObject()).getNode();
@@ -82,28 +97,30 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 				}
 
 				label.setText(toDisplayString);
-			} else // Reference type modes
+			} else // Reference categories nodes
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
 				label.setForeground(Color.blue);
-
-				if (((DefaultMutableTreeNode) value).getUserObject().equals(ReferencesTree.IMAGE_REFERENCES)) {
+				if (((DefaultMutableTreeNode) value).getUserObject()
+						.equals(translator.getTranslation(Tags.IMAGE_REFERENCES))) {
 					label.setIcon(imageIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(ReferencesTree.CROSS_REFERENCES)) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject()
+						.equals(translator.getTranslation(Tags.CROSS_REFERENCES))) {
 					label.setIcon(crossIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(ReferencesTree.CONTENT_REFERENCES)) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject()
+						.equals(translator.getTranslation(Tags.CONTENT_REFERENCES))) {
 					label.setIcon(contentIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(ReferencesTree.RELATED_LINKS)) {
+				} else if (((DefaultMutableTreeNode) value).getUserObject()
+						.equals(translator.getTranslation(Tags.RELATED_LINKS))) {
 					label.setIcon(linkIcon);
 				}
-
 			}
-
 		}
-
 		return label;
 	}
 
 	/**
+	 * Display maximum 20 characters for each node value and set the toolTip with
+	 * the full node value.
 	 * 
 	 * @param node The DOM node
 	 * @return the displayed node text

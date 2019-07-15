@@ -1,6 +1,5 @@
 package com.oxygenxml.sdksamples.workspace;
 
-import java.net.URL;
 import java.util.Arrays;
 
 import javax.swing.JTree;
@@ -11,9 +10,10 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
-import ro.sync.ecss.extensions.commons.table.properties.ECPropertiesComposite;
+import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
+import com.oxygenxml.sdksamples.translator.Tags;
+
 import ro.sync.exml.editor.EditorPageConstants;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
@@ -22,33 +22,30 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class ReferencesTree extends JTree {
-
-	private static final String OUTGOING_REFERENCES_NOT_AVAILABLE = "Outgoing references not available";
-
-	private static final String NO_OUTGOING_REFERENCES_FOUND = "No outgoing references found";
-
 	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')] | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref]";
 
-	private static final String ROOT_REFERENCES = "Root References";
-
-	protected static final String RELATED_LINKS = "Related links";
-
-	protected static final String CONTENT_REFERENCES = "Content references";
-
-	protected static final String CROSS_REFERENCES = "Cross references";
-
-	protected static final String IMAGE_REFERENCES = "Image references";
-
+	/**
+	 * The Logger.
+	 */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
-
+	
+	/**
+	 * The translator of the DITA reference categories.
+	 */
+	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
+	
+	/**
+	 * The constructor.
+	 * @param pluginWorkspaceAccess
+	 */
 	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.setRootVisible(false);
 		ReferencesTreeCellRenderer refTreeCellRenderer = new ReferencesTreeCellRenderer(pluginWorkspaceAccess);
 		this.setCellRenderer(refTreeCellRenderer);
-		// Install tooltips on JTree.
+		// Install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
@@ -86,9 +83,9 @@ public class ReferencesTree extends JTree {
 	 * mode.
 	 */
 	private void setNoRefsAvailableTree() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(ROOT_REFERENCES);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation("Root_references"));
 		ReferencesTreeModel referencesTreeModel = new ReferencesTreeModel();
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(OUTGOING_REFERENCES_NOT_AVAILABLE);
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation("Outgoing_references_not_available"));
 		root.add(noReferencesAvailable);
 		referencesTreeModel.setRoot(root);
 		this.setModel(referencesTreeModel);
@@ -103,7 +100,7 @@ public class ReferencesTree extends JTree {
 	 */
 	private void setPreliminaryTextTree(WSXMLTextEditorPage textPage) throws XPathExpressionException, XPathException {
 		ReferencesTreeModel referencesTreeModel = new ReferencesTreeModel();
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(ROOT_REFERENCES);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation("Root_references"));
 		addAllReferences(textPage, root);
 
 		referencesTreeModel.setRoot(root);
@@ -114,7 +111,7 @@ public class ReferencesTree extends JTree {
 	}
 
 	/**
-	 * 
+	 * Add all the category nodes and the references for each of them.
 	 * @param textPage
 	 * @param referenceExpression
 	 * @param root
@@ -122,12 +119,12 @@ public class ReferencesTree extends JTree {
 	 */
 	private void addAllReferences(WSXMLTextEditorPage textPage, DefaultMutableTreeNode root) throws XPathException {
 
-		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(IMAGE_REFERENCES);
-		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(CROSS_REFERENCES);
-		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(CONTENT_REFERENCES);
-		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(RELATED_LINKS);
-		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(NO_OUTGOING_REFERENCES_FOUND);
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(OUTGOING_REFERENCES_NOT_AVAILABLE);
+		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.IMAGE_REFERENCES));
+		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.CROSS_REFERENCES));
+		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(translator.getTranslation(Tags.CONTENT_REFERENCES));
+		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(translator.getTranslation(Tags.RELATED_LINKS));
+		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND));
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE));
 
 		Object[] referenceNodes = textPage.evaluateXPath(ALL_REFS_XPATH_EXPRESSION);
 		WSXMLTextNodeRange[] referenceNodeRanges = textPage.findElementsByXPath(ALL_REFS_XPATH_EXPRESSION);
@@ -164,7 +161,7 @@ public class ReferencesTree extends JTree {
 								&& currentElemAttributes.getNamedItem("class").getNodeValue().contains("topic/image")) {
 							imageReferences.add(new DefaultMutableTreeNode(refRange));
 						} else if (currentElemAttributes.getNamedItem("class") != null
-								&& currentElemAttributes.getNamedItem("class").getNodeValue().contains("topic/xref")) {							
+								&& currentElemAttributes.getNamedItem("class").getNodeValue().contains("topic/xref")) {
 							crossReferences.add(new DefaultMutableTreeNode(refRange));
 						} else if (currentElement.getAttributes().getNamedItem("conkeyref") != null
 								|| currentElement.getAttributes().getNamedItem("conref") != null) {
