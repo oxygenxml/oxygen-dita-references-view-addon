@@ -13,8 +13,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
-import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
 import com.oxygenxml.sdksamples.translator.Tags;
+import com.oxygenxml.sdksamples.translator.Translator;
 
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
@@ -24,8 +24,7 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	/**
 	 * The translator of the DITA reference categories.
 	 */
-	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
-
+	private Translator translator;
 	/**
 	 * The Image Icons for the reference categories.
 	 */
@@ -39,9 +38,10 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	 * 
 	 * @param pluginWorkspaceAccess
 	 */
-	public ReferencesTreeCellRenderer(StandalonePluginWorkspace pluginWorkspaceAccess) {
+	public ReferencesTreeCellRenderer(StandalonePluginWorkspace pluginWorkspaceAccess, Translator translator) {
 		super();
 
+		this.translator = translator;
 		URL imageUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementImage16.png");
 		if (imageUrl != null) {
 			this.imageIcon = (ImageIcon) pluginWorkspaceAccess.getImageUtilities().loadIcon(imageUrl);
@@ -62,15 +62,6 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 			this.linkIcon = (ImageIcon) pluginWorkspaceAccess.getImageUtilities().loadIcon(linkUrl);
 		}
 
-		//////////
-//		NodeRange range = null;
-//		WSXMLTextEditorPage xmlTextPage;
-//		int startLine = range.getRange().getStartLine();
-//		int column = range.getRange().getStartColumn();
-////		xmlTextPage.geto
-//		xmlTextPage.setCaretPosition(offset);
-//		xmlTextPage.select(startOffset, endOffset);
-		///////////
 	}
 
 	@Override

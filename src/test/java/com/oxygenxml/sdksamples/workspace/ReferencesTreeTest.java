@@ -18,17 +18,18 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 
 public class ReferencesTreeTest extends TestCase {
-
+	
 	public void testTreeWhenNoDITATopic() {
-		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests());
+		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), new DITAReferencesTranslatorForTests());
 		JLabel secondRowRenderLabel;
-
+		
 		// No file opened
 		tree.refreshReferenceTree(null);
 		TreePath path = tree.getPathForRow(0);
 		JLabel firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("Outgoing references not available", firstRowRenderLabel.getText());
+		
+		assertEquals("Outgoing_references_not_available", firstRowRenderLabel.getText());
 
 		// File opened but not in Text mode
 		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
@@ -40,7 +41,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("Outgoing references not available", firstRowRenderLabel.getText());
+		assertEquals("Outgoing_references_not_available", firstRowRenderLabel.getText());
 
 		// File opened in Text mode but it's not a XML file
 		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
@@ -52,7 +53,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("Outgoing references not available", firstRowRenderLabel.getText());
+		assertEquals("Outgoing_references_not_available", firstRowRenderLabel.getText());
 
 		// XML File opened in Text mode but it's not a DITA file
 		final String xmlContent = "<root/>";
@@ -80,7 +81,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("Outgoing references not available", firstRowRenderLabel.getText());
+		assertEquals("Outgoing_references_not_available", firstRowRenderLabel.getText());
 
 		// DITA composite opened in Text mode but WITHOUT any reference inside it
 		final String ditaCompNoRefContent = "<dita/>";
@@ -108,7 +109,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("No outgoing references found", firstRowRenderLabel.getText());
+		assertEquals("No_outgoing_references_found", firstRowRenderLabel.getText());
 
 		// DITA topic opened in Text mode but WITHOUT any reference inside it
 		final String ditaTopicContent = "<gigel class=' topic/topic '/>";
@@ -136,7 +137,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		assertEquals("No outgoing references found", firstRowRenderLabel.getText());
+		assertEquals("No_outgoing_references_found", firstRowRenderLabel.getText());
 
 		// DITA composite opened in Text mode WITH references inside of it
 		final String ditaCompositeContent = "<dita>\n" + "    <topic id=\"topic_xst_3qn_j3b\" >\n"
@@ -169,7 +170,7 @@ public class ReferencesTreeTest extends TestCase {
 		path = tree.getPathForRow(0);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 1, true);
-		assertEquals("Cross references", secondRowRenderLabel.getText());
+		assertEquals("Cross_references", secondRowRenderLabel.getText());
 
 		// DITA topic opened in Text mode with 1 reference inside it
 		final String ditaTopic1Content = "<task class='- topic/topic task/task'>" + "<title>Washing the car</title>\n"
@@ -310,6 +311,9 @@ public class ReferencesTreeTest extends TestCase {
 				path.getLastPathComponent(), true, true, true, 0, true);
 		// no more than 20 characters from the node value shown
 		assertEquals("... ple2.dita#sample2/i1", secondRowRenderLabel.getText());
+		
+		
+		
 
 	}
 

@@ -1,18 +1,20 @@
 package com.oxygenxml.sdksamples.workspace;
 
-import java.util.Arrays;
-
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
 import com.oxygenxml.sdksamples.translator.Tags;
+import com.oxygenxml.sdksamples.translator.Translator;
 
 import ro.sync.exml.editor.EditorPageConstants;
 import ro.sync.exml.workspace.api.editor.WSEditor;
@@ -30,18 +32,71 @@ public class ReferencesTree extends JTree {
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
-	
+
+	private WSEditor editorAccess;
+
+//	//xmlTextPage.setCaretPosition(offset);
+
 	/**
-	 * The constructor.
+	 * The constructor including the tree selection listener
+	 * 
 	 * @param pluginWorkspaceAccess
 	 */
-	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess) {
+	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, Translator translator) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.setRootVisible(false);
-		ReferencesTreeCellRenderer refTreeCellRenderer = new ReferencesTreeCellRenderer(pluginWorkspaceAccess);
+
+		ReferencesTreeCellRenderer refTreeCellRenderer = new ReferencesTreeCellRenderer(pluginWorkspaceAccess,
+				translator);
 		this.setCellRenderer(refTreeCellRenderer);
+
 		// Install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
+
+		// Add Listener for selecting the nodes in the XML Text Page
+		this.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+
+			public void valueChanged(TreeSelectionEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) ReferencesTree.this
+						.getLastSelectedPathComponent();
+
+				// if nothing is selected
+				if (node == null) {
+					return;
+				} else {
+					// retrieve the node that was selected
+					if (editorAccess != null) {
+						if (editorAccess.getCurrentPage() != null) {
+							WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) editorAccess.getCurrentPage();
+
+							// if node is an element
+							if (node.getUserObject() instanceof NodeRange) {
+								System.err.println("IN HERE");
+								WSXMLTextNodeRange range = ((NodeRange) node.getUserObject()).getRange();
+								int startLine = range.getStartLine();
+								int startColumn = range.getStartColumn();
+								int endLine = range.getEndLine();
+								int endColumn = range.getEndColumn();
+
+								try {
+									int startOffset = xmlTextPage.getOffsetOfLineStart(startLine) + startColumn - 1;
+									int endOffset = xmlTextPage.getOffsetOfLineStart(endLine) + endColumn - 1;
+									xmlTextPage.select(startOffset, endOffset);
+
+								} catch (BadLocationException e1) {
+									LOGGER.debug(e1, e1);
+									e1.printStackTrace();
+								}
+
+							} else // selected node is a category
+							{
+
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -50,6 +105,7 @@ public class ReferencesTree extends JTree {
 	 * @throws XPathException
 	 */
 	void refreshReferenceTree(WSEditor editorAccess) {
+		this.editorAccess = editorAccess;
 		try {
 			if (editorAccess != null) {
 				if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())
@@ -79,7 +135,8 @@ public class ReferencesTree extends JTree {
 	private void setNoRefsAvailableTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
 		ReferencesTreeModel referencesTreeModel = new ReferencesTreeModel();
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(
+				Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 		root.add(noReferencesAvailable);
 		referencesTreeModel.setRoot(root);
 		this.setModel(referencesTreeModel);
@@ -106,6 +163,7 @@ public class ReferencesTree extends JTree {
 
 	/**
 	 * Add all the category nodes and the references for each of them.
+	 * 
 	 * @param textPage
 	 * @param referenceExpression
 	 * @param root
@@ -118,11 +176,12 @@ public class ReferencesTree extends JTree {
 		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);
 		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(Tags.RELATED_LINKS);
 		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(Tags.NO_OUTGOING_REFERENCES_FOUND);
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(
+				Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 
 		Object[] referenceNodes = textPage.evaluateXPath(ALL_REFS_XPATH_EXPRESSION);
 		WSXMLTextNodeRange[] referenceNodeRanges = textPage.findElementsByXPath(ALL_REFS_XPATH_EXPRESSION);
-		System.err.println("REF NODES " + Arrays.toString(referenceNodes));
+
 		// DITA topics with outgoing references
 		// The root element is the first in the list of references.
 		if (referenceNodes.length >= 1) {
@@ -142,12 +201,12 @@ public class ReferencesTree extends JTree {
 					for (int i = 1; i < referenceNodes.length; i++) {
 						Element currentElement = (Element) referenceNodes[i];
 						NamedNodeMap currentElemAttributes = currentElement.getAttributes();
-
-						LOGGER.info(" -------------> NODE NAME: " + currentElement.getNodeName());
-						LOGGER.info("startLine: " + referenceNodeRanges[i].getStartLine() + " startColumn: "
-								+ referenceNodeRanges[i].getStartColumn());
-						LOGGER.info("endLine: " + referenceNodeRanges[i].getEndLine() + " endColumn: "
-								+ referenceNodeRanges[i].getEndColumn());
+//
+//						LOGGER.info(" -------------> NODE NAME: " + currentElement.getNodeName());
+//						LOGGER.info("startLine: " + referenceNodeRanges[i].getStartLine() + " startColumn: "
+//								+ referenceNodeRanges[i].getStartColumn());
+//						LOGGER.info("endLine: " + referenceNodeRanges[i].getEndLine() + " endColumn: "
+//								+ referenceNodeRanges[i].getEndColumn());
 
 						NodeRange refRange = new NodeRange(currentElement, referenceNodeRanges[i]);
 
@@ -164,6 +223,31 @@ public class ReferencesTree extends JTree {
 								&& currentElemAttributes.getNamedItem("class").getNodeValue().contains("topic/link")) {
 							relatedLinks.add(new DefaultMutableTreeNode(refRange));
 						}
+
+//						try {
+//							if (textPage.getWordAtCaret() != null) {
+//								int startWordOffset = textPage.getWordAtCaret()[0];
+//								int endWordOffset = textPage.getWordAtCaret()[1];
+//
+//								int startLine = refRange.getRange().getStartLine();
+//								int startColumn = refRange.getRange().getStartColumn();
+//								int endLine = refRange.getRange().getEndLine();
+//								int endColumn = refRange.getRange().getEndColumn();
+//								int startNodeOffset = textPage.getOffsetOfLineStart(startLine) + startColumn - 1;
+//								int endNodeOffset;
+//
+//								endNodeOffset = textPage.getOffsetOfLineStart(endLine) + endColumn - 1;
+//
+//								if (startNodeOffset >= startWordOffset && endWordOffset <= endNodeOffset) {								
+//									TreePath tPath = new TreePath(refRange);
+//									
+//									this.setSelectionPath(tPath);									
+//								}
+//							}
+//						} catch (BadLocationException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 
 					}
 					// Do not add empty categories

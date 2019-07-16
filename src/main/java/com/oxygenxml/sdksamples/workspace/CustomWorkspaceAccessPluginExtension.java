@@ -43,7 +43,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 */
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.refTree = new ReferencesTree(pluginWorkspaceAccess);
+		this.refTree = new ReferencesTree(pluginWorkspaceAccess, translator);
 
 		//PluginResourceBundle resourceBundle = pluginWorkspaceAccess.getResourceBundle();
 
