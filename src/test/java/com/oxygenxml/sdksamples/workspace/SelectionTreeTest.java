@@ -4,7 +4,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.rowset.serial.SerialArray;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.TreePath;
 import javax.xml.xpath.XPathConstants;
@@ -25,22 +27,24 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 public class SelectionTreeTest extends TestCase {
 
 	private List<Integer> selectionOffsets = new ArrayList<Integer>();
+
 	/**
 	 * Test for selecting node in textPage after selecting a node in ReferencesTree.
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void testForSelectionInTree() {
-		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), new DITAReferencesTranslatorForTests());
-		
-		final String ditaContent = "<topic id=\"copyright\" class=\"- topic/topic \">\n" + 
-				"    <title>Copyright</title>\n" + 
-				"    <shortdesc>Legal-related information.</shortdesc>\n" + 
-				"    <body>\n" + 
-				"        <p>Most of the information was taken from <xref class='- topic/xref '\n" + "href=\"www.wikipedia.com\"\n" + 
-				"                format=\"html\" scope=\"external\">Wikipedia</xref>, the free encyclopedia.</p>\n" + 
-				"    </body>\n" + 
-				"</topic>";
-		
+	public void testForSelectionInTree() throws InterruptedException {
+		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
+				new DITAReferencesTranslatorForTests());
+
+		final String ditaContent = "<topic id=\"copyright\" class=\"- topic/topic \">\n"
+				+ "    <title>Copyright</title>\n" + "    <shortdesc>Legal-related information.</shortdesc>\n"
+				+ "    <body>\n" + "        <p>Most of the information was taken from <xref class='- topic/xref '\n"
+				+ "href=\"www.wikipedia.com\"\n"
+				+ "                format=\"html\" scope=\"external\">Wikipedia</xref>, the free encyclopedia.</p>\n"
+				+ "    </body>\n" + "</topic>";
+
 		WSEditorAdapterForTests editor = new WSEditorAdapterForTests() {
 			@Override
 			public String getCurrentPageID() {
@@ -60,11 +64,13 @@ public class SelectionTreeTest extends TestCase {
 						return new WSXMLTextNodeRange[] { new WSXMLTextNodeRangeForTests(),
 								new WSXMLTextNodeRangeForTests() };
 					}
+
 					@Override
 					public void select(int startOffset, int endOffset) {
 						selectionOffsets.add(startOffset);
 						selectionOffsets.add(endOffset);
 					}
+
 					@Override
 					public int getOffsetOfLineStart(int lineNumber) throws BadLocationException {
 						return 5;
@@ -73,26 +79,23 @@ public class SelectionTreeTest extends TestCase {
 			}
 		};
 
-	
-		tree.refreshReferenceTree(editor);	
-		WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) editor.getCurrentPage();
-	
+		tree.refreshReferenceTree(editor);
 		TreePath path = tree.getPathForRow(1);
-		JLabel firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
-				path.getLastPathComponent(), true, true, true, 0, true);
-		
 
 		tree.setSelectionPath(path);
 		tree.setSelectionRow(1);
+		Thread.sleep(700);
+
 		assertEquals("[4, 4]", selectionOffsets.toString());
-			
+
 	}
-	
+
 	/**
-	 * Evaluate the xPath expression in case of a DITA topic.
+	 * Evaluate the xPath expression in case of a DITA topic. Only used in
+	 * TestCases.
 	 * 
 	 * @param ditaContent
-	 * @return
+	 * @return The XPath Nodes
 	 */
 	Object[] evaluateAllRefsExpression(final String ditaContent) {
 		try {

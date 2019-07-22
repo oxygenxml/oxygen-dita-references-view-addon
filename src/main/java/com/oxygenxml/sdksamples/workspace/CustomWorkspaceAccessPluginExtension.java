@@ -2,6 +2,7 @@ package com.oxygenxml.sdksamples.workspace;
 
 import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
@@ -32,20 +33,15 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 * The tree with the outgoing references.
 	 */
 	private ReferencesTree refTree;
-	
+
 	/**
 	 * The DITA references translator for the side-view label.
 	 */
 	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
 
-	/**
-	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationStarted(ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace)
-	 */
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.refTree = new ReferencesTree(pluginWorkspaceAccess, translator);
-
-		//PluginResourceBundle resourceBundle = pluginWorkspaceAccess.getResourceBundle();
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 			@Override
@@ -63,9 +59,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				// An edited XML document has been closed.
 			}
 
-			/**
-			 * @see ro.sync.exml.workspace.api.listeners.WSEditorChangeListener#editorAboutToBeClosed(java.net.URL)
-			 */
 			@Override
 			public boolean editorAboutToBeClosed(URL editorLocation) {
 				// You can veto the closing of an XML document.
@@ -75,9 +68,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 
 			/**
 			 * The editor was relocated (Save as was called).
-			 * 
-			 * @see ro.sync.exml.workspace.api.listeners.WSEditorChangeListener#editorRelocated(java.net.URL,
-			 *      java.net.URL)
 			 */
 			@Override
 			public void editorRelocated(URL previousEditorLocation, URL newEditorLocation) {
@@ -101,9 +91,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		}, StandalonePluginWorkspace.MAIN_EDITING_AREA);
 
 		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
-			/**
-			 * @see ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer#customizeView(ro.sync.exml.workspace.api.standalone.ViewInfo)
-			 */
 			public void customizeView(ViewInfo viewInfo) {
 
 				if (
@@ -111,21 +98,23 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				"ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
 					viewInfo.setComponent(new JScrollPane(refTree));
 					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
-					// You can have images located inside the JAR library and use them...
-//				  viewInfo.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/customMessage.png").toString()));
+					ImageIcon DITARefIcon = new ImageIcon(getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
+				  viewInfo.setIcon(DITARefIcon);
 				}
 			}
 		});
 	}
 
-	/**
-	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationClosing()
-	 */
 	public boolean applicationClosing() {
 		// You can reject the application closing here
 		return true;
 	}
 
+	/**
+	 * Refresh the tree in its class
+	 * 
+	 * @param editorLocation
+	 */
 	void refreshTreeInternal(URL editorLocation) {
 		WSEditor editorAccess = pluginWorkspaceAccess
 				.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);

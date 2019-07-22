@@ -18,17 +18,19 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 
 public class ReferencesTreeTest extends TestCase {
-	
-	public void testTreeWhenNoDITATopic() {
-		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), new DITAReferencesTranslatorForTests());
+
+	public void testTreeForDifferentFiles() {
+		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
+				new DITAReferencesTranslatorForTests());
+
 		JLabel secondRowRenderLabel;
-		
+
 		// No file opened
 		tree.refreshReferenceTree(null);
 		TreePath path = tree.getPathForRow(0);
 		JLabel firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
-		
+
 		assertEquals("Outgoing_references_not_available", firstRowRenderLabel.getText());
 
 		// File opened but not in Text mode
@@ -201,7 +203,6 @@ public class ReferencesTreeTest extends TestCase {
 			}
 		});
 		path = tree.getPathForRow(1);
-		// System.err.println("PATH " + path);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 2, true);
 		assertEquals("../image/carwash.jpg", firstRowRenderLabel.getText());
@@ -246,13 +247,11 @@ public class ReferencesTreeTest extends TestCase {
 			}
 		});
 		path = tree.getPathForRow(1);
-		System.err.println("PATH " + path);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 2, true);
 		assertEquals("... ge/mynextcarwash.jpg", firstRowRenderLabel.getText());
 
 		path = tree.getPathForRow(3);
-		System.err.println("PATH " + path);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 4, true);
 		assertEquals("../concepts/oil.dita", secondRowRenderLabel.getText());
@@ -303,25 +302,22 @@ public class ReferencesTreeTest extends TestCase {
 				};
 			}
 		});
-
 		path = tree.getPathForRow(3);
-		
-		System.err.println("PATH " + path);
 		secondRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
 				path.getLastPathComponent(), true, true, true, 0, true);
+		System.err.println("PATH " + path);
+
 		// no more than 20 characters from the node value shown
-		assertEquals("... ple2.dita#sample2/i1", secondRowRenderLabel.getText());
-		
-		
-		
+		assertEquals("... ttp://www.google.com", secondRowRenderLabel.getText());
 
 	}
 
 	/**
-	 * Evaluate the xPath expression in case of a DITA topic.
+	 * Evaluate the xPath expression in case of a DITA topic. Only used in
+	 * TestCases.
 	 * 
-	 * @param ditaContent
-	 * @return
+	 * @param ditaContent The ditaContent
+	 * @return The nodes after XPath evaluation
 	 */
 	Object[] evaluateAllRefsExpression(final String ditaContent) {
 		try {

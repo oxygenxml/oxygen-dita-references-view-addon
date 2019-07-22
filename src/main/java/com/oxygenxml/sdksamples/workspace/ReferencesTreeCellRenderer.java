@@ -73,43 +73,54 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (value instanceof DefaultMutableTreeNode) {
 			// Attribute nodes
-			String toDisplayString = null;
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				Node node = ((NodeRange) ((DefaultMutableTreeNode) value).getUserObject()).getNode();
 
-				if (node.getAttributes().getNamedItem("href") != null) {
-					toDisplayString = setDisplayNodeValue(node, "href");
-				} else if (node.getAttributes().getNamedItem("keyref") != null) {
-					toDisplayString = setDisplayNodeValue(node, "keyref");
-				} else if (node.getAttributes().getNamedItem("conref") != null) {
-					toDisplayString = setDisplayNodeValue(node, "conref");
-				} else if (node.getAttributes().getNamedItem("conkeyref") != null) {
-					toDisplayString = setDisplayNodeValue(node, "conkeyref");
+				Node hrefAttr = node.getAttributes().getNamedItem("href");
+				if (hrefAttr != null) {
+					setDisplayNodeValue(node, hrefAttr.getNodeValue());
+				} else {
+					Node keyrefAttr = node.getAttributes().getNamedItem("keyref");
+					if (keyrefAttr != null) {
+						setDisplayNodeValue(node, keyrefAttr.getNodeValue());
+					} else {
+						Node conrefAttr = node.getAttributes().getNamedItem("conref");
+						if (conrefAttr != null) {
+							setDisplayNodeValue(node, conrefAttr.getNodeValue());
+						} else {
+							Node conkeyrefAttr = node.getAttributes().getNamedItem("conkeyref");
+							if (conkeyrefAttr != null) {
+								setDisplayNodeValue(node, conkeyrefAttr.getNodeValue());
+							}
+						}
+					}
 				}
 
-			} else // Reference categories nodes
-			if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
-				label.setForeground(Color.blue);
-				if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
-					toDisplayString = translator.getTranslation(Tags.IMAGE_REFERENCES);
-					label.setIcon(imageIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
-					toDisplayString = translator.getTranslation(Tags.CROSS_REFERENCES);
-					label.setIcon(crossIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
-					toDisplayString = translator.getTranslation(Tags.CONTENT_REFERENCES);
-					label.setIcon(contentIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
-					toDisplayString = translator.getTranslation(Tags.RELATED_LINKS);
-					label.setIcon(linkIcon);
-				} else if (((DefaultMutableTreeNode) value).getUserObject()
-						.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
-					toDisplayString = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
-				} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
-					toDisplayString = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
+			} else {// Reference categories nodes
+				String toDisplayString = null;
+				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
+					if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
+						toDisplayString = translator.getTranslation(Tags.IMAGE_REFERENCES);
+						label.setIcon(imageIcon);
+					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
+						toDisplayString = translator.getTranslation(Tags.CROSS_REFERENCES);
+						label.setIcon(crossIcon);
+					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
+						toDisplayString = translator.getTranslation(Tags.CONTENT_REFERENCES);
+						label.setIcon(contentIcon);
+					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
+						toDisplayString = translator.getTranslation(Tags.RELATED_LINKS);
+						label.setIcon(linkIcon);
+					} else if (((DefaultMutableTreeNode) value).getUserObject()
+							.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
+						toDisplayString = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+					} else if (((DefaultMutableTreeNode) value).getUserObject()
+							.equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
+						toDisplayString = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
+					}
 				}
+				label.setText(toDisplayString);
 			}
-			label.setText(toDisplayString);
 		}
 		return label;
 	}
@@ -119,20 +130,21 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	 * the full node value.
 	 * 
 	 * @param node The DOM node
+	 * @param referenceAttributeValue The attribute value
 	 * @return the displayed node text
 	 */
-	private String setDisplayNodeValue(Node node, String attributeString) {
+	private void setDisplayNodeValue(Node node, String referenceAttributeValue) {
 		String toDisplayString = null;
-		String nodeValue = node.getAttributes().getNamedItem(attributeString).getNodeValue();
 
-		if (nodeValue.length() > 20) {
-			toDisplayString = "... " + nodeValue.substring(nodeValue.length() - 20);
+		//TODO show file name.
+		if (referenceAttributeValue.length() > 20) {
+			toDisplayString = "... " + referenceAttributeValue.substring(referenceAttributeValue.length() - 20);
 		} else {
-			toDisplayString = nodeValue;
+			toDisplayString = referenceAttributeValue;
 		}
 
-		this.setToolTipText(nodeValue);
-		return toDisplayString;
+		this.setText(toDisplayString);
+		this.setToolTipText(referenceAttributeValue);
 	}
 
 }
