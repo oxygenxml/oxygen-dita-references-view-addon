@@ -3,6 +3,7 @@ package com.oxygenxml.sdksamples.workspace;
 import java.awt.Color;
 import java.awt.Component;
 import java.net.URL;
+import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -74,23 +75,23 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 		if (value instanceof DefaultMutableTreeNode) {
 			// Attribute nodes
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
-				Node node = ((NodeRange) ((DefaultMutableTreeNode) value).getUserObject()).getNode();
+				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
-				Node hrefAttr = node.getAttributes().getNamedItem("href");
+				String hrefAttr = nodeRange.getAttributeValue("href");
 				if (hrefAttr != null) {
-					setDisplayNodeValue(node, hrefAttr.getNodeValue());
+					setDisplayNodeValue(hrefAttr);
 				} else {
-					Node keyrefAttr = node.getAttributes().getNamedItem("keyref");
+					String keyrefAttr = nodeRange.getAttributeValue("keyref");
 					if (keyrefAttr != null) {
-						setDisplayNodeValue(node, keyrefAttr.getNodeValue());
+						setDisplayNodeValue(keyrefAttr);
 					} else {
-						Node conrefAttr = node.getAttributes().getNamedItem("conref");
+						String conrefAttr = nodeRange.getAttributeValue("conref");
 						if (conrefAttr != null) {
-							setDisplayNodeValue(node, conrefAttr.getNodeValue());
+							setDisplayNodeValue(conrefAttr);
 						} else {
-							Node conkeyrefAttr = node.getAttributes().getNamedItem("conkeyref");
+							String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
 							if (conkeyrefAttr != null) {
-								setDisplayNodeValue(node, conkeyrefAttr.getNodeValue());
+								setDisplayNodeValue(conkeyrefAttr);
 							}
 						}
 					}
@@ -129,14 +130,34 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	 * Display maximum 20 characters for each node value and set the toolTip with
 	 * the full node value.
 	 * 
-	 * @param node The DOM node
+	 * @param node                    The DOM node
 	 * @param referenceAttributeValue The attribute value
 	 * @return the displayed node text
 	 */
-	private void setDisplayNodeValue(Node node, String referenceAttributeValue) {
+	private void setDisplayNodeValue(String referenceAttributeValue) {
 		String toDisplayString = null;
 
-		//TODO show file name.
+		// TODO show file name.
+//		StringTokenizer st = new StringTokenizer(referenceAttributeValue, "/");
+//		String filename = null;
+//		while (st.hasMoreTokens()) {
+//			filename = st.nextToken();
+//		}
+//
+//		int filenameLength = filename.length();
+//		int refLength = referenceAttributeValue.length();
+//
+//		if (filenameLength == refLength) {
+//			toDisplayString = referenceAttributeValue;
+//		} else {
+//			int diff = refLength - filenameLength;
+//			if ((refLength - diff) >= 5) {
+//				toDisplayString = "... " + referenceAttributeValue.substring(diff - 5);
+//			} else {
+//				toDisplayString = "... " + referenceAttributeValue.substring(diff);
+//			}
+//		}
+
 		if (referenceAttributeValue.length() > 20) {
 			toDisplayString = "... " + referenceAttributeValue.substring(referenceAttributeValue.length() - 20);
 		} else {

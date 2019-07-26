@@ -4,6 +4,8 @@ import javax.swing.text.BadLocationException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
@@ -40,10 +42,6 @@ public class NodeRange {
 		this.range = range;
 	}
 
-	public Element getNode() {
-		return element;
-	}
-
 	/**
 	 * Compute the offsets of the node from the XML textPage.
 	 * 
@@ -70,4 +68,25 @@ public class NodeRange {
 		}
 		return finalOffsets;
 	}
+
+	/**
+	 * Get the attribute value, returns <code>null</code> if there is no such
+	 * attribute.
+	 * 
+	 * @param attributeName The attribute name
+	 * @return the attribute value or <code>null</code>
+	 */
+	public String getAttributeValue(String attributeName) {
+		if (element != null) {
+			NamedNodeMap attrs = element.getAttributes();
+			if (attrs != null) {
+				Node attr = attrs.getNamedItem(attributeName);
+				if (attr != null) {
+					return attr.getNodeValue();
+				}
+			}
+		}
+		return null;
+	}
+
 }

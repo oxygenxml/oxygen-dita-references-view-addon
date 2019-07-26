@@ -137,7 +137,7 @@ public class CaretTreeTest extends TestCase {
 			
 			NodeRange selectedNodeRange = (NodeRange) ((DefaultMutableTreeNode) tree.getSelectionPath()
 					.getLastPathComponent()).getUserObject();
-			assertEquals("xref", selectedNodeRange.getNode().getNodeName());
+			assertEquals("www.wikipedia.com", selectedNodeRange.getAttributeValue("href"));			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -3,7 +3,6 @@ package com.oxygenxml.sdksamples.workspace;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
-import javax.swing.event.CaretListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
@@ -23,15 +22,19 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
+import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
-public class ReferencesTree extends JTree {
-	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')] | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref]";
+public class ReferencesTree extends Tree {
+	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
+			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
+			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))]";
 
 	/**
 	 * The referencesTree Logger.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
+	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private WSEditor editorAccess;
 
 	public WSEditor getEditorAccess() {
@@ -42,27 +45,32 @@ public class ReferencesTree extends JTree {
 	private ReferencesTreeCaretListener currentCaretListener;
 
 	private ReferencesTreeSelectionListener refTreeSelectionListener;
-	private ReferencesTreeCaretListener refTreeCaretListener;
+	private ReferencesMouseAdapter refMouseAdapter;
 
 	/**
 	 * The constructor including the tree selection listener
 	 * 
 	 * @param pluginWorkspaceAccess
-	 * @param translator
+	 * @param translator            The translator
 	 */
 	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, Translator translator) {
 		this.setRootVisible(false);
+		this.setShowsRootHandles(false);
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 
-		ReferencesTreeCellRenderer refTreeCellRenderer = new ReferencesTreeCellRenderer(pluginWorkspaceAccess,
-				translator);
-		this.setCellRenderer(refTreeCellRenderer);
+		// set cell renderer for the references tree
+		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess, translator));
 
-		// Install toolTips on JTree.
+		// install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
 
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
+
+		// popUpMenu for Element Nodes
+		refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, translator);
+		this.addMouseListener(refMouseAdapter);
 	}
 
 	/**
@@ -72,12 +80,13 @@ public class ReferencesTree extends JTree {
 	 */
 	void refreshReferenceTree(WSEditor editorAccess) {
 		this.editorAccess = editorAccess;
+		refMouseAdapter.setEditorAccess(editorAccess);
+
 		try {
 			if (editorAccess != null) {
 				if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())
 						&& editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage) {
 					final WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) editorAccess.getCurrentPage();
-					//LOGGER.info("EDITOR LOCATION " + textPage.getParentEditor().getEditorLocation());
 					// Preliminary refresh
 					this.setPreliminaryTextTree(textPage);
 				} else {
@@ -134,7 +143,7 @@ public class ReferencesTree extends JTree {
 			currentTextComponent.removeCaretListener(currentCaretListener);
 		}
 
-		this.currentTextComponent = (JTextArea) textPage.getTextComponent();		
+		this.currentTextComponent = (JTextArea) textPage.getTextComponent();
 		this.currentCaretListener = new ReferencesTreeCaretListener(textPage, this, this.refTreeSelectionListener);
 		this.refTreeSelectionListener.setCaretSelectionInhibitor(currentCaretListener);
 		this.currentTextComponent.addCaretListener(currentCaretListener);
@@ -183,15 +192,18 @@ public class ReferencesTree extends JTree {
 						NodeRange refRange = new NodeRange(currentElement, referenceNodeRanges[i]);
 
 						Node classAttribute = currentElemAttributes.getNamedItem("class");
-						if(classAttribute != null) {
+						if (classAttribute != null) {
 							if (classAttribute.getNodeValue().contains(" topic/image ")) {
 								imageReferences.add(new DefaultMutableTreeNode(refRange));
 							} else if (classAttribute.getNodeValue().contains(" topic/xref ")) {
 								crossReferences.add(new DefaultMutableTreeNode(refRange));
-							}  else if (classAttribute.getNodeValue().contains(" topic/link ")) {
+							} else if (classAttribute.getNodeValue().contains(" topic/link ")) {
 								relatedLinks.add(new DefaultMutableTreeNode(refRange));
 							} else if (currentElement.getAttributes().getNamedItem("conkeyref") != null
 									|| currentElement.getAttributes().getNamedItem("conref") != null) {
+								contentReferences.add(new DefaultMutableTreeNode(refRange));
+							} else {
+								// key references to values defined in the DITAMAP
 								contentReferences.add(new DefaultMutableTreeNode(refRange));
 							}
 						}

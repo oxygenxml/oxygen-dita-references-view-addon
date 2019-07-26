@@ -93,13 +93,12 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
 			public void customizeView(ViewInfo viewInfo) {
 
-				if (
-				// The view ID defined in the "plugin.xml"
-				"ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
+				if ("ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
 					viewInfo.setComponent(new JScrollPane(refTree));
 					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
-					ImageIcon DITARefIcon = new ImageIcon(getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
-				  viewInfo.setIcon(DITARefIcon);
+					ImageIcon DITARefIcon = new ImageIcon(
+							getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
+					viewInfo.setIcon(DITARefIcon);
 				}
 			}
 		});
