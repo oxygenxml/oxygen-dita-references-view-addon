@@ -21,7 +21,7 @@
   class="com.oxygenxml.sdksamples.workspace.CustomWorkspaceAccessPluginExtension"/>
  
   <!--The sample view which will present messages from the sample plugin.-->
-  <view id="SampleWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
+  <view id="ReferencesWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
   <!--The sample toolbar which will present messages from the sample plugin.-->
-  <toolbar id="SampleWorkspaceAccessToolbarID" initialSide="NORTH" initialRow="1"/>
+  <toolbar id="ReferencesWorkspaceAccessToolbarID" initialSide="NORTH" initialRow="1"/>
 </plugin>
