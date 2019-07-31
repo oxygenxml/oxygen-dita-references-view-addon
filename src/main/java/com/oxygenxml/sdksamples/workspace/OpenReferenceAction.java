@@ -65,7 +65,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 */
 	public void actionPerformed(ActionEvent e) {
 
-		// the attributes of the leaf nodes
+		// attributes of the leaf nodes
 		String hrefAttr = nodeRange.getAttributeValue("href");
 		String keyrefAttr = nodeRange.getAttributeValue("keyref");
 		String conrefAttr = nodeRange.getAttributeValue("conref");
@@ -78,7 +78,7 @@ public class OpenReferenceAction extends AbstractAction {
 		try {
 			if (hrefAttr != null) {
 				// possible URL if the protocol name is already inserted in the href reference
-				// by user
+				// by user, otherwise it needs to be added
 				URL possibleURL = new URL(editorLocation, hrefAttr);
 				url = getURLForHTTPHost(formatAttr, hrefAttr, possibleURL);
 				openReferences(url, nodeRange, hrefAttr, formatAttr);
@@ -101,7 +101,7 @@ public class OpenReferenceAction extends AbstractAction {
 
 			}
 		} catch (MalformedURLException e1) {
-			LOGGER.debug(e1, e1);
+			LOGGER.error(e1, e1);
 			e1.printStackTrace();
 		}
 

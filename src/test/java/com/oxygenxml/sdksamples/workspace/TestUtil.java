@@ -52,7 +52,7 @@ public class TestUtil {
 	 * 
 	 * @param tree The references tree.
 	 */
-	public static void simulateDoubleClick(JTree tree) {
+	static void simulateDoubleClick(JTree tree) {
 		Rectangle rowBounds = tree.getRowBounds(tree.getSelectionRows()[0]);
 		Point point = new Point(rowBounds.x, rowBounds.y);
 		MouseEvent mouseEvent = new MouseEvent(tree, MouseEvent.MOUSE_CLICKED, 0, 0, point.x, point.y, 2, false);
@@ -64,8 +64,7 @@ public class TestUtil {
 	 *
 	 * @param tree The tree to dump info for.
 	 */
-	@SuppressWarnings("unused")
-	public static String dumpTree(ReferencesTree tree) {
+	static String dumpTree(ReferencesTree tree) {
 		StringBuilder dump = new StringBuilder();
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
@@ -88,11 +87,11 @@ public class TestUtil {
 	}
 
 	/**
-	 * Dumps tree nodes as shown in the Oxygen editor.
+	 * Show logging for the tree nodes as shown in the Oxygen editor.
 	 * 
 	 * @param tree The ReferencesTree
 	 */
-	public static String logTreeNodes(ReferencesTree tree) {
+	static String logTreeNodes(ReferencesTree tree) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < tree.getRowCount(); i++) {
 			TreePath path = tree.getPathForRow(i);

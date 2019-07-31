@@ -26,7 +26,8 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 public class ReferencesTree extends Tree {
 	/**
-	 * The XPath expression to be evaluated.
+	 * The XPath expression with all the possible references available in the
+	 * current textPage to be evaluated.
 	 */
 	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
@@ -73,7 +74,7 @@ public class ReferencesTree extends Tree {
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
 
-		// popUpMenu for Element Nodes
+		// popUp Menu for Element Nodes
 		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addMouseListener(this.refMouseAdapter);
 	}
@@ -143,7 +144,7 @@ public class ReferencesTree extends Tree {
 		// expand all Nodes of The Reference Tree
 		expandAllNodesInRefTree(this, 0, this.getRowCount());
 
-		// get current Caret Listener
+		// get current Caret Listener and update it 
 		if (currentTextComponent != null && currentCaretListener != null) {
 			currentTextComponent.removeCaretListener(currentCaretListener);
 		}
@@ -155,7 +156,7 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Add all the category nodes and the references for each of them.
+	 * Add all the category nodes and the references for each of them taking into account the "class" values of the leaf nodes
 	 * 
 	 * @param textPage The XML textPage
 	 * @param root     The rootNode
@@ -213,7 +214,7 @@ public class ReferencesTree extends Tree {
 							}
 						}
 					}
-					// Do not add empty categories
+					// Do not add empty categories to the referencesTree
 					if (imageReferences.getChildCount() != 0) {
 						root.add(imageReferences);
 					}

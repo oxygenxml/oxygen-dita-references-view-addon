@@ -5,8 +5,6 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
-import org.apache.log4j.Logger;
-
 import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
 import com.oxygenxml.sdksamples.translator.Tags;
 
@@ -24,12 +22,6 @@ import ro.sync.exml.workspace.api.standalone.ViewInfo;
  * @author Alexandra_Dinisor
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
-
-	/**
-	 * The logger used for logging in this class
-	 */
-	private static final Logger LOGGER = Logger.getLogger(CustomWorkspaceAccessPluginExtension.class);
-
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/**

@@ -35,11 +35,13 @@ public class CaretTreeTest extends TestCase {
 				null, new DITAReferencesTranslatorForTests());
 
 		final String ditaContent = "<topic id=\"copyright\" class=\"- topic/topic \">\n"
-				+ "    <title>Copyright</title>\n" + "    <shortdesc>Legal-related information.</shortdesc>\n"
-				+ "    <body>\n" + "        <p>Most of the information was taken from <xref class='- topic/xref '\n"
-				+ "href=\"www.wikipedia.com\"\n"
+				+ "    <title>Copyright</title>\n" 
+				+ "    <shortdesc>Legal-related information.</shortdesc>\n"
+				+ "    <body>\n" 
+				+ "        <p>Most of the information was taken from <xref class=\"- topic/xref \" href=\"www.wikipedia.com\"\n"
 				+ "                format=\"html\" scope=\"external\">Wikipedia</xref>, the free encyclopedia.</p>\n"
-				+ "    </body>\n" + "</topic>";
+				+ "    </body>\n" 
+				+ "</topic>";
 
 		WSEditorAdapterForTests editor = new WSEditorAdapterForTests() {
 
