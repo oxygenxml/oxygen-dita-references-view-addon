@@ -8,78 +8,101 @@ import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
 
-import org.apache.batik.svggen.ImageCacher.External;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Node;
 
-import ro.sync.ecss.dita.DITAAccess;
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 import ro.sync.exml.editor.ContentTypes;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
-import ro.sync.exml.workspace.api.util.UtilAccess;
 
-public class NodeAction extends AbstractAction {
+@SuppressWarnings("serial")
+public class OpenReferenceAction extends AbstractAction {
 	/**
-	 * The OpenNodeAction Logger.
+	 * The OpenReferenceAction Logger.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(NodeAction.class);
+	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
 	private NodeRange nodeRange;
 	private WSEditor editorAccess;
 
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	private KeysProvider keysProvider;
 
-	public NodeAction(NodeRange nodeRange, WSEditor editorAccess, StandalonePluginWorkspace pluginWorkspaceAccess,
-			String itemName) {
+	/**
+	 * Constructor for popUp menu triggered by right click.
+	 * 
+	 * @param nodeRange             The nodeRange to be clicked
+	 * @param editorAccess          The editor access
+	 * @param pluginWorkspaceAccess The pluginWorkspace access
+	 * @param keysProvider          The name of the contextual menu item
+	 */
+	public OpenReferenceAction(NodeRange nodeRange, WSEditor editorAccess,
+			StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider, String itemName) {
 		super(itemName);
 
 		this.nodeRange = nodeRange;
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.editorAccess = editorAccess;
-	}
-
-	public NodeAction(NodeRange nodeRange, WSEditor editorAccess, StandalonePluginWorkspace pluginWorkspaceAccess) {
-		this(nodeRange, editorAccess, pluginWorkspaceAccess, "");
+		this.keysProvider = keysProvider;
 	}
 
 	/**
-	 * Action for open reference. Case for every attribute value of the leaf node.
+	 * Constructor when opening the reference by double click.
+	 * 
+	 * @param nodeRange             The nodeRange to be clicked
+	 * @param editorAccess          The editor access
+	 * @param pluginWorkspaceAccess The pluginWorkspace access
+	 */
+	public OpenReferenceAction(NodeRange nodeRange, WSEditor editorAccess,
+			StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider) {
+		this(nodeRange, editorAccess, pluginWorkspaceAccess, keysProvider, "");
+	}
+
+	/**
+	 * Action for open reference either by double clicking or by right clicking with
+	 * contextual menu. Case for every attribute value of the leaf node.
 	 */
 	public void actionPerformed(ActionEvent e) {
 
+		// the attributes of the leaf nodes
 		String hrefAttr = nodeRange.getAttributeValue("href");
 		String keyrefAttr = nodeRange.getAttributeValue("keyref");
 		String conrefAttr = nodeRange.getAttributeValue("conref");
 		String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
 		String formatAttr = nodeRange.getAttributeValue("format");
 		URL url = null;
-		LinkedHashMap<String, KeyInfo> keys = DITAAccess.getKeys(editorAccess.getEditorLocation());
+		URL editorLocation = editorAccess.getEditorLocation();
+		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider.getKeys(editorLocation);
 
 		try {
 			if (hrefAttr != null) {
-				URL possibleURL = new URL(editorAccess.getEditorLocation(), hrefAttr);
+				// possible URL if the protocol name is already inserted in the href reference
+				// by user
+				URL possibleURL = new URL(editorLocation, hrefAttr);
 				url = getURLForHTTPHost(formatAttr, hrefAttr, possibleURL);
-				openReferences(url, nodeRange, hrefAttr);
-			} else if (conrefAttr != null) {
-				url = new URL(editorAccess.getEditorLocation(), nodeRange.getAttributeValue("conref"));
-				openReferences(url, nodeRange, "conref");
-			} else if (keyrefAttr != null) {
-				KeyInfo value = getKeyInfoFromReference(keyrefAttr, keys);
-				url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
+				openReferences(url, nodeRange, hrefAttr, formatAttr);
 
-				openReferences(url, nodeRange, value.getAttributes().get("format"));
+			} else if (conrefAttr != null) {
+				url = new URL(editorLocation, conrefAttr);
+				openReferences(url, nodeRange, "conref", formatAttr);
+
+			} else if (keyrefAttr != null) {
+				KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
+				url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
+				formatAttr = value.getAttributes().get("format");
+				openReferences(url, nodeRange, formatAttr, formatAttr);
 
 			} else if (conkeyrefAttr != null) {
-				KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, keys);
+				KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
 				url = value.getHrefLocation();
-				openReferences(url, nodeRange, value.getAttributes().get("format"));
+				formatAttr = value.getAttributes().get("format");
+				openReferences(url, nodeRange, formatAttr, formatAttr);
 
 			}
 		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
 			LOGGER.debug(e1, e1);
+			e1.printStackTrace();
 		}
 
 	}
@@ -90,7 +113,7 @@ public class NodeAction extends AbstractAction {
 	 * user types "www.google.com".
 	 * 
 	 * @param formatAttr  Format attribute to verify
-	 * @param hrefValue   The href value of the attribute
+	 * @param hrefValue   The HREF value of the attribute
 	 * @param possibleURL The URL if no HTML format available
 	 * @return The target URL
 	 * @throws MalformedURLException
@@ -120,9 +143,7 @@ public class NodeAction extends AbstractAction {
 		if (st.hasMoreTokens()) {
 			keyName = st.nextToken();
 		}
-
-		KeyInfo value = keys.get(keyName);
-		return value;
+		return keys.get(keyName);
 	}
 
 	/**
@@ -132,21 +153,22 @@ public class NodeAction extends AbstractAction {
 	 * @param url                     Target URL, the URL to open
 	 * @param nodeRange               The nodeRange
 	 * @param referenceAttributeValue The attribute value
+	 * @param formatAttr              The format attribute
 	 * @throws MalformedURLException
 	 * @throws DOMException
 	 */
-	private void openReferences(URL url, NodeRange nodeRange, String referenceAttributeValue)
+	void openReferences(URL url, NodeRange nodeRange, String referenceAttributeValue, String formatAttr)
 			throws MalformedURLException {
 
 		String classAttr = nodeRange.getAttributeValue("class");
-		String formatAttr = nodeRange.getAttributeValue("format");
+		// String formatAttr = nodeRange.getAttributeValue("format");
 
 		// it's image
 		if (classAttr != null && classAttr.contains(" topic/image ")) {
 			if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(url)) {
 				pluginWorkspaceAccess.open(url, null, ContentTypes.IMAGE_CONTENT_TYPE);
 			} else {
-				// image extension in @format attribute
+				// image needs extension for URL if none in attributeValue
 				if (formatAttr != null) {
 					URL imageUrl = new URL(url.toString() + "." + formatAttr);
 					if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(imageUrl)) {
@@ -165,9 +187,9 @@ public class NodeAction extends AbstractAction {
 					pluginWorkspaceAccess.openInExternalApplication(url, true);
 				}
 			} else {
-				//it's binary resource or a HTML format
+				// binary resource or a HTML format to be opened in browser
 				if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)
-						|| referenceAttributeValue.equals("html")) {
+						|| (referenceAttributeValue != null && referenceAttributeValue.equals("html"))) {
 					pluginWorkspaceAccess.openInExternalApplication(url, true);
 				} else {
 					// it's DITA

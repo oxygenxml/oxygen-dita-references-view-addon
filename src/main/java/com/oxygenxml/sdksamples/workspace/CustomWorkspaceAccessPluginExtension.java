@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
 import com.oxygenxml.sdksamples.translator.Tags;
 
+import ro.sync.ecss.dita.DITAAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
@@ -19,6 +20,8 @@ import ro.sync.exml.workspace.api.standalone.ViewInfo;
 
 /**
  * Plugin extension - workspace access extension.
+ * 
+ * @author Alexandra_Dinisor
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 
@@ -28,6 +31,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	private static final Logger LOGGER = Logger.getLogger(CustomWorkspaceAccessPluginExtension.class);
 
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
+
+	/**
+	 * Provider of keys for the current DITAMAP.
+	 */
+	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
 
 	/**
 	 * The tree with the outgoing references.
@@ -41,7 +49,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.refTree = new ReferencesTree(pluginWorkspaceAccess, translator);
+		this.refTree = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 			@Override
@@ -71,7 +79,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 */
 			@Override
 			public void editorRelocated(URL previousEditorLocation, URL newEditorLocation) {
-				//
 			}
 
 			@Override

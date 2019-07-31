@@ -4,7 +4,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -28,19 +27,22 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	 * The translator of the PopUpMenu item.
 	 */
 	private Translator translator;
+	private KeysProvider keysProvider;
 
 	/**
 	 * The Mouse Adapter constructor.
 	 * 
 	 * @param refTree               The reference Tree
 	 * @param pluginWorkspaceAccess
+	 * @param keysProvider
 	 * @param editorAccess
 	 */
 	public ReferencesMouseAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
-			Translator translator) {
+			KeysProvider keysProvider, Translator translator) {
 		super();
 		this.refTree = refTree;
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
+		this.keysProvider = keysProvider;
 		this.translator = translator;
 	}
 
@@ -55,11 +57,11 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent releasedEvent) {
-		if (releasedEvent.isPopupTrigger()) {
-			handleContextMenu(releasedEvent);
-		} else if (releasedEvent.getClickCount() == 2) {
-			processDoubleClick(releasedEvent);
+	public void mouseClicked(MouseEvent mouseClickedEvent) {
+		if (mouseClickedEvent.isPopupTrigger()) {
+			handleContextMenu(mouseClickedEvent);
+		} else if (mouseClickedEvent.getClickCount() == 2) {
+			processDoubleClick(mouseClickedEvent);
 		}
 	}
 
@@ -83,8 +85,8 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 			if (node.getUserObject() instanceof NodeRange) {
 				JPopupMenu menu = new JPopupMenu();
 				if (itemName != null) {
-					menu.add(new NodeAction((NodeRange) node.getUserObject(), editorAccess, pluginWorkspaceAccess,
-							itemName));
+					menu.add(new OpenReferenceAction((NodeRange) node.getUserObject(), editorAccess,
+							pluginWorkspaceAccess, keysProvider, itemName));
 					menu.show(refTree, event.getX(), event.getY());
 				}
 			}
@@ -95,7 +97,6 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	 * Enable the reference opening when double clicked.
 	 */
 	private void processDoubleClick(MouseEvent event) {
-		refTree.requestFocus();
 		TreePath currentLocationPath = refTree.getPathForLocation(event.getX(), event.getY());
 		if (currentLocationPath != null) {
 			if (refTree.getSelectionModel().getSelectionPath() != null) {
@@ -103,8 +104,8 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 
 				// it must be Element Node
 				if (node.getUserObject() instanceof NodeRange) {
-					new NodeAction((NodeRange) node.getUserObject(), editorAccess, pluginWorkspaceAccess)
-							.actionPerformed(null);
+					new OpenReferenceAction((NodeRange) node.getUserObject(), editorAccess, pluginWorkspaceAccess,
+							keysProvider).actionPerformed(null);
 				}
 			}
 		}

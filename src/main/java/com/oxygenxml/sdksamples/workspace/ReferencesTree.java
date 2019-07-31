@@ -25,12 +25,15 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 public class ReferencesTree extends Tree {
+	/**
+	 * The XPath expression to be evaluated.
+	 */
 	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
 			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))]";
 
 	/**
-	 * The referencesTree Logger.
+	 * The ReferencesTree Logger.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
@@ -51,16 +54,18 @@ public class ReferencesTree extends Tree {
 	 * The constructor including the tree selection listener
 	 * 
 	 * @param pluginWorkspaceAccess
+	 * @param keysProvider
 	 * @param translator            The translator
 	 */
-	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, Translator translator) {
+	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
+			Translator translator) {
 		this.setRootVisible(false);
 		this.setShowsRootHandles(false);
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 
 		// set cell renderer for the references tree
-		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess, translator));
+		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator));
 
 		// install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -69,8 +74,8 @@ public class ReferencesTree extends Tree {
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
 
 		// popUpMenu for Element Nodes
-		refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, translator);
-		this.addMouseListener(refMouseAdapter);
+		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
+		this.addMouseListener(this.refMouseAdapter);
 	}
 
 	/**
@@ -189,7 +194,7 @@ public class ReferencesTree extends Tree {
 						Element currentElement = (Element) referenceNodes[i];
 						NamedNodeMap currentElemAttributes = currentElement.getAttributes();
 
-						NodeRange refRange = new NodeRange(currentElement, referenceNodeRanges[i]);
+						NodeRange refRange = new TextPageNodeRange(currentElement, referenceNodeRanges[i]);
 
 						Node classAttribute = currentElemAttributes.getNamedItem("class");
 						if (classAttribute != null) {
