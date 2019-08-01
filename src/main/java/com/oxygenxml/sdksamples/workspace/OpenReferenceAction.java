@@ -61,7 +61,9 @@ public class OpenReferenceAction extends AbstractAction {
 
 	/**
 	 * Action for open reference either by double clicking or by right clicking with
-	 * contextual menu. Case for every attribute value of the leaf node.
+	 * contextual menu. Case for every attribute value of the leaf node. In case of
+	 * key references (keyref, conkeyref) the URL location comes from the
+	 * LinkedHashMap with KeyInfo.
 	 */
 	public void actionPerformed(ActionEvent e) {
 

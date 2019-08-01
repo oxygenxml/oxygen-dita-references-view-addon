@@ -144,7 +144,7 @@ public class ReferencesTree extends Tree {
 		// expand all Nodes of The Reference Tree
 		expandAllNodesInRefTree(this, 0, this.getRowCount());
 
-		// get current Caret Listener and update it 
+		// get current Caret Listener and update it  
 		if (currentTextComponent != null && currentCaretListener != null) {
 			currentTextComponent.removeCaretListener(currentCaretListener);
 		}
@@ -156,7 +156,8 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Add all the category nodes and the references for each of them taking into account the "class" values of the leaf nodes
+	 * Add all the category nodes and the references for each of them taking into
+	 * account the "class" values of the leaf nodes
 	 * 
 	 * @param textPage The XML textPage
 	 * @param root     The rootNode
