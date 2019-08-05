@@ -1,6 +1,5 @@
 package com.oxygenxml.sdksamples.workspace;
 
-import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -9,17 +8,20 @@ import javax.swing.tree.TreeSelectionModel;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 import com.oxygenxml.sdksamples.translator.Tags;
 import com.oxygenxml.sdksamples.translator.Translator;
+import com.oxygenxml.sdksamples.workspace.authorpage.AuthorPageReferencesTreeCaretListener;
+import com.oxygenxml.sdksamples.workspace.authorpage.AuthorReferencesCollector;
+import com.oxygenxml.sdksamples.workspace.textpage.TextPageReferencesTreeCaretListener;
+import com.oxygenxml.sdksamples.workspace.textpage.TextReferencesCollector;
 
+import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.exml.editor.EditorPageConstants;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
+import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
-import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
@@ -45,12 +47,13 @@ public class ReferencesTree extends Tree {
 		return editorAccess;
 	}
 
-	private JTextArea currentTextComponent;
-	private ReferencesTreeCaretListener currentCaretListener;
-
 	private ReferencesTreeSelectionListener refTreeSelectionListener;
 	private ReferencesMouseAdapter refMouseAdapter;
 
+	private TextPageReferencesTreeCaretListener textPageCaretListener;
+
+	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
+	
 	/**
 	 * The constructor including the tree selection listener
 	 * 
@@ -58,7 +61,9 @@ public class ReferencesTree extends Tree {
 	 * @param keysProvider
 	 * @param translator            The translator
 	 */
-	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
+	public ReferencesTree(
+			StandalonePluginWorkspace pluginWorkspaceAccess, 
+			KeysProvider keysProvider,
 			Translator translator) {
 		this.setRootVisible(false);
 		this.setShowsRootHandles(false);
@@ -73,7 +78,17 @@ public class ReferencesTree extends Tree {
 
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
-
+				
+		this.textPageCaretListener = new TextPageReferencesTreeCaretListener(
+				() -> (WSXMLTextEditorPage)editorAccess.getCurrentPage(), 
+				this, 
+				this.refTreeSelectionListener);	
+		
+		this.authorPageCaretListener = new AuthorPageReferencesTreeCaretListener(
+				() -> (WSAuthorEditorPage)editorAccess.getCurrentPage(),
+				this, 
+				this.refTreeSelectionListener);
+		
 		// popUp Menu for Element Nodes
 		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addMouseListener(this.refMouseAdapter);
@@ -85,18 +100,20 @@ public class ReferencesTree extends Tree {
 	 * @throws XPathException
 	 */
 	void refreshReferenceTree(WSEditor editorAccess) {
-		this.editorAccess = editorAccess;
-		refMouseAdapter.setEditorAccess(editorAccess);
+		this.editorAccess = editorAccess;	
+		this.refMouseAdapter.setEditorAccess(editorAccess);
 
 		try {
 			if (editorAccess != null) {
 				if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())
-						&& editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage) {
-					final WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) editorAccess.getCurrentPage();
+						&& editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage
+						
+					|| EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())
+					&& editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {					
 					// Preliminary refresh
-					this.setPreliminaryTextTree(textPage);
+					this.setPreliminaryTextTree(editorAccess);
 				} else {
-					// CSS is opened or XML is opened in Grid mode.
+					// Other content type, like CSS, or an XML opened in Grid mode.
 					this.setNoRefsAvailableTree();
 				}
 			} else {
@@ -106,6 +123,20 @@ public class ReferencesTree extends Tree {
 			e.printStackTrace();
 			LOGGER.error(e, e);
 			this.setNoRefsAvailableTree();
+		}
+	}
+
+	/**
+	 * Build the collector depending on the Page Mode, Author or Text.
+	 * 
+	 * @param currentPageID The specific Page ID for Text or Author
+	 * @return The specific Page Collector
+	 */
+	private ReferencesCollector buildCollector(String currentPageID) {
+		if (currentPageID.equals(EditorPageConstants.PAGE_TEXT)) {
+			return new TextReferencesCollector();
+		} else {
+			return new AuthorReferencesCollector();
 		}
 	}
 
@@ -125,18 +156,22 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Find out all the outgoing references and show them in the tree.
 	 * 
-	 * @param textPage The XML textPage
+	 * @param editorPage The XML textPage
 	 * @throws XPathExpressionException
 	 * @throws XPathException
+	 * @throws AuthorOperationException 
 	 */
 
-	private void setPreliminaryTextTree(final WSXMLTextEditorPage textPage)
-			throws XPathExpressionException, XPathException {
-
+	private void setPreliminaryTextTree(WSEditor editorAccess)
+			throws XPathExpressionException, XPathException, AuthorOperationException {
+		
+		// set root for ReferencesTree
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
 		DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root);
 
-		addAllReferences(textPage, root);
+		WSEditorPage editorPage = editorAccess.getCurrentPage();
+		ReferencesCollector referencesCollector = buildCollector(editorAccess.getCurrentPageID());
+		referencesCollector.collectReferences(editorPage, root);
 
 		referencesTreeModel.setRoot(root);
 		this.setModel(referencesTreeModel);
@@ -144,102 +179,24 @@ public class ReferencesTree extends Tree {
 		// expand all Nodes of The Reference Tree
 		expandAllNodesInRefTree(this, 0, this.getRowCount());
 
-		// get current Caret Listener and update it  
-		if (currentTextComponent != null && currentCaretListener != null) {
-			currentTextComponent.removeCaretListener(currentCaretListener);
-		}
-
-		this.currentTextComponent = (JTextArea) textPage.getTextComponent();
-		this.currentCaretListener = new ReferencesTreeCaretListener(textPage, this, this.refTreeSelectionListener);
-		this.refTreeSelectionListener.setCaretSelectionInhibitor(currentCaretListener);
-		this.currentTextComponent.addCaretListener(currentCaretListener);
+		// updates for Caret and Selection Listener
+		installUpdateListeners(editorPage);
 	}
 
 	/**
-	 * Add all the category nodes and the references for each of them taking into
-	 * account the "class" values of the leaf nodes
+	 * Install the selection and caret updates for TextPage or AuthorPage.
 	 * 
-	 * @param textPage The XML textPage
-	 * @param root     The rootNode
-	 * @throws XPathException
+	 * @param page Either TextPage or AuthorPage
 	 */
-	private void addAllReferences(WSXMLTextEditorPage textPage, DefaultMutableTreeNode root) throws XPathException {
-
-		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(Tags.IMAGE_REFERENCES);
-		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(Tags.CROSS_REFERENCES);
-		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);
-		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(Tags.RELATED_LINKS);
-		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(Tags.NO_OUTGOING_REFERENCES_FOUND);
-		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(
-				Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
-
-		Object[] referenceNodes = textPage.evaluateXPath(ALL_REFS_XPATH_EXPRESSION);
-		WSXMLTextNodeRange[] referenceNodeRanges = textPage.findElementsByXPath(ALL_REFS_XPATH_EXPRESSION);
-
-		// DITA topics with outgoing references
-		// The root element is the first in the list of references.
-		if (referenceNodes.length >= 1) {
-			Element rootElement = (Element) referenceNodes[0];
-			NamedNodeMap rootAttributes = rootElement.getAttributes();
-			// DITA topic or Composite topic
-			if ((rootAttributes.getNamedItem("class") != null
-					&& rootAttributes.getNamedItem("class").getNodeValue().contains("topic/topic"))
-					|| rootElement.getNodeName().equals("dita")) {
-
-				if (referenceNodes.length == 1) {
-					// DITA topic but no reference found
-					root.add(noReferencesFound);
-				} else {
-
-					// It is an interesting XML document, it's DITA.
-					for (int i = 1; i < referenceNodes.length; i++) {
-						Element currentElement = (Element) referenceNodes[i];
-						NamedNodeMap currentElemAttributes = currentElement.getAttributes();
-
-						NodeRange refRange = new TextPageNodeRange(currentElement, referenceNodeRanges[i]);
-
-						Node classAttribute = currentElemAttributes.getNamedItem("class");
-						if (classAttribute != null) {
-							if (classAttribute.getNodeValue().contains(" topic/image ")) {
-								imageReferences.add(new DefaultMutableTreeNode(refRange));
-							} else if (classAttribute.getNodeValue().contains(" topic/xref ")) {
-								crossReferences.add(new DefaultMutableTreeNode(refRange));
-							} else if (classAttribute.getNodeValue().contains(" topic/link ")) {
-								relatedLinks.add(new DefaultMutableTreeNode(refRange));
-							} else if (currentElement.getAttributes().getNamedItem("conkeyref") != null
-									|| currentElement.getAttributes().getNamedItem("conref") != null) {
-								contentReferences.add(new DefaultMutableTreeNode(refRange));
-							} else {
-								// key references to values defined in the DITAMAP
-								contentReferences.add(new DefaultMutableTreeNode(refRange));
-							}
-						}
-					}
-					// Do not add empty categories to the referencesTree
-					if (imageReferences.getChildCount() != 0) {
-						root.add(imageReferences);
-					}
-					if (crossReferences.getChildCount() != 0) {
-						root.add(crossReferences);
-					}
-					if (contentReferences.getChildCount() != 0) {
-						root.add(contentReferences);
-					}
-					if (relatedLinks.getChildCount() != 0) {
-						root.add(relatedLinks);
-					}
-
-				}
-			} else {
-				// an XML file which is not DITA: HTML for example
-				root.add(noReferencesAvailable);
-
-			}
-
+	private void installUpdateListeners(WSEditorPage page) {		
+		if (page instanceof WSXMLTextEditorPage) {
+			// get current Caret Listener for Text Page and update it
+			textPageCaretListener.bind();
+			this.refTreeSelectionListener.setCaretSelectionInhibitor(textPageCaretListener);
 		} else {
-			LOGGER.error("Invalid situation");
-			// DITA topic with NO references
-			root.add(noReferencesFound);
+			// get current Caret Listener for Author Page and update it
+			authorPageCaretListener.bind();
+			this.refTreeSelectionListener.setCaretSelectionInhibitor(authorPageCaretListener);
 		}
 	}
 

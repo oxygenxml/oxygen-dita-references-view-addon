@@ -15,7 +15,7 @@ import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 public interface KeysProvider {
 
 	/**
-	 * Get the Map with KeyInfo for key references from the current DITAMAP.
+	 * Get the LinkedHashMap with KeyInfo for key references from the current DITAMAP.
 	 */
 	LinkedHashMap<String, KeyInfo> getKeys(URL editorLocation);
 

@@ -9,8 +9,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.apache.log4j.Logger;
-
 import com.oxygenxml.sdksamples.translator.Tags;
 import com.oxygenxml.sdksamples.translator.Translator;
 
@@ -19,7 +17,6 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeCellRenderer.class);
 	/**
 	 * The translator of the DITA reference categories.
 	 */
@@ -33,7 +30,7 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	private ImageIcon crossIcon = null;
 
 	/**
-	 * Include the image icon for the categories and translator for references
+	 * Construct the Renderer by including the image icon for categories and translator for references
 	 * categories.
 	 * 
 	 * @param imageUtilities The imageUtilities
@@ -73,7 +70,8 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 		label.setIcon(null);
 
 		if (value instanceof DefaultMutableTreeNode) {
-			// set node value for leaf nodes.
+
+			// set node value in renderer for leaf nodes with the attribute value
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
@@ -128,8 +126,8 @@ public class ReferencesTreeCellRenderer extends DefaultTreeCellRenderer {
 	}
 
 	/**
-	 * Display maximum 20 characters for each node value and set the toolTip with
-	 * the full node value.
+	 * Display maximum 20 characters for each leaf node value and set the toolTip
+	 * with the full node value.
 	 * 
 	 * @param node                    The DOM node
 	 * @param referenceAttributeValue The attribute value

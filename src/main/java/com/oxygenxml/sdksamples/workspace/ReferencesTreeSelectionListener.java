@@ -10,7 +10,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.Logger;
 
-import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
+import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
+import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
+import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 
 public class ReferencesTreeSelectionListener implements TreeSelectionListener, TreeSelectionInhibitor {
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeSelectionListener.class);
@@ -28,7 +30,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	 * Coalescing for selecting the matching element in text page
 	 */
 	private static final int TIMER_DELAY = 500;
-	private ActionListener timerTreeListener = new TimerTreeListener();
+	private ActionListener timerTreeListener = new SelectionTreeListener();
 	private Timer updateTreeTimer = new Timer(TIMER_DELAY, timerTreeListener);
 
 	public ReferencesTreeSelectionListener(ReferencesTree refTree) {
@@ -40,15 +42,21 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 		this.caretSelectionInhibitor = caretSelectionInhibitor;
 	}
 
-	private class TimerTreeListener implements ActionListener {
+	/**
+	 * Timer Listener when selecting in References Tree.
+	 * 
+	 * @author Alexandra_Dinisor
+	 *
+	 */
+	private class SelectionTreeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			// Notify the tree about the change.
+			// Notify the tree about the reference node selection change in tree.
 			selectReferenceElementInTextPage();
 		}
 	}
 
 	/**
-	 * Tree updates with coalescing.
+	 * Update Tree with coalescing.
 	 */
 	public void valueChanged(TreeSelectionEvent e) {
 		if (!inhibitTreeSelectionListener) {
@@ -70,24 +78,39 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 			// retrieve the node that was selected
 			if (this.refTree.getEditorAccess() != null) {
 				if (this.refTree.getEditorAccess().getCurrentPage() != null) {
-					WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) refTree.getEditorAccess().getCurrentPage();
 
 					// if node is a reference element
 					if (node.getUserObject() instanceof NodeRange) {
 						NodeRange range = (NodeRange) node.getUserObject();
-						int[] nodeOffsets = range.getNodeOffsets(xmlTextPage);
+						WSEditorPage editorPage = (WSEditorPage) refTree.getEditorAccess().getCurrentPage();
+						int[] nodeOffsets = range.getNodeOffsets(editorPage);
 						int startOffset = nodeOffsets[0];
 						int endOffset = nodeOffsets[1];
-
-						// select in editor the specified node from refTree
+						
 						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
-						xmlTextPage.select(startOffset, endOffset);
+						// select in editor the specified node from refTree
+						selectRange(editorPage, startOffset, endOffset);						
 						caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
 					}
 				}
 			} else {
-				System.err.println("EDITOR NULL");
+				LOGGER.error("EDITOR NULL");
 			}
+		}
+	}
+
+	/**
+	 * Select the corresponding Element in Editor.
+	 * 
+	 * @param page        Text / Author Page
+	 * @param startOffset Start Offset to be selected
+	 * @param endOffset   End Offset to be selected
+	 */
+	private void selectRange(WSEditorPage page, int startOffset, int endOffset) {
+		if (page instanceof WSTextEditorPage) {
+			((WSTextEditorPage) page).select(startOffset, endOffset);
+		} else {
+			((WSAuthorEditorPage) page).select(startOffset, endOffset);
 		}
 	}
 

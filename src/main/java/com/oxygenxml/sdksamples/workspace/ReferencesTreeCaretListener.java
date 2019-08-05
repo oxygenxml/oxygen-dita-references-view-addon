@@ -3,48 +3,47 @@ package com.oxygenxml.sdksamples.workspace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
+import java.util.function.Supplier;
 
 import javax.swing.JTree;
 import javax.swing.Timer;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
-import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
+import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 
-public class ReferencesTreeCaretListener implements CaretListener, CaretSelectionInhibitor {
+public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implements CaretSelectionInhibitor {
 
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeCaretListener.class);
 
-	private WSXMLTextEditorPage textPage;
+	protected Supplier<T> editorPage;
 	private ReferencesTree refTree;
 
 	private TreeSelectionInhibitor treeSelectionInhibitor;
 
 	private static final int TIMER_DELAY = 600;
-	private ActionListener timerListener = new TimerListener();
+	private ActionListener timerListener = new CaretTimerListener();
 	private Timer updateCaretTimer = new Timer(TIMER_DELAY, timerListener);
 
 	/**
-	 * Set the inhibitor on false, by default.
+	 * Set the inhibitor on false by default.
 	 */
 	private boolean inhibitCaretSelectionListener = false;
 
 	/**
-	 * The constructor.
+	 * Construct the CaretListener for Text or Author.
 	 * 
 	 * @param textPage           The XML textPage
 	 * @param refTree            The references Tree
 	 * @param selectionInhibitor The boolean for the selection
 	 */
-	public ReferencesTreeCaretListener(WSXMLTextEditorPage textPage, ReferencesTree refTree,
+	public ReferencesTreeCaretListener(Supplier<T> editorPage, ReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
 		this.updateCaretTimer.setRepeats(false);
 
-		this.textPage = textPage;
+		this.editorPage = editorPage;
 		this.refTree = refTree;
 		this.treeSelectionInhibitor = selectionInhibitor;
 	}
@@ -52,7 +51,7 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 	/**
 	 * Caret updates with coalescing.
 	 */
-	public void caretUpdate(CaretEvent e) {
+	public void caretUpdate() {
 		if(!inhibitCaretSelectionListener) {
 			updateCaretTimer.restart();
 		} else {
@@ -60,7 +59,13 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 		}
 	}
 
-	private class TimerListener implements ActionListener {
+	/**
+	 * Listener for Caret Updates in Text/Author Page.
+	 * 
+	 * @author Alexandra_Dinisor
+	 *
+	 */
+	private class CaretTimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			// Notify the caret about the change.
 			searchForNodeMatchingCaret();
@@ -68,16 +73,24 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 	}
 
 	/**
-	 * Iterate in tree to find matching reference node for caret.
+	 * Get the caret offset for the Text / Author Page.
+	 * 
+	 * @return The Caret Offset
+	 */
+	protected abstract int getCaretOffset();
+
+	/**
+	 * Search and select the treeNode corresponding the caret in DITA Page.
 	 */
 	private void searchForNodeMatchingCaret() {
-		if (textPage.getCaretOffset() != 0) {
-			int caretOffset = textPage.getCaretOffset();
+		if (getCaretOffset() != 0) {
+			int caretOffset = getCaretOffset();
 
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();
 			TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset,
-					textPage);
+					editorPage.get());
 
+			// select the returned path
 			if (pathForSelectionInTree != null) {
 				treeSelectionInhibitor.setInhibitTreeSelectionListener(true);
 				refTree.expandPath(pathForSelectionInTree);
@@ -89,7 +102,7 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 	}
 
 	/**
-	 * Visit all the nodes recursively to find the matching one for caret.
+	 * Visit all the reference nodes recursively to find the matching one for caret.
 	 * 
 	 * @param tree        The Reference Tree
 	 * @param parent      The path from parent
@@ -98,15 +111,16 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 	 * @return The TreePath for the selected Node
 	 */
 	private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset,
-			final WSXMLTextEditorPage textPage) {
+			final WSEditorPage page) {
 
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
 
 		// it must be value node
 		if (node.getUserObject() instanceof NodeRange) {
-
 			NodeRange nodeRangeElem = (NodeRange) node.getUserObject();
-			int[] nodeOffsets = nodeRangeElem.getNodeOffsets(textPage);
+			
+			// get node offsets corresponding the caret
+			int[] nodeOffsets = nodeRangeElem.getNodeOffsets(page);			
 			int startNodeOffset = nodeOffsets[0];
 			int endNodeOffset = nodeOffsets[1];
 
@@ -117,11 +131,11 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 			}
 		}
 
+		// search children
 		if (node.getChildCount() > 0) {
 			for (Enumeration e = node.children(); e.hasMoreElements();) {
 				DefaultMutableTreeNode nextNode = (DefaultMutableTreeNode) e.nextElement();
-				TreePath foundPath = visitAllNodes(tree, parent.pathByAddingChild(nextNode), caretOffset,
-						textPage);
+				TreePath foundPath = visitAllNodes(tree, parent.pathByAddingChild(nextNode), caretOffset, page);
 
 				if (foundPath != null) {
 					// Found the node in the deeper recursion
@@ -133,7 +147,7 @@ public class ReferencesTreeCaretListener implements CaretListener, CaretSelectio
 	}
 	
 	/**
-	 * Implement the InhibitorCaretSelectionInhibitor interface method.
+	 * Set the InhibitorCaretSelectionListener.
 	 * 
 	 * @param inhibitCaretSelectionListener
 	 */

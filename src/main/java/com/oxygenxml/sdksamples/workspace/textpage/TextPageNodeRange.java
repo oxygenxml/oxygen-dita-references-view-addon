@@ -1,4 +1,4 @@
-package com.oxygenxml.sdksamples.workspace;
+package com.oxygenxml.sdksamples.workspace.textpage;
 
 import javax.swing.text.BadLocationException;
 
@@ -7,14 +7,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.oxygenxml.sdksamples.workspace.NodeRange;
+
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 
 /**
- * A pair of DOM Element and it's corresponding range in the text page.
+ * A pair of DOM Element and its corresponding range in the Text Page.
  * 
- * @author Alexandra Dinisor
+ * @author Alexandra_Dinisor
  */
 public class TextPageNodeRange implements NodeRange{
 	/**
@@ -32,7 +34,7 @@ public class TextPageNodeRange implements NodeRange{
 	private WSXMLTextNodeRange range;
 
 	/**
-	 * The node range.
+	 * Construct the TextPage NodeRange.
 	 * 
 	 * 
 	 * @param node  The node
@@ -44,11 +46,12 @@ public class TextPageNodeRange implements NodeRange{
 	}
 
 	/**
-	 * Compute the offsets of the node from the XML textPage.
+	 * Compute the offsets of the corresponding reference node in tree for the
+	 * element in the textPage.
 	 * 
 	 * @param range       The node ranges
 	 * @param xmlTextPage The XML textPage
-	 * @return An array with the start and end offsets of the node in XML textPage
+	 * @return An array with start and end offsets of DOM node in XML TextPage
 	 */
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) editorPage;
@@ -76,7 +79,7 @@ public class TextPageNodeRange implements NodeRange{
 	 * attribute.
 	 * 
 	 * @param attributeName The attribute name
-	 * @return the attribute value or <code>null</code>
+	 * @return the attribute Value or <code>null</code>
 	 */
 	public String getAttributeValue(String attributeName) {
 		if (element != null) {
@@ -89,6 +92,11 @@ public class TextPageNodeRange implements NodeRange{
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getNodeName() {
+		return element.getNodeName();
 	}
 
 }
