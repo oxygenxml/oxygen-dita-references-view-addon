@@ -26,15 +26,8 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
+@SuppressWarnings("serial")
 public class ReferencesTree extends Tree {
-	/**
-	 * The XPath expression with all the possible references available in the
-	 * current textPage to be evaluated.
-	 */
-	static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
-			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
-			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))]";
-
 	/**
 	 * The ReferencesTree Logger.
 	 */
@@ -49,16 +42,14 @@ public class ReferencesTree extends Tree {
 
 	private ReferencesTreeSelectionListener refTreeSelectionListener;
 	private ReferencesMouseAdapter refMouseAdapter;
-
 	private TextPageReferencesTreeCaretListener textPageCaretListener;
-
 	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
-	
+
 	/**
-	 * The constructor including the tree selection listener
+	 * Construct the ReferencesTree.
 	 * 
 	 * @param pluginWorkspaceAccess
-	 * @param keysProvider
+	 * @param keysProvider          The Map with the current DITAMAP keys
 	 * @param translator            The translator
 	 */
 	public ReferencesTree(
@@ -76,14 +67,17 @@ public class ReferencesTree extends Tree {
 		// install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
 
+		// install selection listener
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
 				
+		// install caret listener for textPage
 		this.textPageCaretListener = new TextPageReferencesTreeCaretListener(
 				() -> (WSXMLTextEditorPage)editorAccess.getCurrentPage(), 
 				this, 
 				this.refTreeSelectionListener);	
 		
+		// install caret listener for authorPage
 		this.authorPageCaretListener = new AuthorPageReferencesTreeCaretListener(
 				() -> (WSAuthorEditorPage)editorAccess.getCurrentPage(),
 				this, 
@@ -95,8 +89,10 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Refresh references tree.
+	 * Refresh referencesTree depending on file type. For example: DITA, CSS or XML
+	 * in Grid Mode etc.
 	 * 
+	 * @param editorAccess The current editorAccess
 	 * @throws XPathException
 	 */
 	void refreshReferenceTree(WSEditor editorAccess) {
@@ -127,7 +123,7 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Build the collector depending on the Page Mode, Author or Text.
+	 * Build the collector for Editor: Author/Text Page
 	 * 
 	 * @param currentPageID The specific Page ID for Text or Author
 	 * @return The specific Page Collector
@@ -141,8 +137,8 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Set the root for "No available references" when CSS / XML is opened in Grid
-	 * mode.
+	 * Set the root for "No available references". For example: CSS / XML opened in
+	 * Grid Mode.
 	 */
 	private void setNoRefsAvailableTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
@@ -154,14 +150,13 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Find out all the outgoing references and show them in the tree.
+	 * Find out all the outgoing references and show them in ReferencesTree.
 	 * 
-	 * @param editorPage The XML textPage
+	 * @param editorAccess The editorAccess
 	 * @throws XPathExpressionException
 	 * @throws XPathException
 	 * @throws AuthorOperationException 
 	 */
-
 	private void setPreliminaryTextTree(WSEditor editorAccess)
 			throws XPathExpressionException, XPathException, AuthorOperationException {
 		
@@ -170,13 +165,15 @@ public class ReferencesTree extends Tree {
 		DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root);
 
 		WSEditorPage editorPage = editorAccess.getCurrentPage();
+
+		// install collector of nodeRanges where the XPath expression is evaluated on
 		ReferencesCollector referencesCollector = buildCollector(editorAccess.getCurrentPageID());
 		referencesCollector.collectReferences(editorPage, root);
 
 		referencesTreeModel.setRoot(root);
 		this.setModel(referencesTreeModel);
 
-		// expand all Nodes of The Reference Tree
+		// expand all nodes of ReferencesTree
 		expandAllNodesInRefTree(this, 0, this.getRowCount());
 
 		// updates for Caret and Selection Listener
@@ -184,28 +181,28 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Install the selection and caret updates for TextPage or AuthorPage.
+	 * Install the selection and caret updates for TextPage / AuthorPage.
 	 * 
-	 * @param page Either TextPage or AuthorPage
+	 * @param page The Text/Author Page
 	 */
-	private void installUpdateListeners(WSEditorPage page) {		
+	private void installUpdateListeners(WSEditorPage page) {
 		if (page instanceof WSXMLTextEditorPage) {
-			// get current Caret Listener for Text Page and update it
+			// get current Caret Listener for TextPage and update it
 			textPageCaretListener.bind();
 			this.refTreeSelectionListener.setCaretSelectionInhibitor(textPageCaretListener);
 		} else {
-			// get current Caret Listener for Author Page and update it
+			// get current Caret Listener for AuthorPage and update it
 			authorPageCaretListener.bind();
 			this.refTreeSelectionListener.setCaretSelectionInhibitor(authorPageCaretListener);
 		}
 	}
 
 	/**
-	 * Expand all the nodes from the very beginning.
+	 * Expand all nodes from the very beginning.
 	 * 
-	 * @param tree          The references Tree
-	 * @param startingIndex The beginning
-	 * @param rowCount      All rows
+	 * @param tree          The ReferencesTree
+	 * @param startingIndex
+	 * @param rowCount      
 	 */
 	private void expandAllNodesInRefTree(JTree tree, int startingIndex, int rowCount) {
 		for (int i = startingIndex; i < rowCount; ++i) {

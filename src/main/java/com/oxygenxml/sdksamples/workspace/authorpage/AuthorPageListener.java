@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.oxygenxml.sdksamples.workspace.authorpage;
 
 import javax.swing.Timer;

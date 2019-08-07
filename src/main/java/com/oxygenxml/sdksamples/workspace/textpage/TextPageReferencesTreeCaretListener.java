@@ -15,7 +15,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretListener<WSXMLTextEditorPage> implements CaretListener {
 
 	/**
-	 * Constructor for TextPage.
+	 * Construct the CaretListener for TextPage.
 	 * 
 	 * @param textPage           The XML TextPage
 	 * @param refTree            The referencesTree
@@ -37,7 +37,7 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 	}
 
 	/**
-	 * Update the current Caret Listener for TextPage.
+	 * Bind the current TextPage with its current Caret Listener.
 	 */
 	public void bind() {
 		JTextArea currentTextComponent = (JTextArea) editorPage.get().getTextComponent();

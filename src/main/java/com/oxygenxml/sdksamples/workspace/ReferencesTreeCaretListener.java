@@ -52,7 +52,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * Caret updates with coalescing.
 	 */
 	public void caretUpdate() {
-		if(!inhibitCaretSelectionListener) {
+		if (!inhibitCaretSelectionListener) {
 			updateCaretTimer.restart();
 		} else {
 			updateCaretTimer.stop();
@@ -66,6 +66,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 *
 	 */
 	private class CaretTimerListener implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Notify the caret about the change.
 			searchForNodeMatchingCaret();
@@ -80,17 +81,16 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	protected abstract int getCaretOffset();
 
 	/**
-	 * Search and select the treeNode corresponding the caret in DITA Page.
+	 * Search and select the treeNode corresponding the caret in Editor.
 	 */
 	private void searchForNodeMatchingCaret() {
 		if (getCaretOffset() != 0) {
-			int caretOffset = getCaretOffset();
+			int caretOffset = getCaretOffset();			
 
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();
-			TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset,
-					editorPage.get());
+			TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset, editorPage.get());
 
-			// select the returned path
+			// select the returned path matching the caret
 			if (pathForSelectionInTree != null) {
 				treeSelectionInhibitor.setInhibitTreeSelectionListener(true);
 				refTree.expandPath(pathForSelectionInTree);
@@ -110,17 +110,15 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * @param textPage    The XML textPage
 	 * @return The TreePath for the selected Node
 	 */
-	private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset,
-			final WSEditorPage page) {
-
+	private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset, final WSEditorPage page) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
 
 		// it must be value node
 		if (node.getUserObject() instanceof NodeRange) {
 			NodeRange nodeRangeElem = (NodeRange) node.getUserObject();
-			
+
 			// get node offsets corresponding the caret
-			int[] nodeOffsets = nodeRangeElem.getNodeOffsets(page);			
+			int[] nodeOffsets = nodeRangeElem.getNodeOffsets(page);
 			int startNodeOffset = nodeOffsets[0];
 			int endNodeOffset = nodeOffsets[1];
 
@@ -143,6 +141,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 				}
 			}
 		}
+		
 		return null;
 	}
 	
@@ -151,6 +150,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * 
 	 * @param inhibitCaretSelectionListener
 	 */
+	@Override
 	public void setInhibitCaretSelectionListener(boolean inhibitCaretSelectionListener) {
 		this.inhibitCaretSelectionListener = inhibitCaretSelectionListener;
 

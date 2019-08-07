@@ -26,8 +26,8 @@ public abstract class ReferencesCollector {
 	private static final Logger LOGGER = Logger.getLogger(ReferencesCollector.class);
 
 	/**
-	 * The XPath expression with all the possible references available in the
-	 * current textPage to be evaluated.
+	 * The XPath expression with all possible references available in current
+	 * editor.
 	 */
 	protected static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
@@ -44,7 +44,7 @@ public abstract class ReferencesCollector {
 
 	/**
 	 * Add all the category nodes and the references for each of them taking into
-	 * account the "class" values of the leaf nodes
+	 * account the "class" values of the leaf nodes.
 	 * 
 	 * @param textPage The XML TextPage
 	 * @param root     The rootNode
@@ -59,9 +59,8 @@ public abstract class ReferencesCollector {
 		DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(Tags.NO_OUTGOING_REFERENCES_FOUND);
 		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 
-		// get Reference Nodes and NodeRanges for Text Page or Author Page
+		// get NodeRanges for Text Page / Author Page
 		List<NodeRange> ranges = collect(textPage);
-
 
 		// DITA topics with outgoing references
 		// The root element is the first in the list of references
@@ -135,7 +134,7 @@ public abstract class ReferencesCollector {
 	 * Check for DITA Topic or Composite.
 	 * 
 	 * @param range The corresponding nodeRange
-	 * @return
+	 * @return true if root shows DITA file
 	 */
 	private boolean isDITARoot(NodeRange range) {
 		return (range.getAttributeValue("class") != null && range.getAttributeValue("class").contains("topic/topic"))

@@ -13,11 +13,11 @@ import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretListener<WSAuthorEditorPage> implements AuthorCaretListener {
 
 	/**
-	 * Constructor for AuthorPage.
+	 * Construct the CaretListener for AuthorPage.
 	 * 
 	 * @param authorPage         The Author Page
 	 * @param refTree            The References Tree
-	 * @param selectionInhibitor The selection Inhibitor
+	 * @param selectionInhibitor The selectionInhibitor
 	 */
 	public AuthorPageReferencesTreeCaretListener(Supplier<WSAuthorEditorPage> authorPage, ReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
@@ -35,7 +35,7 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 	}
 
 	/**
-	 * Update the current Caret Listener for AuthorPage.
+	 * Bind the current AuthorPage with its current Caret Listener.
 	 */
 	public void bind() {
 		editorPage.get().removeAuthorCaretListener(this);

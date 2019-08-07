@@ -17,21 +17,24 @@ import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 public class ReferencesTreeSelectionListener implements TreeSelectionListener, TreeSelectionInhibitor {
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeSelectionListener.class);
 
+	/**
+	 * The referencesTree.
+	 */
 	private ReferencesTree refTree;
 
 	/**
-	 * Set the inhibitor on false, by default.
+	 * Set the inhibiter on false, by default.
 	 */
 	private boolean inhibitTreeSelectionListener = false;
 
 	private CaretSelectionInhibitor caretSelectionInhibitor;
 
 	/**
-	 * Coalescing for selecting the matching element in text page
+	 * Coalescing for selecting the matching element from referencesTree in textPage.
 	 */
 	private static final int TIMER_DELAY = 500;
-	private ActionListener timerTreeListener = new SelectionTreeListener();
-	private Timer updateTreeTimer = new Timer(TIMER_DELAY, timerTreeListener);
+	private ActionListener selectionTreeTimerListener = new SelectionTreeTimerListener();
+	private Timer updateTreeTimer = new Timer(TIMER_DELAY, selectionTreeTimerListener);
 
 	public ReferencesTreeSelectionListener(ReferencesTree refTree) {
 		this.updateTreeTimer.setRepeats(false);
@@ -43,14 +46,15 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	}
 
 	/**
-	 * Timer Listener when selecting in References Tree.
+	 * Timer Listener when selecting a node in References Tree.
 	 * 
 	 * @author Alexandra_Dinisor
 	 *
 	 */
-	private class SelectionTreeListener implements ActionListener {
+	private class SelectionTreeTimerListener implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
-			// Notify the tree about the reference node selection change in tree.
+			// Notify the tree about selection change of the treeNode
 			selectReferenceElementInTextPage();
 		}
 	}
@@ -58,6 +62,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	/**
 	 * Update Tree with coalescing.
 	 */
+	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		if (!inhibitTreeSelectionListener) {
 			updateTreeTimer.restart();
@@ -79,17 +84,17 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 			if (this.refTree.getEditorAccess() != null) {
 				if (this.refTree.getEditorAccess().getCurrentPage() != null) {
 
-					// if node is a reference element
+					// if node is a leaf
 					if (node.getUserObject() instanceof NodeRange) {
 						NodeRange range = (NodeRange) node.getUserObject();
-						WSEditorPage editorPage = (WSEditorPage) refTree.getEditorAccess().getCurrentPage();
+						WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
 						int[] nodeOffsets = range.getNodeOffsets(editorPage);
 						int startOffset = nodeOffsets[0];
 						int endOffset = nodeOffsets[1];
 						
 						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
-						// select in editor the specified node from refTree
-						selectRange(editorPage, startOffset, endOffset);						
+						// select in editorPage the corresponding reference Element
+						selectRange(editorPage, startOffset, endOffset);
 						caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
 					}
 				}
@@ -119,6 +124,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	 * 
 	 * @param inhibitTreeSelectionListener
 	 */
+	@Override
 	public void setInhibitTreeSelectionListener(boolean inhibitTreeSelectionListener) {
 		this.inhibitTreeSelectionListener = inhibitTreeSelectionListener;
 
