@@ -40,8 +40,9 @@ public class ReferencesTree extends Tree {
 		return editorAccess;
 	}
 
-	private ReferencesTreeSelectionListener refTreeSelectionListener;
 	private ReferencesMouseAdapter refMouseAdapter;
+	private EnterForReferencesKeyAdapter enterKeyAdapter;
+	private ReferencesTreeSelectionListener refTreeSelectionListener;
 	private TextPageReferencesTreeCaretListener textPageCaretListener;
 	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
 
@@ -86,6 +87,10 @@ public class ReferencesTree extends Tree {
 		// popUp Menu for Leaf Nodes
 		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addMouseListener(this.refMouseAdapter);
+
+		// Key Adapter for Leaf Nodes when Enter Key is pressed
+		this.enterKeyAdapter = new EnterForReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider);
+		this.addKeyListener(this.enterKeyAdapter);
 	}
 
 	/**
@@ -98,6 +103,7 @@ public class ReferencesTree extends Tree {
 	void refreshReferenceTree(WSEditor editorAccess) {
 		this.editorAccess = editorAccess;
 		this.refMouseAdapter.setEditorAccess(editorAccess);
+		this.enterKeyAdapter.setEditorAccess(editorAccess);
 
 		try {
 			if (editorAccess != null) {

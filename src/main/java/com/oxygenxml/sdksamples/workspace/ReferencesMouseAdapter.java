@@ -23,10 +23,9 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 		this.editorAccess = editorAccess;
 	}
 
-	/**
-	 * The translator of the PopUpMenu item.
-	 */
+	/* The translator of the PopUpMenu item. */
 	private Translator translator;
+
 	private KeysProvider keysProvider;
 
 	/**
@@ -81,7 +80,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 			refTree.getSelectionModel().setSelectionPath(currentLocationPath);
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentLocationPath.getLastPathComponent();
 
-			// it must be Element Node
+			// it must be Leaf Node
 			if (node.getUserObject() instanceof NodeRange) {
 				JPopupMenu menu = new JPopupMenu();
 				if (itemName != null) {
@@ -102,7 +101,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 			if (refTree.getSelectionModel().getSelectionPath() != null) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentLocationPath.getLastPathComponent();
 
-				// it must be Element Node
+				// it must be Leaf Node
 				if (node.getUserObject() instanceof NodeRange) {
 					new OpenReferenceAction((NodeRange) node.getUserObject(), editorAccess, pluginWorkspaceAccess,
 							keysProvider).actionPerformed(null);

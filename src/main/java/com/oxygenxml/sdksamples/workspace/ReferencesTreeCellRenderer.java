@@ -25,7 +25,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * The translator of the DITA reference categories.
 	 */
 	private Translator translator;
-	
+
 	/**
 	 * Icons for leaf nodes.
 	 */
@@ -89,18 +89,18 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
 		JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		label.setIcon(null);
-		
+
 		int width = tree.getWidth();
 		Container treeParent = tree.getParent();
 		if (treeParent instanceof JViewport) {
 			width = (int) ((JViewport) treeParent).getViewRect().getWidth();
 		}
-		
+
 		if (value instanceof DefaultMutableTreeNode) {
 
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
-				
+
 				// set width for node text without its IconWidth and TextGap
 				Rectangle rowBounds = tree.getRowBounds(row);
 				if (rowBounds != null) {
@@ -112,13 +112,14 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				}
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
-				
+
 			} else {
-				// add expanded/collapsed icons when at least 1 reference is found in tree
+				// decide if expanded/collapsed icons are needed when at least 1 reference is
+				// found in tree
 				boolean hasReferences = true;
 
 				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
-					hasReferences = setTextForCategory(value, label, hasReferences);
+					hasReferences = setTextForCategoryNode(value, label, hasReferences);
 					setIconForCategoryNode(expanded, label, hasReferences);
 				}
 			}
@@ -146,12 +147,14 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 			} else {
 				String conrefAttr = nodeRange.getAttributeValue("conref");
 				if (conrefAttr != null) {
-					this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr, width));
+					this.setText(
+							StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr, width));
 					this.setToolTipText(hrefAttr);
 				} else {
 					String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
 					if (conkeyrefAttr != null) {
-						this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr, width));
+						this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr,
+								width));
 						this.setToolTipText(hrefAttr);
 					}
 				}
@@ -160,7 +163,38 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	}
 
 	/**
-	 * Set Icon for category node depending on status: expanded/collapsed.
+	 * Set translated text for reference category and change value for boolean
+	 * "hasReferences", if the ReferencesTree has at least 1 reference inside.
+	 * 
+	 * @param value         The Node Value
+	 * @param label         The Node Label
+	 * @param hasReferences Boolean hasReferences
+	 * @return
+	 */
+	private boolean setTextForCategoryNode(Object value, JLabel label, boolean hasReferences) {
+		String toDisplayCategory = null;
+
+		if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
+			toDisplayCategory = translator.getTranslation(Tags.IMAGE_REFERENCES);
+		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
+			toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
+		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
+			toDisplayCategory = translator.getTranslation(Tags.CONTENT_REFERENCES);
+		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
+			toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
+		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
+			toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+			hasReferences = false;
+		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
+			toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
+			hasReferences = false;
+		}
+		label.setText(toDisplayCategory);
+		return hasReferences;
+	}
+
+	/**
+	 * Set icon for category node depending on status: expanded/collapsed.
 	 * 
 	 * @param expanded      If category node is expanded
 	 * @param label         The Node Label
@@ -201,37 +235,4 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		}
 	}
 
-	
-	/**
-	 * Set translated text for reference category and change value for boolean
-	 * "hasReferences", if the ReferencesTree has at least 1 reference inside.
-	 * 
-	 * @param value         The Node Value
-	 * @param label         The Node Label
-	 * @param hasReferences Boolean hasReferences
-	 * @return
-	 */
-	private boolean setTextForCategory(Object value, JLabel label, boolean hasReferences) {
-			String toDisplayCategory = null;
-
-			if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
-				toDisplayCategory = translator.getTranslation(Tags.IMAGE_REFERENCES);
-			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
-				toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
-			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
-				toDisplayCategory = translator.getTranslation(Tags.CONTENT_REFERENCES);
-			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
-				toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
-			} else if (((DefaultMutableTreeNode) value).getUserObject()
-					.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
-				toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
-				hasReferences = false;
-			} else if (((DefaultMutableTreeNode) value).getUserObject()
-					.equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
-				toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
-				hasReferences = false;
-			}
-			label.setText(toDisplayCategory);		
-		return hasReferences;
-	}
 }
