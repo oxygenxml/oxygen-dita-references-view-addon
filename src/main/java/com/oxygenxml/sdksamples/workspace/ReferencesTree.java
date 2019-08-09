@@ -61,7 +61,7 @@ public class ReferencesTree extends Tree {
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 
-		// set cell renderer for the references tree
+		// set cellRenderer for ReferencesTree
 		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator));
 
 		// install toolTips on JTree.
@@ -83,7 +83,7 @@ public class ReferencesTree extends Tree {
 				this, 
 				this.refTreeSelectionListener);
 		
-		// popUp Menu for Element Nodes
+		// popUp Menu for Leaf Nodes
 		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addMouseListener(this.refMouseAdapter);
 	}
@@ -96,16 +96,16 @@ public class ReferencesTree extends Tree {
 	 * @throws XPathException
 	 */
 	void refreshReferenceTree(WSEditor editorAccess) {
-		this.editorAccess = editorAccess;	
+		this.editorAccess = editorAccess;
 		this.refMouseAdapter.setEditorAccess(editorAccess);
 
 		try {
 			if (editorAccess != null) {
 				if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())
 						&& editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage
-						
-					|| EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())
-					&& editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {					
+
+						|| EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())
+								&& editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {
 					// Preliminary refresh
 					this.setPreliminaryTextTree(editorAccess);
 				} else {
@@ -155,11 +155,11 @@ public class ReferencesTree extends Tree {
 	 * @param editorAccess The editorAccess
 	 * @throws XPathExpressionException
 	 * @throws XPathException
-	 * @throws AuthorOperationException 
+	 * @throws AuthorOperationException
 	 */
 	private void setPreliminaryTextTree(WSEditor editorAccess)
 			throws XPathExpressionException, XPathException, AuthorOperationException {
-		
+
 		// set root for ReferencesTree
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
 		DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root);
@@ -181,7 +181,7 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Install the selection and caret updates for TextPage / AuthorPage.
+	 * Install the selection and caret updates for TextPage/AuthorPage.
 	 * 
 	 * @param page The Text/Author Page
 	 */
@@ -200,18 +200,17 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Expand all nodes from the very beginning.
 	 * 
-	 * @param tree          The ReferencesTree
+	 * @param refTree          The ReferencesTree
 	 * @param startingIndex
-	 * @param rowCount      
+	 * @param rowCount
 	 */
-	private void expandAllNodesInRefTree(JTree tree, int startingIndex, int rowCount) {
+	private void expandAllNodesInRefTree(JTree refTree, int startingIndex, int rowCount) {
 		for (int i = startingIndex; i < rowCount; ++i) {
-			tree.expandRow(i);
+			refTree.expandRow(i);
 		}
 
-		if (tree.getRowCount() != rowCount) {
-			expandAllNodesInRefTree(tree, rowCount, tree.getRowCount());
+		if (refTree.getRowCount() != rowCount) {
+			expandAllNodesInRefTree(refTree, rowCount, refTree.getRowCount());
 		}
 	}
-
 }

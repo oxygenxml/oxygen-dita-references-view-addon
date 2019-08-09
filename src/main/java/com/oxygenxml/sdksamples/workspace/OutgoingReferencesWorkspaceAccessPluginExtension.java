@@ -2,6 +2,8 @@ package com.oxygenxml.sdksamples.workspace;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -26,11 +28,11 @@ import ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer;
 import ro.sync.exml.workspace.api.standalone.ViewInfo;
 
 /**
- * Plugin extension - workspace access extension.
+ * Plugin extension.
  * 
  * @author Alexandra_Dinisor
  */
-public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
+public class OutgoingReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/**
@@ -68,6 +70,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * Let the application start.
 	 */
+	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.refTree = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
@@ -163,14 +166,31 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		}, StandalonePluginWorkspace.MAIN_EDITING_AREA);
 
 		/**
-		 * Add side-view Icon and Title.
+		 * Add Icon, Title and ScrollPane for side-view. ScrollPane should let the whole
+		 * node text to be painted in the Layout without adding extra "...".
 		 */
 		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
+			@Override
 			public void customizeView(ViewInfo viewInfo) {
 
 				if ("ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
-					viewInfo.setComponent(new JScrollPane(refTree));
+					// set side-view ScrollPane
+					JScrollPane component = new JScrollPane(refTree);
+					component.addComponentListener(new ComponentAdapter() {
+						@Override
+						public void componentResized(ComponentEvent e) {
+							refTree.setPreferredSize(null);
+							refTree.invalidate();
+							bindTreeWithEditor(null);
+							refTree.doLayout();
+						};
+					});
+					viewInfo.setComponent(component);
+
+					// set side-view Title
 					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
+
+					// set side-view Icon
 					ImageIcon DITARefIcon = new ImageIcon(
 							getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
 					viewInfo.setIcon(DITARefIcon);
@@ -182,6 +202,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * Let the application close.
 	 */
+	@Override
 	public boolean applicationClosing() {
 		return true;
 	}
@@ -193,7 +214,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 * 
 	 * @param editorLocation The editorLocation
 	 */
-	void bindTreeWithEditor(URL editorLocation) {
+	protected void bindTreeWithEditor(URL editorLocation) {
 		WSEditor editorAccess = null;
 		if (editorLocation != null) {
 			editorAccess = pluginWorkspaceAccess.getEditorAccess(editorLocation,
@@ -205,8 +226,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	}
 
 	/**
-	 * Inner TimerListener for changes in ReferencesTree. Notify the tree about
-	 * change in the textPage.
+	 * Inner TimerListener for EditorChanges in ReferencesTree. Notify the tree
+	 * about change in the textPage.
 	 * 
 	 * @author Alexandra_Dinisor
 	 */

@@ -75,10 +75,10 @@ public class ReferencesTreeRenderingTest extends TestCase {
 	}
 
 	/**
-	 * File opened in Text mode but it's not a XML file.
+	 * File opened in Text Mode but it's not a XML file.
 	 */
 	@Test
-	public void test_NoXMLFile() {
+	public void test_NoXMLFileTextMode() {
 		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
 			@Override
 			public String getCurrentPageID() {
@@ -91,6 +91,7 @@ public class ReferencesTreeRenderingTest extends TestCase {
 				true, true, true, 0, true);
 		assertEquals("Outgoing_references_not_available", label.getText());
 	}
+	
 
 	/**
 	 * XML File opened in Text mode but it's not a DITA file.
@@ -173,11 +174,12 @@ public class ReferencesTreeRenderingTest extends TestCase {
 	}
 	
 	/**
-	 * Create the WSEditor depending on the textPage the expression is evaluated on.
-	 * @param content
-	 * @param noOfNodeRanges
-	 * @return
-	 */	
+	 * Create the WSEditor for TextPage depending on the XPath expression.
+	 * 
+	 * @param content        The DITA Content
+	 * @param noOfNodeRanges Number of NodeRanges
+	 * @return WSEditor in TextMode with XPAth evaluation
+	 */
 	private WSEditorAdapterForTests createWSEditorAdapterForTextPage(String content, int noOfNodeRanges) {
 		return new WSEditorAdapterForTests() {
 			@Override
@@ -201,7 +203,5 @@ public class ReferencesTreeRenderingTest extends TestCase {
 			}
 		};
 	}
-
-
 
 }

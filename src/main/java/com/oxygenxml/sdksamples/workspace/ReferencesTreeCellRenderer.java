@@ -1,11 +1,14 @@
 package com.oxygenxml.sdksamples.workspace;
 
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Rectangle;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.JViewport;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.oxygenxml.sdksamples.translator.Tags;
@@ -38,9 +41,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	private ImageIcon expandedIcon = null;
 
 	/**
-	 * Construct Renderer by including the icons for leaf nodes and icon for
-	 * references categories corresponding their status: expanded/collapsed. A
-	 * translator for references categories.
+	 * Construct Renderer by including the icons for leaf nodes and reference
+	 * category nodes corresponding their status: expanded/collapsed.
 	 * 
 	 * @param imageUtilities The imageUtilities
 	 * @param translator     The translator for categories
@@ -87,69 +89,37 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
 		JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		label.setIcon(null);
-
+		
+		int width = tree.getWidth();
+		Container treeParent = tree.getParent();
+		if (treeParent instanceof JViewport) {
+			width = (int) ((JViewport) treeParent).getViewRect().getWidth();
+		}
+		
 		if (value instanceof DefaultMutableTreeNode) {
 
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
-				// set icon for leaf nodes
-				displayIcon(label, nodeRange);
-
-				// set node text for leaf nodes from attribute values
-				String hrefAttr = nodeRange.getAttributeValue("href");
-				if (hrefAttr != null) {
-					displayNodeValue(hrefAttr);
-				} else {
-					String keyrefAttr = nodeRange.getAttributeValue("keyref");
-					if (keyrefAttr != null) {
-						displayNodeValue(keyrefAttr);
-					} else {
-						String conrefAttr = nodeRange.getAttributeValue("conref");
-						if (conrefAttr != null) {
-							displayNodeValue(conrefAttr);
-						} else {
-							String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
-							if (conkeyrefAttr != null) {
-								displayNodeValue(conkeyrefAttr);
-							}
-						}
-					}
-				}
-
-			} else {
-				// add expanded/collapsed icons only when references found in tree
-				boolean hasReferences = true;
 				
-				// set node translated text for references categories
-				String toDisplayCategory = null;
-				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
-					if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
-						toDisplayCategory = translator.getTranslation(Tags.IMAGE_REFERENCES);
-					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
-						toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
-					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
-						toDisplayCategory = translator.getTranslation(Tags.CONTENT_REFERENCES);
-					} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
-						toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
-					} else if (((DefaultMutableTreeNode) value).getUserObject()
-							.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
-						toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
-						hasReferences = false;
-					} else if (((DefaultMutableTreeNode) value).getUserObject()
-							.equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
-						toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
-						hasReferences = false;
+				// set width for node text without its IconWidth and TextGap
+				Rectangle rowBounds = tree.getRowBounds(row);
+				if (rowBounds != null) {
+					width -= rowBounds.x;
+					if (label.getIcon() != null) {
+						width -= label.getIcon().getIconWidth();
+						width -= label.getIconTextGap();
 					}
 				}
-				label.setText(toDisplayCategory);
+				setTextAndToolTipForLeafNode(label, width, nodeRange);
+				setIconForLeafNode(label, nodeRange);
+				
+			} else {
+				// add expanded/collapsed icons when at least 1 reference is found in tree
+				boolean hasReferences = true;
 
-				// set icon for references categories if any
-				if (hasReferences) {
-					if (expanded) {
-						label.setIcon(expandedIcon);
-					} else {
-						label.setIcon(collapsedIcon);
-					}
+				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
+					hasReferences = setTextForCategory(value, label, hasReferences);
+					setIconForCategoryNode(expanded, label, hasReferences);
 				}
 			}
 		}
@@ -157,12 +127,62 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	}
 
 	/**
-	 * Set icon for each leaf node depending on references category.
+	 * Set text and toolTip for Leaf Node corresponding the attribute value.
 	 * 
-	 * @param label     NodeLabel
-	 * @param nodeRange The nodeRange
+	 * @param label     The Leaf Node Label
+	 * @param width     The Text Width
+	 * @param nodeRange The NodeRange
 	 */
-	private void displayIcon(JLabel label, NodeRange nodeRange) {
+	private void setTextAndToolTipForLeafNode(JLabel label, int width, NodeRange nodeRange) {
+		String hrefAttr = nodeRange.getAttributeValue("href");
+		if (hrefAttr != null) {
+			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), hrefAttr, width));
+			this.setToolTipText(hrefAttr);
+		} else {
+			String keyrefAttr = nodeRange.getAttributeValue("keyref");
+			if (keyrefAttr != null) {
+				this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), keyrefAttr, width));
+				this.setToolTipText(hrefAttr);
+			} else {
+				String conrefAttr = nodeRange.getAttributeValue("conref");
+				if (conrefAttr != null) {
+					this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr, width));
+					this.setToolTipText(hrefAttr);
+				} else {
+					String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
+					if (conkeyrefAttr != null) {
+						this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr, width));
+						this.setToolTipText(hrefAttr);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set Icon for category node depending on status: expanded/collapsed.
+	 * 
+	 * @param expanded      If category node is expanded
+	 * @param label         The Node Label
+	 * @param hasReferences
+	 */
+	private void setIconForCategoryNode(boolean expanded, JLabel label, boolean hasReferences) {
+		if (hasReferences) {
+			if (expanded) {
+				label.setIcon(expandedIcon);
+			} else {
+				label.setIcon(collapsedIcon);
+			}
+		}
+	}
+
+	/**
+	 * Set icon for each leaf node depending on reference category.
+	 * 
+	 * @param label     The Node Label
+	 * @param nodeRange The NodeRange
+	 */
+	private void setIconForLeafNode(JLabel label, NodeRange nodeRange) {
 		String classAttrValue = nodeRange.getAttributeValue("class");
 
 		if (classAttrValue != null) {
@@ -181,45 +201,37 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		}
 	}
 
+	
 	/**
-	 * Display maximum 20 characters for each leaf node value and set the toolTip
-	 * with the full node value.
+	 * Set translated text for reference category and change value for boolean
+	 * "hasReferences", if the ReferencesTree has at least 1 reference inside.
 	 * 
-	 * @param referenceAttributeValue The attribute value
-	 * @return the displayed node text
+	 * @param value         The Node Value
+	 * @param label         The Node Label
+	 * @param hasReferences Boolean hasReferences
+	 * @return
 	 */
-	private void displayNodeValue(String referenceAttributeValue) {
-		String toDisplayString = null;
+	private boolean setTextForCategory(Object value, JLabel label, boolean hasReferences) {
+			String toDisplayCategory = null;
 
-		// TODO show file name.
-//		StringTokenizer st = new StringTokenizer(referenceAttributeValue, "/");
-//		String filename = null;
-//		while (st.hasMoreTokens()) {
-//			filename = st.nextToken();
-//		}
-//
-//		int filenameLength = filename.length();
-//		int refLength = referenceAttributeValue.length();
-//
-//		if (filenameLength == refLength) {
-//			toDisplayString = referenceAttributeValue;
-//		} else {
-//			int diff = refLength - filenameLength;
-//			if ((refLength - diff) >= 5) {
-//				toDisplayString = "... " + referenceAttributeValue.substring(diff - 5);
-//			} else {
-//				toDisplayString = "... " + referenceAttributeValue.substring(diff);
-//			}
-//		}
-
-		if (referenceAttributeValue.length() > 20) {
-			toDisplayString = "... " + referenceAttributeValue.substring(referenceAttributeValue.length() - 20);
-		} else {
-			toDisplayString = referenceAttributeValue;
-		}
-
-		this.setText(toDisplayString);
-		this.setToolTipText(referenceAttributeValue);
+			if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
+				toDisplayCategory = translator.getTranslation(Tags.IMAGE_REFERENCES);
+			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
+				toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
+			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
+				toDisplayCategory = translator.getTranslation(Tags.CONTENT_REFERENCES);
+			} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
+				toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
+			} else if (((DefaultMutableTreeNode) value).getUserObject()
+					.equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
+				toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+				hasReferences = false;
+			} else if (((DefaultMutableTreeNode) value).getUserObject()
+					.equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
+				toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
+				hasReferences = false;
+			}
+			label.setText(toDisplayCategory);		
+		return hasReferences;
 	}
-
 }

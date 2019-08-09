@@ -34,10 +34,12 @@ public class TextReferencesCollector extends ReferencesCollector {
 				.findElementsByXPath(ALL_REFS_XPATH_EXPRESSION);
 
 		// get all pairs (Element, its corresponding NodeRange)
-		for (int i = 0; i < referenceNodes.length; i++) {
-			Element currentElement = (Element) referenceNodes[i];
-			NodeRange refRange = new TextPageNodeRange(currentElement, referenceTextNodeRanges[i]);
-			ranges.add(refRange);
+		if (referenceNodes != null) {
+			for (int i = 0; i < referenceNodes.length; i++) {
+				Element currentElement = (Element) referenceNodes[i];
+				NodeRange refRange = new TextPageNodeRange(currentElement, referenceTextNodeRanges[i]);
+				ranges.add(refRange);
+			}
 		}
 
 		return ranges;

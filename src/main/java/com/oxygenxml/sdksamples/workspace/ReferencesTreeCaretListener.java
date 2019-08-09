@@ -28,12 +28,12 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	private Timer updateCaretTimer = new Timer(TIMER_DELAY, timerListener);
 
 	/**
-	 * Set the inhibitor on false by default.
+	 * Set the inhibiter on false by default.
 	 */
 	private boolean inhibitCaretSelectionListener = false;
 
 	/**
-	 * Construct the CaretListener for Text or Author.
+	 * Construct the CaretListener for Text/Author.
 	 * 
 	 * @param textPage           The XML textPage
 	 * @param refTree            The references Tree
@@ -74,7 +74,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	}
 
 	/**
-	 * Get the caret offset for the Text / Author Page.
+	 * Get the caret offset for Text/Author Page.
 	 * 
 	 * @return The Caret Offset
 	 */
@@ -129,7 +129,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 			}
 		}
 
-		// search children
+		// search for the matching node among current node's children
 		if (node.getChildCount() > 0) {
 			for (Enumeration e = node.children(); e.hasMoreElements();) {
 				DefaultMutableTreeNode nextNode = (DefaultMutableTreeNode) e.nextElement();

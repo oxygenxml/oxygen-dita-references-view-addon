@@ -4,7 +4,7 @@
 
 <plugin
  id="com.oxygenxml.plugin.WorkspaceAccess"
- name="CustomWorkspaceAccess"
+ name="OutgoingReferencesWorkspaceAccess"
  description="Test"
  version="${project.version}"
  vendor="oXygen XML"
@@ -18,10 +18,8 @@
  </runtime>
  
  <extension type="WorkspaceAccess" 
-  class="com.oxygenxml.sdksamples.workspace.CustomWorkspaceAccessPluginExtension"/>
+   class="com.oxygenxml.sdksamples.workspace.OutgoingReferencesWorkspaceAccessPluginExtension"/>
  
-  <!--The sample view which will present messages from the sample plugin.-->
   <view id="ReferencesWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
-  <!--The sample toolbar which will present messages from the sample plugin.-->
   <toolbar id="ReferencesWorkspaceAccessToolbarID" initialSide="NORTH" initialRow="1"/>
 </plugin>
