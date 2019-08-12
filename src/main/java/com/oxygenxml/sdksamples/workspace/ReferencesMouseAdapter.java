@@ -46,11 +46,6 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent releasedEvent) {
-		handleContextMenu(releasedEvent);
-	}
-
-	@Override
 	public void mouseReleased(MouseEvent releasedEvent) {
 		handleContextMenu(releasedEvent);
 	}
