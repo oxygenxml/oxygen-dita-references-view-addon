@@ -28,7 +28,10 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 
 	@Override
 	protected int getCaretOffset() {
-		return editorPage.get().getCaretOffset();
+		if (editorPage != null) {
+			return editorPage.get().getCaretOffset();
+		}
+		return -1;
 	}
 
 	@Override

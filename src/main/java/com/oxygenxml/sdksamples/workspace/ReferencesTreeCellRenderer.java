@@ -21,22 +21,16 @@ import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 @SuppressWarnings("serial")
 public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
-	/**
-	 * The translator of the DITA reference categories.
-	 */
+	/* The translator of the DITA reference categories. */
 	private Translator translator;
 
-	/**
-	 * Icons for leaf nodes.
-	 */
+	/* Icons for leaf nodes. */
 	private ImageIcon imageIcon = null;
 	private ImageIcon linkIcon = null;
 	private ImageIcon contentIcon = null;
 	private ImageIcon crossIcon = null;
 
-	/**
-	 * Icons for reference categories depending on status: expanded/collapsed.
-	 */
+	/* Icons for reference categories depending on status: expanded/collapsed. */
 	private ImageIcon collapsedIcon = null;
 	private ImageIcon expandedIcon = null;
 
@@ -82,11 +76,13 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		}
 
 	}
+	
+	private int inProgress = 0;
 
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf,
 			int row, boolean hasFocus) {
-
+		inProgress++;
 		JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		label.setIcon(null);
 
@@ -101,17 +97,21 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
-				// set width for node text without its IconWidth and TextGap
-				Rectangle rowBounds = tree.getRowBounds(row);
-				if (rowBounds != null) {
-					width -= rowBounds.x;
-					if (label.getIcon() != null) {
-						width -= label.getIcon().getIconWidth();
-						width -= label.getIconTextGap();
+				if (inProgress == 1) {
+					// set width for node text without its IconWidth and TextGap
+					Rectangle rowBounds = tree.getRowBounds(row);
+					if (rowBounds != null) {
+						width -= rowBounds.x;
+						if (label.getIcon() != null) {
+							width -= label.getIcon().getIconWidth();
+							width -= label.getIconTextGap();
+						}
 					}
 				}
+				
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
+				
 
 			} else {
 				// decide if expanded/collapsed icons are needed when at least 1 reference is
@@ -124,6 +124,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				}
 			}
 		}
+		
+		inProgress--;
 		return label;
 	}
 

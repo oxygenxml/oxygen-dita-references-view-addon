@@ -4,16 +4,18 @@ import java.awt.FontMetrics;
 
 public class StringUtilities {
 	/**
+	 * Trim the node text to be displayed so that it is shown a part of the name
+	 * clearly beginning from backwards, by searching through the delimiters "#",
+	 * "/", "\".
 	 * 
-	 * @param fontMetrics
-	 * @param referenceAttributeValue
-	 * @param width
+	 * @param fontMetrics             The FontMetrics
+	 * @param referenceAttributeValue The ReferenceAttributeValue
+	 * @param width                   The width
 	 * @return
 	 */
 	public static String trimNodeText(FontMetrics fontMetrics, String referenceAttributeValue, int width) {
 		String toDisplayString = null;
 
-		// TODO show file name.
 		char[] charArray = referenceAttributeValue.toCharArray();
 		
 		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
@@ -39,7 +41,6 @@ public class StringUtilities {
 				}
 			}	
 		}
-		System.err.println("to be displayed: " + toDisplayString);
 		return toDisplayString;
 	}
 }

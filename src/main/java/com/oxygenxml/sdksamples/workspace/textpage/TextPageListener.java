@@ -12,9 +12,8 @@ import javax.swing.event.DocumentListener;
  *
  */
 public class TextPageListener implements DocumentListener {
-	/**
-	 * Timer for changes in TextPage.
-	 */
+
+	/* Timer for changes in TextPage. */
 	private Timer updateTreeTimer;
 
 	/**

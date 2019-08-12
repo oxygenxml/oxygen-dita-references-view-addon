@@ -27,9 +27,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	private ActionListener timerListener = new CaretTimerListener();
 	private Timer updateCaretTimer = new Timer(TIMER_DELAY, timerListener);
 
-	/**
-	 * Set the inhibiter on false by default.
-	 */
+	/* Set the inhibiter on false by default. */
 	private boolean inhibitCaretSelectionListener = false;
 
 	/**
@@ -84,7 +82,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * Search and select the treeNode corresponding the caret in Editor.
 	 */
 	private void searchForNodeMatchingCaret() {
-		if (getCaretOffset() != 0) {
+		if (getCaretOffset() > 0) {
 			int caretOffset = getCaretOffset();			
 
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();

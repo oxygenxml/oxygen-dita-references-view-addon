@@ -17,20 +17,17 @@ import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 public class ReferencesTreeSelectionListener implements TreeSelectionListener, TreeSelectionInhibitor {
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeSelectionListener.class);
 
-	/**
-	 * The referencesTree.
-	 */
+	/* The referencesTree. */
 	private ReferencesTree refTree;
 
-	/**
-	 * Set the inhibiter on false, by default.
-	 */
+	/* Set the inhibiter on false, by default. */
 	private boolean inhibitTreeSelectionListener = false;
 
 	private CaretSelectionInhibitor caretSelectionInhibitor;
 
-	/**
-	 * Coalescing for selecting the matching element from referencesTree in textPage.
+	/*
+	 * Coalescing for selecting the matching element from referencesTree in
+	 * textPage.
 	 */
 	private static final int TIMER_DELAY = 500;
 	private ActionListener selectionTreeTimerListener = new SelectionTreeTimerListener();

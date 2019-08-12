@@ -18,9 +18,8 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 @SuppressWarnings("serial")
 public class OpenReferenceAction extends AbstractAction {
-	/**
-	 * The OpenReferenceAction Logger.
-	 */
+
+	/* The OpenReferenceAction Logger. */
 	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
 	private NodeRange nodeRange;
@@ -65,6 +64,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * key references (keyref, conkeyref) the URL location comes from the
 	 * LinkedHashMap with KeyInfo.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		// attributes of the leaf nodes

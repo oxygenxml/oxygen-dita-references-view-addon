@@ -1,6 +1,5 @@
 package com.oxygenxml.sdksamples.workspace;
 
-import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -28,9 +27,7 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 @SuppressWarnings("serial")
 public class ReferencesTree extends Tree {
-	/**
-	 * The ReferencesTree Logger.
-	 */
+	/* The ReferencesTree Logger. */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
@@ -72,18 +69,32 @@ public class ReferencesTree extends Tree {
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
 				
-		// install caret listener for textPage
+		// install caret listener for textPage and check if current page corresponds
 		this.textPageCaretListener = new TextPageReferencesTreeCaretListener(
-				() -> (WSXMLTextEditorPage)editorAccess.getCurrentPage(), 
+				() -> {
+					if (editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage) {
+						return (WSXMLTextEditorPage) editorAccess.getCurrentPage();
+					}
+
+					return null;
+				},
 				this, 
-				this.refTreeSelectionListener);	
-		
-		// install caret listener for authorPage
+				this.refTreeSelectionListener);
+
+
+		// install caret listener for authorPage and check if current page corresponds
 		this.authorPageCaretListener = new AuthorPageReferencesTreeCaretListener(
-				() -> (WSAuthorEditorPage)editorAccess.getCurrentPage(),
+				() -> {
+					if (editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {
+						return (WSAuthorEditorPage) editorAccess.getCurrentPage();
+					}
+
+					return null;
+				}, 
 				this, 
 				this.refTreeSelectionListener);
 		
+
 		// popUp Menu for Leaf Nodes
 		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addMouseListener(this.refMouseAdapter);
@@ -180,7 +191,7 @@ public class ReferencesTree extends Tree {
 		this.setModel(referencesTreeModel);
 
 		// expand all nodes of ReferencesTree
-		expandAllNodesInRefTree(this, 0, this.getRowCount());
+		expandAllRows();
 
 		// updates for Caret and Selection Listener
 		installUpdateListeners(editorPage);
@@ -206,17 +217,12 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Expand all nodes from the very beginning.
 	 * 
-	 * @param refTree          The ReferencesTree
-	 * @param startingIndex
-	 * @param rowCount
+	 * @param refTree The ReferencesTree
 	 */
-	private void expandAllNodesInRefTree(JTree refTree, int startingIndex, int rowCount) {
-		for (int i = startingIndex; i < rowCount; ++i) {
-			refTree.expandRow(i);
-		}
-
-		if (refTree.getRowCount() != rowCount) {
-			expandAllNodesInRefTree(refTree, rowCount, refTree.getRowCount());
+	protected void expandAllRows() {
+		for (int i = 0; i < this.getRowCount(); i++) {
+			this.expandRow(i);
 		}
 	}
+	
 }

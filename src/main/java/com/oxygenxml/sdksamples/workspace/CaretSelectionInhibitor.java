@@ -11,7 +11,7 @@ public interface CaretSelectionInhibitor {
 	/**
 	 * Sets the inhibiter on false by default.
 	 * 
-	 * @param inhibitTreeSelectionListener The inhibitor
+	 * @param inhibitTreeSelectionListener The inhibiter
 	 */
 	public void setInhibitCaretSelectionListener(boolean inhibitCaretSelectionListener);
 

@@ -8,7 +8,11 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import com.oxygenxml.sdksamples.translator.DITAReferencesTranslator;
 import com.oxygenxml.sdksamples.translator.Tags;
@@ -35,36 +39,24 @@ import ro.sync.exml.workspace.api.standalone.ViewInfo;
 public class OutgoingReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
-	/**
-	 * Provider of keys for the current DITAMAP.
-	 */
+	/* Provider of keys for the current DITAMAP. */
 	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
 
-	/**
-	 * The tree with the outgoing references.
-	 */
+	/* The tree with the outgoing references. */
 	private ReferencesTree refTree;
-	
-	/**
-	 * The timer for editor changes.
-	 */
+
+	/* The timer for editor changes. */
 	private static final int TIMER_DELAY = 500;
 	private ActionListener timerListener = new EditorChangesTimerListener();
 	private Timer updateTreeTimer = new Timer(TIMER_DELAY, timerListener);
 
-	/**
-	 * The DITA references translator for the side-view label.
-	 */
+	/* The DITA references translator for the side-view label. */
 	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
 
-	/**
-	 * Document Listener to update the ReferencesTree for TextPage.
-	 */
+	/* Document Listener to update the ReferencesTree for TextPage. */
 	private TextPageListener textPageDocumentListener = new TextPageListener(updateTreeTimer);
 
-	/**
-	 * Author Listener to update the ReferencesTree for AuthorPage.
-	 */
+	/* Author Listener to update the ReferencesTree for AuthorPage. */
 	private AuthorPageListener authorPageListener = new AuthorPageListener(updateTreeTimer);
 
 	/**
@@ -174,18 +166,26 @@ public class OutgoingReferencesWorkspaceAccessPluginExtension implements Workspa
 			public void customizeView(ViewInfo viewInfo) {
 
 				if ("ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
-					// set side-view ScrollPane
-					JScrollPane component = new JScrollPane(refTree);
-					component.addComponentListener(new ComponentAdapter() {
+					
+					JScrollPane scrollPane = new JScrollPane(refTree);
+					scrollPane.addComponentListener(new ComponentAdapter() {
 						@Override
 						public void componentResized(ComponentEvent e) {
-							refTree.setPreferredSize(null);
-							refTree.invalidate();
-							bindTreeWithEditor(null);
-							refTree.doLayout();
-						};
+							SwingUtilities.invokeLater(() -> {
+								// remember the selected path
+								TreePath selectionPath = refTree.getSelectionPath();
+								((DefaultTreeModel) refTree.getModel())
+										.nodeStructureChanged((TreeNode) refTree.getModel().getRoot());
+
+								// expand all rows with same selected path after side-view scrolled
+								refTree.expandAllRows();
+								refTree.setSelectionPath(selectionPath);
+							});
+
+						}
 					});
-					viewInfo.setComponent(component);
+					// set side-view ScrollPane
+					viewInfo.setComponent(scrollPane);
 
 					// set side-view Title
 					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
