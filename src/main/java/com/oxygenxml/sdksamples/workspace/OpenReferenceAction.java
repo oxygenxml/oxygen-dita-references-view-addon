@@ -110,9 +110,9 @@ public class OpenReferenceAction extends AbstractAction {
 	}
 
 	/**
-	 * Case for no protocol in the attribute value. The HTTP Host should have the
-	 * protocol name when new URL created. For example: "https://www.google.com" if
-	 * user types "www.google.com".
+	 * Get URL in case of no protocol in the attribute value. The HTTP Host should
+	 * have the protocol name when new URL created. For example:
+	 * "http://www.google.com" if user types "www.google.com".
 	 * 
 	 * @param formatAttr  Format attribute to verify
 	 * @param hrefValue   The HREF value of the attribute

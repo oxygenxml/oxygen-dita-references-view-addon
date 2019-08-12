@@ -31,10 +31,10 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	/**
 	 * The Mouse Adapter constructor.
 	 * 
-	 * @param refTree               The reference Tree
-	 * @param pluginWorkspaceAccess
-	 * @param keysProvider
-	 * @param editorAccess
+	 * @param refTree               The ReferencesTree
+	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
+	 * @param keysProvider          The keysProvider
+	 * @param editorAccess          The editorAccess
 	 */
 	public ReferencesMouseAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
 			KeysProvider keysProvider, Translator translator) {

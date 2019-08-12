@@ -18,24 +18,19 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
  * 
  * @author Alexandra_Dinisor
  */
-public class TextPageNodeRange implements NodeRange{
-	/**
-	 * The referencesTree Logger.
-	 */
+public class TextPageNodeRange implements NodeRange {
+
+	/* The referencesTree Logger. */
 	private static final Logger LOGGER = Logger.getLogger(NodeRange.class);
-	/**
-	 * The XML element.
-	 */
+
+	/* The XML element. */
 	private Element element;
 
-	/**
-	 * The range in the XML content
-	 */
+	/* The range in the XML content */
 	private WSXMLTextNodeRange range;
 
 	/**
 	 * Construct the TextPage NodeRange.
-	 * 
 	 * 
 	 * @param node  The node
 	 * @param range The range.
@@ -49,10 +44,10 @@ public class TextPageNodeRange implements NodeRange{
 	 * Compute the offsets of the corresponding reference node in tree for the
 	 * element in the textPage.
 	 * 
-	 * @param range       The node ranges
-	 * @param xmlTextPage The XML textPage
+	 * @param editorPage The XML textPage
 	 * @return An array with start and end offsets of DOM node in XML TextPage
 	 */
+	@Override
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) editorPage;
 		int[] finalOffsets = new int[2];
@@ -79,8 +74,9 @@ public class TextPageNodeRange implements NodeRange{
 	 * attribute.
 	 * 
 	 * @param attributeName The attribute name
-	 * @return the attribute Value or <code>null</code>
+	 * @return the attribute value or <code>null</code>
 	 */
+	@Override
 	public String getAttributeValue(String attributeName) {
 		if (element != null) {
 			NamedNodeMap attrs = element.getAttributes();

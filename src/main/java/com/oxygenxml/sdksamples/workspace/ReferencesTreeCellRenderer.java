@@ -77,12 +77,14 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
 	}
 	
+	/* only at first method call compute width of node text */
 	private int inProgress = 0;
 
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf,
 			int row, boolean hasFocus) {
-		inProgress++;
+		
+		inProgress++;		
 		JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		label.setIcon(null);
 
@@ -98,7 +100,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
 				if (inProgress == 1) {
-					// set width for node text without its IconWidth and TextGap
+					// compute width for node text without its IconWidth and TextGap
 					Rectangle rowBounds = tree.getRowBounds(row);
 					if (rowBounds != null) {
 						width -= rowBounds.x;
@@ -112,7 +114,6 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
 				
-
 			} else {
 				// decide if expanded/collapsed icons are needed when at least 1 reference is
 				// found in tree

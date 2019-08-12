@@ -10,19 +10,20 @@ import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 
 /**
+ * AuthorListener for AuthorPage.
+ * 
  * @author Alexandra_Dinisor
  *
  */
 public class AuthorPageListener implements AuthorListener {
-	/**
-	 * Timer for changes in AuthorPage.
-	 */
+
+	/* Timer for changes in AuthorPage. */
 	private Timer updateTreeTimer;
 
 	/**
 	 * Construct the AuthorPage Listener.
 	 * 
-	 * @param updateTreeTimer
+	 * @param updateTreeTimer The updateTreeTimer
 	 */
 	public AuthorPageListener(Timer updateTreeTimer) {
 		super();
@@ -32,79 +33,66 @@ public class AuthorPageListener implements AuthorListener {
 	@Override
 	public void documentChanged(AuthorDocument oldDocument, AuthorDocument newDocument) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void doctypeChanged() {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void contentInserted(DocumentContentInsertedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void contentDeleted(DocumentContentDeletedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeDoctypeChange() {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeContentInsert(DocumentContentInsertedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeContentDelete(DocumentContentDeletedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeAuthorNodeStructureChange(AuthorNode authorNode) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeAuthorNodeNameChange(AuthorNode authorNode) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void beforeAttributeChange(AttributeChangedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void authorNodeStructureChanged(AuthorNode node) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void authorNodeNameChanged(AuthorNode node) {
 		updateTreeTimer.restart();
-
 	}
 
 	@Override
 	public void attributeChanged(AttributeChangedEvent e) {
 		updateTreeTimer.restart();
-
 	}
 
 }

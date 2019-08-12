@@ -159,7 +159,7 @@ public class OutgoingReferencesWorkspaceAccessPluginExtension implements Workspa
 
 		/**
 		 * Add Icon, Title and ScrollPane for side-view. ScrollPane should let the whole
-		 * node text to be painted in the Layout without adding extra "...".
+		 * part of node text to be painted in the Layout without adding extra "...".
 		 */
 		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
 			@Override

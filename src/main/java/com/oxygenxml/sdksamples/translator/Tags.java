@@ -59,4 +59,5 @@ public class Tags {
 	 * Label for References PopUpMenu.
 	 */
 	public static final String OPEN_REFERENCE = "Open_reference";
+	
 }

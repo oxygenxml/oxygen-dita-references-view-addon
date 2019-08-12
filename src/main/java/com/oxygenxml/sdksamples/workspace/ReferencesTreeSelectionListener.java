@@ -26,18 +26,28 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	private CaretSelectionInhibitor caretSelectionInhibitor;
 
 	/*
-	 * Coalescing for selecting the matching element from referencesTree in
+	 * Coalescing for selecting the matching element from the referencesTree in
 	 * textPage.
 	 */
 	private static final int TIMER_DELAY = 500;
 	private ActionListener selectionTreeTimerListener = new SelectionTreeTimerListener();
 	private Timer updateTreeTimer = new Timer(TIMER_DELAY, selectionTreeTimerListener);
 
+	/**
+	 * Construct the ReferencesTreeSelectionListener.
+	 * 
+	 * @param refTree The ReferencesTree
+	 */
 	public ReferencesTreeSelectionListener(ReferencesTree refTree) {
 		this.updateTreeTimer.setRepeats(false);
 		this.refTree = refTree;
 	}
 
+	/**
+	 * Set the caretSelectionInhibitor.
+	 * 
+	 * @param caretSelectionInhibitor The caretSelectionInhibitor
+	 */
 	public void setCaretSelectionInhibitor(CaretSelectionInhibitor caretSelectionInhibitor) {
 		this.caretSelectionInhibitor = caretSelectionInhibitor;
 	}
@@ -119,7 +129,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	/**
 	 * Implement the TreeSelectionInhibitor interface method.
 	 * 
-	 * @param inhibitTreeSelectionListener
+	 * @param inhibitTreeSelectionListener The inhibitTreeSelectionListener
 	 */
 	@Override
 	public void setInhibitTreeSelectionListener(boolean inhibitTreeSelectionListener) {

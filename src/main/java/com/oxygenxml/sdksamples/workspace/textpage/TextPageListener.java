@@ -8,6 +8,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
+ * DocumentListener for TextPageListener.
+ * 
  * @author Alexandra_Dinisor
  *
  */
@@ -19,12 +21,12 @@ public class TextPageListener implements DocumentListener {
 	/**
 	 * Construct the TextPage Listener.
 	 * 
-	 * @param updateTreeTimer
+	 * @param updateTreeTimer The updateTreeTimer
 	 */
 	public TextPageListener(Timer updateTreeTimer) {
 		this.updateTreeTimer = updateTreeTimer;
 	}
-	
+
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		updateTreeTimer.restart();

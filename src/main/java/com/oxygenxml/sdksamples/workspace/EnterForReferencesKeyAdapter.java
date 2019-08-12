@@ -10,24 +10,29 @@ import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class EnterForReferencesKeyAdapter extends KeyAdapter {
-	
+
 	private ReferencesTree refTree;
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private WSEditor editorAccess;
 
+	/**
+	 * Set the editorAccess.
+	 * 
+	 * @param editorAccess The editorAccess
+	 */
 	public void setEditorAccess(WSEditor editorAccess) {
 		this.editorAccess = editorAccess;
 	}
-	
+
 	private KeysProvider keysProvider;
-	
+
 	/**
 	 * Construct the Key Adapter.
 	 * 
 	 * @param refTree               The ReferencesTree
-	 * @param pluginWorkspaceAccess
-	 * @param keysProvider
-	 * @param editorAccess
+	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
+	 * @param keysProvider          The keysProvider
+	 * @param editorAccess          The editorAccess
 	 */
 	public EnterForReferencesKeyAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
 			KeysProvider keysProvider) {
@@ -38,10 +43,10 @@ public class EnterForReferencesKeyAdapter extends KeyAdapter {
 	}
 
 	@Override
-    public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			handleEnterKey(e);
-        }
+		}
 	}
 
 	/**
@@ -62,5 +67,5 @@ public class EnterForReferencesKeyAdapter extends KeyAdapter {
 			}
 		}
 	}
-	
+
 }

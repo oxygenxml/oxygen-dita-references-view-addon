@@ -33,6 +33,11 @@ public class ReferencesTree extends Tree {
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private WSEditor editorAccess;
 
+	/**
+	 * Get the editorAccess.
+	 * 
+	 * @return The editorAccess
+	 */
 	public WSEditor getEditorAccess() {
 		return editorAccess;
 	}
@@ -46,7 +51,7 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Construct the ReferencesTree.
 	 * 
-	 * @param pluginWorkspaceAccess
+	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
 	 * @param keysProvider          The Map with the current DITAMAP keys
 	 * @param translator            The translator
 	 */
@@ -140,10 +145,10 @@ public class ReferencesTree extends Tree {
 	}
 
 	/**
-	 * Build the collector for Editor: Author/Text Page
+	 * Build the collector for Editor: Author/Text Page.
 	 * 
-	 * @param currentPageID The specific Page ID for Text or Author
-	 * @return The specific Page Collector
+	 * @param currentPageID The specific Page ID for Text / Author
+	 * @return The specific Text/Author Page Collector
 	 */
 	private ReferencesCollector buildCollector(String currentPageID) {
 		if (currentPageID.equals(EditorPageConstants.PAGE_TEXT)) {
@@ -217,7 +222,6 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Expand all nodes from the very beginning.
 	 * 
-	 * @param refTree The ReferencesTree
 	 */
 	protected void expandAllRows() {
 		for (int i = 0; i < this.getRowCount(); i++) {

@@ -8,36 +8,31 @@ import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 
 /**
  * A pair of Author Element and its corresponding range in the Author Page.
+ * 
  * @author Alexandra_Dinisor
  *
  */
 public class AuthorPageNodeRange implements NodeRange {
 
-	/**
-	 * The Author element.
-	 */
+	/* The Author element. */
 	private AuthorElement element;
 
 	/**
 	 * Construct the AuthorPage NodeRange.
 	 * 
-	 * @param authorNode
+	 * @param authorNode The AuthorElement
 	 */
 	public AuthorPageNodeRange(AuthorElement authorNode) {
 		element = authorNode;
 	}
 
-	/**
-	 * Get the attribute value of the element.
-	 */
+	@Override
 	public String getAttributeValue(String attributeName) {
 		AttrValue attributeValue = element.getAttribute(attributeName);
 		return attributeValue != null ? attributeValue.getValue() : null;
 	}
 
-	/**
-	 * Get the nodeOffsets in AuthorPage. 
-	 */
+	@Override
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		return new int[] { element.getStartOffset(), element.getEndOffset() };
 	}
@@ -46,6 +41,5 @@ public class AuthorPageNodeRange implements NodeRange {
 	public String getNodeName() {
 		return element.getDisplayName();
 	}
-	
-	
+
 }

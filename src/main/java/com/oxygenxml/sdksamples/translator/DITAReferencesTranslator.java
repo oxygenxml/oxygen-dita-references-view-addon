@@ -13,7 +13,8 @@ public class DITAReferencesTranslator implements Translator {
 
 	public DITAReferencesTranslator() {
 	}
-
+	
+	@Override
 	public String getTranslation(String key) {
 		return ((StandalonePluginWorkspace) PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle()
 				.getMessage(key);
