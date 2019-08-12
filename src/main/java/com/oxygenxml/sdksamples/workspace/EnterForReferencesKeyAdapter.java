@@ -38,22 +38,7 @@ public class EnterForReferencesKeyAdapter extends KeyAdapter {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
-			handleEnterKey(e);
-        }
-		
-	}
-
-	@Override
     public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
-			handleEnterKey(e);
-        }
-	}
-
-	@Override
-    public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER){
 			handleEnterKey(e);
         }
