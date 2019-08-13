@@ -67,7 +67,6 @@ public class OpenReferenceAction extends AbstractAction {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		// attributes of the leaf nodes
 		String hrefAttr = nodeRange.getAttributeValue("href");
 		String keyrefAttr = nodeRange.getAttributeValue("keyref");
@@ -88,7 +87,6 @@ public class OpenReferenceAction extends AbstractAction {
 
 			} else if (conrefAttr != null) {
 				url = new URL(editorLocation, conrefAttr);
-				// TODO ce pasam ca 3 arg
 				openReferences(url, nodeRange, formatAttr);
 
 			} else if (keyrefAttr != null) {
@@ -163,7 +161,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @throws MalformedURLException
 	 * @throws DOMException
 	 */
-	void openReferences(URL url, NodeRange nodeRange, String formatAttr) throws MalformedURLException {
+	private void openReferences(URL url, NodeRange nodeRange, String formatAttr) throws MalformedURLException {
 		String classAttr = nodeRange.getAttributeValue("class");
 
 		// it's image
@@ -179,7 +177,6 @@ public class OpenReferenceAction extends AbstractAction {
 					}
 				}
 			}
-
 		} else {
 			if (formatAttr != null) {
 				// it's DITA
