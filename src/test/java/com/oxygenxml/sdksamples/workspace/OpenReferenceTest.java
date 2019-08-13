@@ -1,5 +1,6 @@
 package com.oxygenxml.sdksamples.workspace;
 
+import java.awt.Rectangle;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -141,10 +142,10 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open reference in image perspective of image with extension.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_ImageWithExtension() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		assertEquals(13, tree.getRowCount());
 
@@ -160,15 +161,15 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open reference in image perspective of image with no extension.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_ImageWithNoExtension() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(2);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 2, false);
-		assertEquals("image", label.getText());
+		assertEquals("image", label.getToolTipText());
 
 		tree.setSelectionRow(2);
 		TestUtil.simulateDoubleClick(tree);
@@ -177,15 +178,15 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open DITA Topic from conref reference.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromConRef() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(4);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 4, false);
-		assertEquals("... ple2.dita#sample2/i1", label.getText());
+		assertEquals("sample2.dita#sample2/i1", label.getText());
 
 		tree.setSelectionRow(4);
 		TestUtil.simulateDoubleClick(tree);
@@ -194,10 +195,10 @@ public class OpenReferenceTest extends TestCase {
 	
 	/**
 	 * Open DITA Topic from conkeyref reference.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromConKeyRef() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(5);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -211,10 +212,10 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open HTML reference without protocol written by user in href attribute.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_HTMLFormat() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(7);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -231,6 +232,7 @@ public class OpenReferenceTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_DITATopic() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(8);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -243,10 +245,10 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open binary resource with @format attribute, not handled by Oxygen.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_BinaryRescourceWithFormat() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(9);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -260,10 +262,10 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open DITA Topic from keyref attribute.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromKeyref() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(11);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -277,10 +279,10 @@ public class OpenReferenceTest extends TestCase {
 
 	/**
 	 * Open binary resource from key reference, not handled by Oxygen.
-	 * 
 	 */
 	@Test
 	public void testOpenRef_BinaryResourceFromKeyref() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(12);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),

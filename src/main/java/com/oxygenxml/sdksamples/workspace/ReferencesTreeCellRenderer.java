@@ -110,7 +110,6 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 						}
 					}
 				}
-				
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
 				

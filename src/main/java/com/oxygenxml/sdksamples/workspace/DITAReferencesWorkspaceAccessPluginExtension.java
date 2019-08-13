@@ -36,7 +36,7 @@ import ro.sync.exml.workspace.api.standalone.ViewInfo;
  * 
  * @author Alexandra_Dinisor
  */
-public class OutgoingReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
+public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/* Provider of keys for the current DITAMAP. */
@@ -164,8 +164,7 @@ public class OutgoingReferencesWorkspaceAccessPluginExtension implements Workspa
 		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
 			@Override
 			public void customizeView(ViewInfo viewInfo) {
-
-				if ("ReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
+				if ("DITAReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
 					
 					JScrollPane scrollPane = new JScrollPane(refTree);
 					scrollPane.addComponentListener(new ComponentAdapter() {
@@ -191,9 +190,10 @@ public class OutgoingReferencesWorkspaceAccessPluginExtension implements Workspa
 					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
 
 					// set side-view Icon
-					ImageIcon DITARefIcon = new ImageIcon(
+					ImageIcon DITAReferencesIcon = new ImageIcon(
 							getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
-					viewInfo.setIcon(DITARefIcon);
+					
+					viewInfo.setIcon(DITAReferencesIcon);
 				}
 			}
 		});

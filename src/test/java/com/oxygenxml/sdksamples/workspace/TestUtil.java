@@ -105,7 +105,7 @@ public class TestUtil {
 			TreePath path = tree.getPathForRow(i);
 			JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(
 					tree, path.getLastPathComponent(), false, true, true, i, false);
-			stringBuilder.append(label.getText()).append("\n");
+			stringBuilder.append(label.getText()).append(" -> " + label.getToolTipText()).append("\n");
 		}
 		return stringBuilder.toString();
 	}

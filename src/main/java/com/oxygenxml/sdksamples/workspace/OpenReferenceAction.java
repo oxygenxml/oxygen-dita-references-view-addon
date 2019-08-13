@@ -35,10 +35,11 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @param editorAccess          The editor access
 	 * @param pluginWorkspaceAccess The pluginWorkspace access
 	 * @param keysProvider          The name of the contextual menu item
+	 * @param actionName            The name of the action.
 	 */
 	public OpenReferenceAction(NodeRange nodeRange, WSEditor editorAccess,
-			StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider, String itemName) {
-		super(itemName);
+			StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider, String actionName) {
+		super(actionName);
 
 		this.nodeRange = nodeRange;
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
@@ -83,30 +84,33 @@ public class OpenReferenceAction extends AbstractAction {
 				// by user, otherwise it needs to be added
 				URL possibleURL = new URL(editorLocation, hrefAttr);
 				url = getURLForHTTPHost(formatAttr, hrefAttr, possibleURL);
-				openReferences(url, nodeRange, hrefAttr, formatAttr);
+				openReferences(url, nodeRange, formatAttr);
 
 			} else if (conrefAttr != null) {
 				url = new URL(editorLocation, conrefAttr);
-				openReferences(url, nodeRange, "conref", formatAttr);
+				// TODO ce pasam ca 3 arg
+				openReferences(url, nodeRange, formatAttr);
 
 			} else if (keyrefAttr != null) {
 				KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
-				url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
-				formatAttr = value.getAttributes().get("format");
-				openReferences(url, nodeRange, formatAttr, formatAttr);
+				if (value != null) {
+					url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
+					formatAttr = value.getAttributes().get("format");
+					openReferences(url, nodeRange, formatAttr);
+				}
 
 			} else if (conkeyrefAttr != null) {
 				KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
-				url = value.getHrefLocation();
-				formatAttr = value.getAttributes().get("format");
-				openReferences(url, nodeRange, formatAttr, formatAttr);
-
+				if (value != null) {
+					url = value.getHrefLocation();
+					formatAttr = value.getAttributes().get("format");
+					openReferences(url, nodeRange, formatAttr);
+				}
 			}
 		} catch (MalformedURLException e1) {
 			LOGGER.error(e1, e1);
 			e1.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -123,7 +127,7 @@ public class OpenReferenceAction extends AbstractAction {
 	private URL getURLForHTTPHost(String formatAttr, String hrefValue, URL possibleURL) throws MalformedURLException {
 		URL url;
 		if (formatAttr != null && formatAttr.equals("html") && !hrefValue.startsWith("http")) {
-			url = new URL(hrefValue.replace(hrefValue, "http://" + hrefValue));
+			url = new URL("http://" + hrefValue);
 		} else {
 			url = possibleURL;
 		}
@@ -134,13 +138,13 @@ public class OpenReferenceAction extends AbstractAction {
 	 * Get the specific KeyInfo of the given key after removing the "/" if any. in
 	 * order to get the filename.
 	 * 
-	 * @param keyAttr The key reference attribute value
-	 * @param keys    The LinkedHashMap with all the keys
+	 * @param keyAttrValue The key reference attribute value
+	 * @param keys         The LinkedHashMap with all the keys
 	 * @throws MalformedURLException
 	 */
-	private KeyInfo getKeyInfoFromReference(String keyAttr, LinkedHashMap<String, KeyInfo> keys)
+	private KeyInfo getKeyInfoFromReference(String keyAttrValue, LinkedHashMap<String, KeyInfo> keys)
 			throws MalformedURLException {
-		StringTokenizer st = new StringTokenizer(keyAttr, "/");
+		StringTokenizer st = new StringTokenizer(keyAttrValue, "/");
 		String keyName = null;
 		if (st.hasMoreTokens()) {
 			keyName = st.nextToken();
@@ -159,11 +163,8 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @throws MalformedURLException
 	 * @throws DOMException
 	 */
-	void openReferences(URL url, NodeRange nodeRange, String referenceAttributeValue, String formatAttr)
-			throws MalformedURLException {
-
+	void openReferences(URL url, NodeRange nodeRange, String formatAttr) throws MalformedURLException {
 		String classAttr = nodeRange.getAttributeValue("class");
-		// String formatAttr = nodeRange.getAttributeValue("format");
 
 		// it's image
 		if (classAttr != null && classAttr.contains(" topic/image ")) {
@@ -191,7 +192,7 @@ public class OpenReferenceAction extends AbstractAction {
 			} else {
 				// binary resource or a HTML format to be opened in browser
 				if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)
-						|| (referenceAttributeValue != null && referenceAttributeValue.equals("html"))) {
+						|| (formatAttr != null && formatAttr.equals("html"))) {
 					pluginWorkspaceAccess.openInExternalApplication(url, true);
 				} else {
 					// it's DITA

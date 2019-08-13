@@ -3,6 +3,8 @@
  */
 package com.oxygenxml.sdksamples.workspace;
 
+import java.awt.Rectangle;
+
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
@@ -23,6 +25,8 @@ public class ReferencesTreeRenderingTest extends TestCase {
 
 	final ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
 			null, new DITAReferencesTranslatorForTests());
+	
+	
 	
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
 			+ "    <title class=\"- topic/title \">sample</title>\n"
@@ -85,7 +89,6 @@ public class ReferencesTreeRenderingTest extends TestCase {
 				return PAGE_TEXT;
 			}
 		});
-		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(" ", 0));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				true, true, true, 0, true);
@@ -161,15 +164,22 @@ public class ReferencesTreeRenderingTest extends TestCase {
 	 */
 	@Test
 	public void test_DITAWithAllRefs() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 14));
-		TreePath path = tree.getPathForRow(7);
+
+		TreePath path = tree.getPathForRow(1);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				true, true, true, 7, true);
+				true, true, true, 1, true);
+		assertEquals("image.png", label.getText());
+
+		path = tree.getPathForRow(7);
+		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
+				true, true, 7, true);
 		assertEquals("www.google.com", label.getText());
-		
+
 		path = tree.getPathForRow(8);
-		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				true, true, true, 8, true);
+		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
+				true, true, 8, true);
 		assertEquals("sample2.dita", label.getText());
 	}
 	

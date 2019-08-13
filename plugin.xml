@@ -4,7 +4,7 @@
 
 <plugin
  id="com.oxygenxml.plugin.WorkspaceAccess"
- name="OutgoingReferencesWorkspaceAccess"
+ name="DITAReferencesWorkspaceAccess"
  description="Test"
  version="${project.version}"
  vendor="oXygen XML"
@@ -18,8 +18,7 @@
  </runtime>
  
  <extension type="WorkspaceAccess" 
-   class="com.oxygenxml.sdksamples.workspace.OutgoingReferencesWorkspaceAccessPluginExtension"/>
+   class="com.oxygenxml.sdksamples.workspace.DITAReferencesWorkspaceAccessPluginExtension"/>
  
-  <view id="ReferencesWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
-  <toolbar id="ReferencesWorkspaceAccessToolbarID" initialSide="NORTH" initialRow="1"/>
+  <view id="DITAReferencesWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
 </plugin>

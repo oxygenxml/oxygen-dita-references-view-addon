@@ -210,18 +210,17 @@ public class ReferencesTree extends Tree {
 	private void installUpdateListeners(WSEditorPage page) {
 		if (page instanceof WSXMLTextEditorPage) {
 			// get current Caret Listener for TextPage and update it
-			textPageCaretListener.bind();
+			textPageCaretListener.bindTextPageWithCaret();
 			this.refTreeSelectionListener.setCaretSelectionInhibitor(textPageCaretListener);
 		} else {
 			// get current Caret Listener for AuthorPage and update it
-			authorPageCaretListener.bind();
+			authorPageCaretListener.bindAuthorPageWithCaret();
 			this.refTreeSelectionListener.setCaretSelectionInhibitor(authorPageCaretListener);
 		}
 	}
 
 	/**
 	 * Expand all nodes from the very beginning.
-	 * 
 	 */
 	protected void expandAllRows() {
 		for (int i = 0; i < this.getRowCount(); i++) {

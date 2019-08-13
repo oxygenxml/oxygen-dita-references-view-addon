@@ -28,7 +28,7 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 
 	@Override
 	protected int getCaretOffset() {
-		if (editorPage != null) {
+		if (editorPage.get() != null) {
 			return editorPage.get().getCaretOffset();
 		}
 		return -1;
@@ -42,7 +42,7 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 	/**
 	 * Bind the current TextPage with its current Caret Listener.
 	 */
-	public void bind() {
+	public void bindTextPageWithCaret() {
 		JTextArea currentTextComponent = (JTextArea) editorPage.get().getTextComponent();
 		currentTextComponent.removeCaretListener(this);		
 		currentTextComponent.addCaretListener(this);

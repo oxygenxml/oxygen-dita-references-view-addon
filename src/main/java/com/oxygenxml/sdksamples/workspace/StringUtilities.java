@@ -1,7 +1,9 @@
 package com.oxygenxml.sdksamples.workspace;
 
 import java.awt.FontMetrics;
+
 /**
+ * Utilities for node text.
  * 
  * @Alexandra_Dinisor
  *
@@ -20,7 +22,6 @@ public class StringUtilities {
 		String toDisplayString = null;
 
 		char[] charArray = referenceAttributeValue.toCharArray();
-
 		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
 			toDisplayString = referenceAttributeValue;
 		} else {

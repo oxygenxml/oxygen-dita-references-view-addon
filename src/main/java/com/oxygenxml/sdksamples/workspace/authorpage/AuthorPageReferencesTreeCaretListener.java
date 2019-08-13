@@ -26,7 +26,7 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 
 	@Override
 	protected int getCaretOffset() {
-		if (editorPage != null) {
+		if (editorPage.get() != null) {
 			return editorPage.get().getCaretOffset();
 		}
 		return -1;
@@ -40,7 +40,7 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 	/**
 	 * Bind the current AuthorPage with its current Caret Listener.
 	 */
-	public void bind() {
+	public void bindAuthorPageWithCaret() {
 		editorPage.get().removeAuthorCaretListener(this);
 		editorPage.get().addAuthorCaretListener(this);
 	}

@@ -32,7 +32,7 @@ public interface NodeRange {
 	/**
 	 * Get the nodeName.
 	 * 
-	 * @return the nodeName
+	 * @return the nodeName. Never <code>null</code>
 	 */
 	String getNodeName();
 
