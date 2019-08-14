@@ -6,7 +6,8 @@
                 <section id="section_qvx_xkk_33b">
                         <title>Image references</title>
                         <ul id="ul_zr3_ykk_33b">
-                                <li>Direct image ref <image href="image2.jpg"/></li>
+                                <li>Direct image ref <image href="image.png"/></li>
+                                <li>Indirect image <image keyref="image"/></li>
                         </ul>
                 </section>
                 <section id="section_i2f_5jk_33b">
@@ -15,6 +16,8 @@
                                 <ul id="ul_sr4_vjk_33b">
                                         <li>Link to external resource <xref href="http://www.google.com" format="html"
                                                 scope="external"/></li>
+                                        <li>Internal link: <xref href="sample2.dita"/></li>
+                                        <li>Link to  <xref href="test.pdf" format="pdf">binary resource</xref></li>
                                 </ul>
                         </p>
                 </section>
@@ -22,6 +25,8 @@
                         <title>Indirect internal (cross reference) links</title>
                         <ul>
                                 <li>Link to external resource <xref keyref="google"/></li>
+                                <li>Internal link: <xref keyref="sample2"/></li>
+                                <li>Link to  <xref keyref="myPDF">binary resource</xref></li>
                         </ul>
                 </section>
                 <section id="section_gcg_wlk_33b">
@@ -29,6 +34,8 @@
                         <p>
                                 <ul id="ul_f25_wlk_33b">
                                         <li conref="sample2.dita#sample2/i1"/>
+                                        <li>Conref range:</li>
+                                        <li conref="sample2.dita#sample2/i1" conrefend="sample2.dita#sample2/i3"/>
                                 </ul>
                         </p>
                 </section>
@@ -36,12 +43,23 @@
                         <title>Indirect content reference</title>
                         <ul>
                                 <li conkeyref="sample2/i1"/>
+                                <li>Conkeyref range:</li>
+                                <li conkeyref="sample2/i1" conrefend="bla.dita#test/i3"/>
                         </ul>
                 </section>
         </body>
         <related-links>
                 <linklist>
+                        <desc>Direct related links</desc>
+                        <link href="http://www.google.com" format="html"
+                                scope="external"/>
+                        <link href="sample2.dita"/>
+                        <link href="test.pdf" format="pdf"><linktext>binary resource</linktext></link>
+                </linklist>
+                <linklist>
                         <desc>Indirect related links</desc>
+                        <link keyref="google"/>
+                        <link keyref="sample2"/>
                         <link keyref="myPDF"><linktext>binary resource</linktext></link>
                 </linklist>
         </related-links>
