@@ -2,6 +2,8 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\test\Documents"/>
+			<item value="C:\Users\test\Documents\oxygen-dita-outgoing-references-view"/>
 			<item value="C:\Users\test\Documents\sample-plugin-workspace-access"/>
 		</list>
 		<list key="projectNameTemplate">

@@ -3,8 +3,15 @@
 <map>
     <title>Samples</title>
     <keydef keys="image" href="image.png" format="png"/>
-    <keydef keys="google" href="http://www.google.com" format="html" scope="external"/>
+    <keydef keys="google" href="https://www.google.com" format="html" scope="external"/>
     <keydef keys="myPDF" href="test.pdf" format="pdf"/>
     <topicref href="sample.dita"/>
     <topicref href="sample2.dita" keys="sample2"/>
+    <keydef keys="simpleKey">
+        <topicmeta>
+            <keywords>
+                <keyword>value</keyword>
+            </keywords>
+        </topicmeta>
+    </keydef>
 </map>
