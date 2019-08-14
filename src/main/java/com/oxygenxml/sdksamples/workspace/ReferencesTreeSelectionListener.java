@@ -62,7 +62,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Notify the tree about selection change of the treeNode
-			selectReferenceElementInTextPage();
+			selectReferenceElementInEditorPage();
 		}
 	}
 
@@ -79,9 +79,9 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	}
 
 	/**
-	 * Select the matching Reference Element in the TextPage.
+	 * Select the matching Reference Element in the TextPage / AuthorPage.
 	 */
-	private void selectReferenceElementInTextPage() {
+	private void selectReferenceElementInEditorPage() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) refTree.getLastSelectedPathComponent();
 		// if nothing is selected
 		if (node == null) {
@@ -90,15 +90,14 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 			// retrieve the node that was selected
 			if (this.refTree.getEditorAccess() != null) {
 				if (this.refTree.getEditorAccess().getCurrentPage() != null) {
-
 					// if node is a leaf
-					if (node.getUserObject() instanceof NodeRange) {
+					if (node.getUserObject() instanceof NodeRange) {;
 						NodeRange range = (NodeRange) node.getUserObject();
 						WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
 						int[] nodeOffsets = range.getNodeOffsets(editorPage);
 						int startOffset = nodeOffsets[0];
 						int endOffset = nodeOffsets[1];
-						
+					
 						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
 						// select in editorPage the corresponding reference Element
 						selectRange(editorPage, startOffset, endOffset);

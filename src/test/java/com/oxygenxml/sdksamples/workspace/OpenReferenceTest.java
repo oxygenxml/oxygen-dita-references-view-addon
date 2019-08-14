@@ -247,7 +247,7 @@ public class OpenReferenceTest extends TestCase {
 	 * Open binary resource with @format attribute, not handled by Oxygen.
 	 */
 	@Test
-	public void testOpenRef_BinaryRescourceWithFormat() {
+	public void testOpenRef_BinaryResourceWithFormat() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(9);

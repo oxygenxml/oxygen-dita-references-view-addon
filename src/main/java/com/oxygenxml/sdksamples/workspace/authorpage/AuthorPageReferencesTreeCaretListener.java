@@ -15,7 +15,7 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 	/**
 	 * Construct the CaretListener for AuthorPage.
 	 * 
-	 * @param authorPage         The Author Page
+	 * @param authorPage         The AuthorPage
 	 * @param refTree            The References Tree
 	 * @param selectionInhibitor The selectionInhibitor
 	 */

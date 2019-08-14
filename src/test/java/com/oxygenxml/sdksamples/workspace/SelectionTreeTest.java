@@ -30,7 +30,7 @@ public class SelectionTreeTest extends TestCase {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testSelectionInTree() throws InterruptedException {
+	public void test_SelectionInTreeTextPage() throws InterruptedException {
 		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
 				null, new DITAReferencesTranslatorForTests());
 

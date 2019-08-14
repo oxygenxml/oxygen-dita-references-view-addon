@@ -16,156 +16,164 @@ import ro.sync.exml.workspace.api.listeners.WSEditorPageChangedListener;
 
 public class WSEditorAdapterForTests implements WSEditor {
 
+	@Override
 	public String getEncodingForSerialization() {
-		
 		return null;
 	}
 
+	@Override
 	public URL getEditorLocation() {
-		
 		return null;
 	}
 
+	@Override
 	public void save() {
 		
-
 	}
 
+	@Override
 	public void saveAs(URL location) {
 		
-
 	}
 
-	public boolean close(boolean askForSave) {
-		
+	@Override
+	public boolean close(boolean askForSave) {	
 		return false;
 	}
 
+	@Override
 	public void setModified(boolean modified) {
 		
-
 	}
 
-	public boolean isNewDocument() {
-		
+	@Override
+	public boolean isNewDocument() {	
 		return false;
 	}
 
-	public Reader createContentReader() {
-		
+	@Override
+	public Reader createContentReader() {	
 		return null;
 	}
 
-	public InputStream createContentInputStream() throws IOException {
-		
+	@Override
+	public InputStream createContentInputStream() throws IOException {	
 		return null;
 	}
 
+	@Override
 	public void reloadContent(Reader reader) {
 		
-
 	}
 
+	@Override
 	public void reloadContent(Reader reader, boolean discardUndoableEdits) {
 		
-
 	}
 
+	@Override
 	public void setEditorTabText(String tabText) {
 		
-
 	}
 
+	@Override
 	public void setEditorTabTooltipText(String tabTooltip) {
 		
-
 	}
 
+	@Override
 	public DocumentTypeInformation getDocumentTypeInformation() {
 		
 		return null;
 	}
 
+	@Override
 	public boolean isModified() {
 		
 		return false;
 	}
 
+	@Override
 	public void runTransformationScenarios(String[] scenarioNames, TransformationFeedback transformationFeedback)
 			throws TransformationScenarioNotFoundException {
 		
-
 	}
 
+	@Override
 	public WSEditorPage getCurrentPage() {
 		return new TextComponentForTests();
 	}
 
-	public String getCurrentPageID() {
-		
+	@Override
+	public String getCurrentPageID() {		
 		return null;
 	}
 
-	public void addPageChangedListener(WSEditorPageChangedListener pageChangedListener) {
-		
+	@Override
+	public void addPageChangedListener(WSEditorPageChangedListener pageChangedListener) {	
 
 	}
 
-	public void removePageChangedListener(WSEditorPageChangedListener pageChangedListener) {
-		
+	@Override
+	public void removePageChangedListener(WSEditorPageChangedListener pageChangedListener) {		
 
 	}
 
-	public void addEditorListener(WSEditorListener editorListener) {
-		
+	@Override
+	public void addEditorListener(WSEditorListener editorListener) {		
 
 	}
 
+	@Override
 	public WSEditorListener[] getEditorListeners() {
 		
 		return null;
 	}
 
-	public void removeEditorListener(WSEditorListener editorListener) {
-		
+	@Override
+	public void removeEditorListener(WSEditorListener editorListener) {		
 
 	}
 
-	public void changePage(String pageID) {
-		
+	@Override
+	public void changePage(String pageID) {		
 
 	}
 
-	public void addValidationProblemsFilter(ValidationProblemsFilter validationProblemsFilter) {
-		
+	@Override
+	public void addValidationProblemsFilter(ValidationProblemsFilter validationProblemsFilter) {		
 
 	}
 
-	public void removeValidationProblemsFilter(ValidationProblemsFilter validationProblemsFilter) {
-		
+	@Override
+	public void removeValidationProblemsFilter(ValidationProblemsFilter validationProblemsFilter) {		
 
 	}
 
+	@Override
 	public boolean checkValid() {
 		
 		return false;
 	}
 
+	@Override
 	public boolean checkValid(boolean automatic) {
 		
 		return false;
 	}
 
+	@Override
 	public Object getComponent() {
 		
 		return null;
 	}
 
-	public void setEditable(boolean editable) {
-		
+	@Override
+	public void setEditable(boolean editable) {		
 
 	}
 
+	@Override
 	public boolean isEditable() {
 		
 		return false;

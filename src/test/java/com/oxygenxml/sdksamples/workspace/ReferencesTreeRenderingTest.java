@@ -23,29 +23,24 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  */
 public class ReferencesTreeRenderingTest extends TestCase {
 
-	final ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
-			null, new DITAReferencesTranslatorForTests());
-	
-	
-	
+	final ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
+			new DITAReferencesTranslatorForTests());
+
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
-			+ "    <title class=\"- topic/title \">sample</title>\n"
-			+ "    <body>\n"
+			+ "    <title class=\"- topic/title \">sample</title>\n" + "    <body>\n"
 			+ "            <image class=\"- topic/image \" href=\"image.png\"/>\n"
 			+ "            <image class=\"- topic/image \" href=\"image\" format=\"png\"/> '\n "
 			+ "            <p>Link to external resource <xref keyref=\"google\"/> </p>\n"
 			+ "            <p class=\"- topic/p \" conref=\"sample2.dita#sample2/i1\"/>\n"
 			+ "            <p class=\"- topic/p \" conkeyref=\"sample2/i1\" conrefend=\"bla.dita#test/i3\"/> \n"
-			+ "    </body>\n "
-			+ "    <related-links>\n"
+			+ "    </body>\n " + "    <related-links>\n"
 			+ "            <link class=\"- topic/link \" href=\"www.google.com\" format=\"html\" scope=\"external\"/>\n"
 			+ "            <link class=\"- topic/link \" href=\"sample2.dita\"/>\n"
 			+ "            <link class=\"- topic/link \" href=\"test.pdf\" format=\"pdf\"><linktext>binary resource</linktext></link>\n"
 			+ "            <link class=\"- topic/link \" keyref=\"google\"/>\n"
 			+ "            <link class=\"- topic/link \" keyref=\"sample2\"/>\n"
 			+ "            <link class=\"- topic/link \" keyref=\"myPDF\"><linktext>binary resource</linktext></link>\n"
-			+ "    </related-links>\n"
-			+ "</topic>";
+			+ "    </related-links>\n" + "</topic>";
 
 	/**
 	 * Test the tree root when no file is opened.
@@ -94,7 +89,6 @@ public class ReferencesTreeRenderingTest extends TestCase {
 				true, true, true, 0, true);
 		assertEquals("Outgoing_references_not_available", label.getText());
 	}
-	
 
 	/**
 	 * XML File opened in Text mode but it's not a DITA file.
@@ -124,21 +118,16 @@ public class ReferencesTreeRenderingTest extends TestCase {
 
 	}
 
-
 	/**
 	 * DITA Composite opened in Text Mode WITH references inside.
 	 */
 	@Test
 	public void test_DITACompositeWithRefs() {
-		String ditaCompositeContent = "<dita>\n"
-					+ "    <topic id=\"topic_xst_3qn_j3b\" >\n"
-					+ "        <title></title>\n"
-					+ "        <body>\n"
-					+ "            <p><xref class=\"- topic/xref \" href=\"https://docs.oracle.com/javase/7/docs/api/javax/swing/AbstractAction.html\"\n"
-					+ "                format=\"html\" scope=\"external\"/></p>\n"
-					+ "        </body>\n"
-					+ "    </topic>\n"
-					+ " </dita>";
+		String ditaCompositeContent = "<dita>\n" + "    <topic id=\"topic_xst_3qn_j3b\" >\n"
+				+ "        <title></title>\n" + "        <body>\n"
+				+ "            <p><xref class=\"- topic/xref \" href=\"https://docs.oracle.com/javase/7/docs/api/javax/swing/AbstractAction.html\"\n"
+				+ "                format=\"html\" scope=\"external\"/></p>\n" + "        </body>\n" + "    </topic>\n"
+				+ " </dita>";
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaCompositeContent, 2));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -163,7 +152,7 @@ public class ReferencesTreeRenderingTest extends TestCase {
 	 * DITA topic opened in Text Mode with ALL reference categories inside.
 	 */
 	@Test
-	public void test_DITAWithAllRefs() {
+	public void test_DITAWithAllRefsInTextMode() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 14));
 
@@ -182,13 +171,13 @@ public class ReferencesTreeRenderingTest extends TestCase {
 				true, true, 8, true);
 		assertEquals("sample2.dita", label.getText());
 	}
-	
+
 	/**
 	 * Create the WSEditor for TextPage depending on the XPath expression.
 	 * 
 	 * @param content        The DITA Content
 	 * @param noOfNodeRanges Number of NodeRanges
-	 * @return WSEditor in TextMode with XPAth evaluation
+	 * @return WSEditor in TextMode with XPath evaluation
 	 */
 	private WSEditorAdapterForTests createWSEditorAdapterForTextPage(String content, int noOfNodeRanges) {
 		return new WSEditorAdapterForTests() {

@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
@@ -65,6 +67,57 @@ public class TestUtil {
 		MouseEvent mouseEvent = new MouseEvent(tree, MouseEvent.MOUSE_CLICKED, 0, 0, point.x, point.y, 2, false);
 		tree.dispatchEvent(mouseEvent);
 	}
+	
+	/**
+	 * Create an array of AuthorElements evaluated by an XPath expression for the
+	 * outgoing references.
+	 * 
+	 * @return a references array of AuthorElements
+	 */
+	static AuthorElementAdapter[] createAuthorElementArray() {
+		Map<String, String> rootAttributeMap = new LinkedHashMap<String, String>();
+		rootAttributeMap.put("class", "- topic/topic ");
+		rootAttributeMap.put("id", "sample");
+		AuthorElementAdapter rootElem = new AuthorElementAdapter("topic", 1, 342, rootAttributeMap);
+
+		Map<String, String> imageAttributeMap = new LinkedHashMap<String, String>();
+		imageAttributeMap.put("href", "image2.jpg");
+		imageAttributeMap.put("class", "- topic/image ");
+		AuthorElementAdapter imageElem = new AuthorElementAdapter("image", 49, 50, imageAttributeMap);
+
+		Map<String, String> keyrefAttributeMap = new LinkedHashMap<String, String>();
+		keyrefAttributeMap.put("href", "http://www.google.com");
+		keyrefAttributeMap.put("format", "html");
+		keyrefAttributeMap.put("scope", "external");
+		keyrefAttributeMap.put("class", "- topic/xref ");
+		AuthorElementAdapter keyrefElem = new AuthorElementAdapter("xref", 125, 126, keyrefAttributeMap);
+
+		Map<String, String> googleAttributeMap = new LinkedHashMap<String, String>();
+		googleAttributeMap.put("keyref", "google");
+		googleAttributeMap.put("class", "- topic/xref ");
+		AuthorElementAdapter googleKeyrefElem = new AuthorElementAdapter("xref", 203, 204, googleAttributeMap);
+
+		Map<String, String> conrefAttributeMap = new LinkedHashMap<String, String>();
+		conrefAttributeMap.put("conref", "sample2.dita#sample2/i1");
+		conrefAttributeMap.put("class", "- topic/li ");
+		AuthorElementAdapter conrefElem = new AuthorElementAdapter("li", 237, 247, conrefAttributeMap);
+
+		Map<String, String> conkeyrefAttributeMap = new LinkedHashMap<String, String>();
+		conkeyrefAttributeMap.put("conkeyref", "sample2/i1");
+		conkeyrefAttributeMap.put("class", "- topic/li ");
+		AuthorElementAdapter conkeyrefElem = new AuthorElementAdapter("li", 281, 291, conkeyrefAttributeMap);
+
+		Map<String, String> linkAttributeMap = new LinkedHashMap<String, String>();
+		linkAttributeMap.put("keyref", "myPDF");
+		linkAttributeMap.put("class", "- topic/link ");
+		AuthorElementAdapter linkElem = new AuthorElementAdapter("link", 321, 339, linkAttributeMap);
+
+		AuthorElementAdapter[] elemArray = new AuthorElementAdapter[] 
+				{ rootElem, imageElem, keyrefElem, googleKeyrefElem, conrefElem, conkeyrefElem, linkElem };
+
+		return elemArray;
+	}
+
 
 	/**
 	 * Dumps tree information.
@@ -105,7 +158,7 @@ public class TestUtil {
 			TreePath path = tree.getPathForRow(i);
 			JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(
 					tree, path.getLastPathComponent(), false, true, true, i, false);
-			stringBuilder.append(label.getText()).append(" -> " + label.getToolTipText()).append("\n");
+			stringBuilder.append(label.getText()).append("\n");
 		}
 		return stringBuilder.toString();
 	}
