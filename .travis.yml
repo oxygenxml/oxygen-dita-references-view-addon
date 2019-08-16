@@ -29,7 +29,7 @@ deploy:
   provider: releases
   api_key: ${MY_GH_TOKEN_OXYGEN}
   file:
-    - target/oxygen-batch-converter-${TRAVIS_TAG}-plugin.jar
+    - target/oxygen-dita-outgoing-references-view-${TRAVIS_TAG}-plugin.jar
     - target/addon.xml
   skip_cleanup: true
   on:
