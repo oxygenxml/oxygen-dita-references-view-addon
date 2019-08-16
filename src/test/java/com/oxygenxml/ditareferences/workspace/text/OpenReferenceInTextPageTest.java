@@ -34,7 +34,7 @@ import ro.sync.util.URLUtil;
  * @author Alexandra_Dinisor
  *
  */
-public class OpenReferenceInTextTest extends TestCase {
+public class OpenReferenceInTextPageTest extends TestCase {
 	
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
 			+ "    <title class=\"- topic/title \">sample</title>\n"

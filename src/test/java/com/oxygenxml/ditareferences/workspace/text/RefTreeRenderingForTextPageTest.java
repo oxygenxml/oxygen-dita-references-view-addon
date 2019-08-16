@@ -27,7 +27,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  * @author Alexandra_Dinisor
  *
  */
-public class ReferencesTreeRenderingForTextPageTest extends TestCase {
+public class RefTreeRenderingForTextPageTest extends TestCase {
 
 	final ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
 			new DITAReferencesTranslatorForTests());

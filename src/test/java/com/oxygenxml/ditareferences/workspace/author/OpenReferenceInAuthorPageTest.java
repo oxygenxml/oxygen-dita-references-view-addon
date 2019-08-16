@@ -30,7 +30,7 @@ import ro.sync.exml.workspace.api.util.UtilAccess;
  * @Alexandra_Dinisor
  *
  */
-class OpenReferenceInAuthorTest extends TestCase {
+class OpenReferenceInAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
 	private final ArrayList<URL> URLToExternal = new ArrayList<URL>();
