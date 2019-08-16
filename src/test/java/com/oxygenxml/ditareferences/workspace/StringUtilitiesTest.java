@@ -6,8 +6,6 @@ import java.awt.Toolkit;
 
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.workspace.StringUtilities;
-
 import junit.framework.TestCase;
 
 public class StringUtilitiesTest extends TestCase {	
@@ -17,7 +15,7 @@ public class StringUtilitiesTest extends TestCase {
 	String expected;
 	String trimmed;
 	
-	Font font = new Font("Courier New", Font.PLAIN, 14);
+	Font font = new Font("Monospaced", Font.PLAIN, 14);
 	FontMetrics fontMetrics = Toolkit.getDefaultToolkit().getFontMetrics(font);
 		
 	@Test
@@ -52,6 +50,7 @@ public class StringUtilitiesTest extends TestCase {
 		System.out.println("advanceWidth for " + text + ": " + advanceWidth);
 
 		trimmed = StringUtilities.trimNodeText(fontMetrics, text, width);
+		System.out.println(trimmed);
 		assertEquals(expected, trimmed);	
 	}
 	
