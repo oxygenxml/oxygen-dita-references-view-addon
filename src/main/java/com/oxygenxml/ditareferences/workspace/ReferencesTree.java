@@ -129,7 +129,7 @@ public class ReferencesTree extends Tree {
 						|| EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())
 								&& editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {
 					// Preliminary refresh
-					this.setPreliminaryTextTree(editorAccess);
+					this.setPreliminaryTree(editorAccess);
 				} else {
 					// Other content type, like CSS, or an XML opened in Grid mode.
 					this.setNoRefsAvailableTree();
@@ -179,7 +179,7 @@ public class ReferencesTree extends Tree {
 	 * @throws XPathException
 	 * @throws AuthorOperationException
 	 */
-	private void setPreliminaryTextTree(WSEditor editorAccess)
+	private void setPreliminaryTree(WSEditor editorAccess)
 			throws XPathExpressionException, XPathException, AuthorOperationException {
 
 		// set root for ReferencesTree
