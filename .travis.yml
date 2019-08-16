@@ -8,6 +8,9 @@ addons:
 
 jdk:
  - oraclejdk8
+
+dist: trusty
+ 
 matrix:
   fast_finish: true
 install: true
