@@ -33,26 +33,26 @@ import ro.sync.exml.workspace.api.util.UtilAccess;
 public class OpenReferenceInAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
-	private final ArrayList<URL> URLToExternal = new ArrayList<URL>();
-	private final ArrayList<URL> URLToDITA = new ArrayList<URL>();
-	private final ArrayList<URL> URLToImage = new ArrayList<URL>();
+	private final ArrayList<URL> urlToExternal = new ArrayList<URL>();
+	private final ArrayList<URL> urlToDITA = new ArrayList<URL>();
+	private final ArrayList<URL> urlToImage = new ArrayList<URL>();
 
 	final StandalonePluginWorkspaceAccessForTests pluginWorkspaceAccess = new StandalonePluginWorkspaceAccessForTests() {
 		@Override
 		public void openInExternalApplication(URL url, boolean preferAssociatedApplication) {
-			URLToExternal.add(url);
+			urlToExternal.add(url);
 			super.openInExternalApplication(url, preferAssociatedApplication);
 		}
 
 		@Override
 		public boolean open(URL url) {
-			URLToDITA.add(url);
+			urlToDITA.add(url);
 			return super.open(url);
 		}
 
 		@Override
 		public boolean open(URL url, String imposedPage, String imposedContentType) {
-			URLToImage.add(url);
+			urlToImage.add(url);
 			return super.open(url, imposedPage, imposedContentType);
 		}
 
@@ -114,7 +114,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setSelectionRow(1);
 		TestUtil.simulateDoubleClick(tree);
 
-		assertEquals("/image2.jpg", URLToImage.get(0).toString().substring(11));
+		assertTrue("Should have worked " + String.valueOf(urlToImage.get(0)), urlToImage.get(0).toString().endsWith("/image2.jpg"));
 
 	}
 
@@ -135,7 +135,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setSelectionRow(6);
 		TestUtil.simulateDoubleClick(tree);
 
-		assertEquals("/sample2.dita#sample2/i1", URLToDITA.get(0).toString().substring(11));
+		assertTrue("Should have worked " + String.valueOf(urlToDITA.get(0)), urlToDITA.get(0).toString().endsWith("/sample2.dita#sample2/i1"));
 
 	}
 
@@ -156,7 +156,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setSelectionRow(7);
 		TestUtil.simulateDoubleClick(tree);
 
-		assertEquals("file:/C:/Users/test/Documents/sample2.dita", URLToDITA.get(0).toString());
+		assertEquals("file:/C:/Users/test/Documents/sample2.dita", urlToDITA.get(0).toString());
 
 	}
 
@@ -177,7 +177,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setSelectionRow(9);
 		TestUtil.simulateDoubleClick(tree);
 
-		assertEquals("file:/C:/Users/test/Documents/test.pdf", URLToExternal.get(0).toString());
+		assertEquals("file:/C:/Users/test/Documents/test.pdf", urlToExternal.get(0).toString());
 	}
 
 
