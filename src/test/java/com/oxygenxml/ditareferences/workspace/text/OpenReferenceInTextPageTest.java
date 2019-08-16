@@ -164,7 +164,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 
 		tree.setSelectionRow(1);
 		TestUtil.simulateDoubleClick(tree);
-		assertEquals("C:/image.png", URLToImage.get(0).toString().substring(9));
+		assertEquals("/image.png", URLToImage.get(0).toString().substring(11));
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 
 		tree.setSelectionRow(2);
 		TestUtil.simulateDoubleClick(tree);
-		assertEquals("C:/image.png", URLToImage.get(0).toString().substring(9));
+		assertEquals("/image.png", URLToImage.get(0).toString().substring(11));
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 
 		tree.setSelectionRow(4);
 		TestUtil.simulateDoubleClick(tree);
-		assertEquals("C:/sample2.dita#sample2/i1", URLToDITA.get(0).toString().substring(9));
+		assertEquals("/sample2.dita#sample2/i1", URLToDITA.get(0).toString().substring(11));
 	}
 	
 	/**
