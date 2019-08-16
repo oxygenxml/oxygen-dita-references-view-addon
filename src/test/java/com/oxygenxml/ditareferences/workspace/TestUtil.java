@@ -84,7 +84,7 @@ public class TestUtil {
 	 * @param elem The array of AuthorElements with XPath evaluation
 	 * @return WSEditor in AuthorMode with XPath evaluation
 	 */
-	public static WSEditorAdapterForTests createWSEditorAdapterForAuthorPage(AuthorElementAdapter[] elem) {
+	public static WSEditorAdapterForTests createWSEditorAdapterForAuthorPage(final AuthorElementAdapter[] elem) {
 		return new WSEditorAdapterForTests() {
 			@Override
 			public String getCurrentPageID() {

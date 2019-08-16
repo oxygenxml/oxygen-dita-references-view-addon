@@ -20,5 +20,5 @@
  <extension type="WorkspaceAccess" 
    class="com.oxygenxml.ditareferences.workspace.DITAReferencesWorkspaceAccessPluginExtension"/>
  
-  <view id="DITAReferencesWorkspaceAccessID" initialSide="EAST" initialRow="0"/>
+  <view id="DITAReferencesWorkspaceAccessID" initialSide="EAST" initialRow="1"/>
 </plugin>

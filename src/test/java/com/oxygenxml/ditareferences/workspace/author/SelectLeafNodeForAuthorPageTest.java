@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 import javax.swing.tree.TreePath;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.ReferencesTree;
@@ -14,7 +14,7 @@ import com.oxygenxml.ditareferences.workspace.WSEditorAdapterForTests;
 
 import junit.framework.TestCase;
 
-class SelectLeafNodeForAuthorPageTest extends TestCase {
+public class SelectLeafNodeForAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
 	ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null, new DITAReferencesTranslatorForTests());

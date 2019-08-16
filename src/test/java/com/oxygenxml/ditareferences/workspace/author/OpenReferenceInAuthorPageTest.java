@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
@@ -30,7 +30,7 @@ import ro.sync.exml.workspace.api.util.UtilAccess;
  * @Alexandra_Dinisor
  *
  */
-class OpenReferenceInAuthorPageTest extends TestCase {
+public class OpenReferenceInAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
 	private final ArrayList<URL> URLToExternal = new ArrayList<URL>();

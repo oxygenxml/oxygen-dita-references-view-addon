@@ -19,7 +19,7 @@ public class StringUtilities {
 	 * @return The displayed part of node text 
 	 */
 	public static String trimNodeText(FontMetrics fontMetrics, String referenceAttributeValue, int width) {
-		String toDisplayString = null;
+		String toDisplayString = referenceAttributeValue;
 
 		char[] charArray = referenceAttributeValue.toCharArray();
 		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
