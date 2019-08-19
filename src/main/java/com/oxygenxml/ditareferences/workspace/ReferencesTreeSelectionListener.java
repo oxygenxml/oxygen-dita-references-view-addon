@@ -71,9 +71,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 		private void selectReferenceElementInEditorPage() {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) refTree.getLastSelectedPathComponent();
 			// if nothing is selected
-			if (node == null) {
-				return;
-			} else {
+			if (node != null) {				
 				// retrieve the node that was selected
 				if (refTree.getEditorAccess() != null) {
 					if (refTree.getEditorAccess().getCurrentPage() != null) {
@@ -96,6 +94,21 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 				}
 			}
 		}
+		
+		/**
+		 * Select the corresponding Element in Editor.
+		 * 
+		 * @param page        Text / Author Page
+		 * @param startOffset Start Offset to be selected
+		 * @param endOffset   End Offset to be selected
+		 */
+		private void selectRange(WSEditorPage page, int startOffset, int endOffset) {
+			if (page instanceof WSTextEditorPage) {
+				((WSTextEditorPage) page).select(startOffset, endOffset);
+			} else {
+				((WSAuthorEditorPage) page).select(startOffset, endOffset);
+			}
+		}
 	}
 
 	/**
@@ -110,22 +123,6 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 		}
 	}
 
-
-
-	/**
-	 * Select the corresponding Element in Editor.
-	 * 
-	 * @param page        Text / Author Page
-	 * @param startOffset Start Offset to be selected
-	 * @param endOffset   End Offset to be selected
-	 */
-	private void selectRange(WSEditorPage page, int startOffset, int endOffset) {
-		if (page instanceof WSTextEditorPage) {
-			((WSTextEditorPage) page).select(startOffset, endOffset);
-		} else {
-			((WSAuthorEditorPage) page).select(startOffset, endOffset);
-		}
-	}
 
 	/**
 	 * Implement the TreeSelectionInhibitor interface method.

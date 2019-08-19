@@ -23,7 +23,7 @@ public class AuthorReferencesCollector extends ReferencesCollector {
 	@Override
 	protected List<NodeRange> collect(WSEditorPage page) throws XPathException {
 		WSAuthorEditorPage authorEditorPage = (WSAuthorEditorPage) page;
-		List<NodeRange> ranges = new ArrayList<NodeRange>();
+		List<NodeRange> ranges = new ArrayList<>();
 
 		try {
 			AuthorNode[] referenceAuthorNodeRanges = authorEditorPage.getDocumentController()
