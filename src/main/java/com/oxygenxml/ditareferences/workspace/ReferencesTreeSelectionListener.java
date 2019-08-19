@@ -64,6 +64,51 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 			// Notify the tree about selection change of the treeNode
 			selectReferenceElementInEditorPage();
 		}
+
+		/**
+		 * Select the matching Reference Element in the TextPage / AuthorPage.
+		 */
+		private void selectReferenceElementInEditorPage() {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) refTree.getLastSelectedPathComponent();
+			// if nothing is selected
+			if (node != null) {
+				// retrieve the node that was selected
+				if (refTree.getEditorAccess() != null) {
+					if (refTree.getEditorAccess().getCurrentPage() != null) {
+						// if node is a leaf
+						if (node.getUserObject() instanceof NodeRange) {
+							NodeRange range = (NodeRange) node.getUserObject();
+							WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
+							int[] nodeOffsets = range.getNodeOffsets(editorPage);
+							int startOffset = nodeOffsets[0];
+							int endOffset = nodeOffsets[1];
+
+							caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
+							// select in editorPage the corresponding reference Element
+							selectRange(editorPage, startOffset, endOffset);
+							caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
+						}
+					}
+				} else {
+					LOGGER.error("EDITOR NULL");
+				}
+			}
+		}
+
+		/**
+		 * Select the corresponding Element in Editor.
+		 * 
+		 * @param page        Text / Author Page
+		 * @param startOffset Start Offset to be selected
+		 * @param endOffset   End Offset to be selected
+		 */
+		private void selectRange(WSEditorPage page, int startOffset, int endOffset) {
+			if (page instanceof WSTextEditorPage) {
+				((WSTextEditorPage) page).select(startOffset, endOffset);
+			} else {
+				((WSAuthorEditorPage) page).select(startOffset, endOffset);
+			}
+		}
 	}
 
 	/**
@@ -87,51 +132,6 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	public void setInhibitTreeSelectionListener(boolean inhibitTreeSelectionListener) {
 		this.inhibitTreeSelectionListener = inhibitTreeSelectionListener;
 
-	}
-
-	/**
-	 * Select the matching Reference Element in the TextPage / AuthorPage.
-	 */
-	private void selectReferenceElementInEditorPage() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) refTree.getLastSelectedPathComponent();
-		// if nothing is selected
-		if (node != null) {
-			// retrieve the node that was selected
-			if (refTree.getEditorAccess() != null) {
-				if (refTree.getEditorAccess().getCurrentPage() != null) {
-					// if node is a leaf
-					if (node.getUserObject() instanceof NodeRange) {
-						NodeRange range = (NodeRange) node.getUserObject();
-						WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
-						int[] nodeOffsets = range.getNodeOffsets(editorPage);
-						int startOffset = nodeOffsets[0];
-						int endOffset = nodeOffsets[1];
-
-						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
-						// select in editorPage the corresponding reference Element
-						selectRange(editorPage, startOffset, endOffset);
-						caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
-					}
-				}
-			} else {
-				LOGGER.error("EDITOR NULL");
-			}
-		}
-	}
-
-	/**
-	 * Select the corresponding Element in Editor.
-	 * 
-	 * @param page        Text / Author Page
-	 * @param startOffset Start Offset to be selected
-	 * @param endOffset   End Offset to be selected
-	 */
-	private void selectRange(WSEditorPage page, int startOffset, int endOffset) {
-		if (page instanceof WSTextEditorPage) {
-			((WSTextEditorPage) page).select(startOffset, endOffset);
-		} else {
-			((WSAuthorEditorPage) page).select(startOffset, endOffset);
-		}
 	}
 
 }
