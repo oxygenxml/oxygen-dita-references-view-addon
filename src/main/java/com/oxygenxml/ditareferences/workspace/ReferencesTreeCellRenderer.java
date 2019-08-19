@@ -95,20 +95,13 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		}
 
 		if (value instanceof DefaultMutableTreeNode) {
-
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
-				if (inProgress == 1) {
-					// compute width for node text without its IconWidth and TextGap
+				// compute width for node text 
+				if (inProgress == 1) {					
 					Rectangle rowBounds = tree.getRowBounds(row);
-					if (rowBounds != null) {
-						width -= rowBounds.x;
-						if (label.getIcon() != null) {
-							width -= label.getIcon().getIconWidth();
-							width -= label.getIconTextGap();
-						}
-					}
+					width = adjustWidth(label, width, rowBounds);
 				}
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
@@ -127,6 +120,26 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		
 		inProgress--;
 		return label;
+	}
+
+	/**
+	 * Adjust the width of the leaf node, removing the icon width and gap between
+	 * icon and text of the leaf node.
+	 * 
+	 * @param label     The label
+	 * @param width     The initial width
+	 * @param rowBounds The rowBounds
+	 * @return the adjusted width
+	 */
+	private int adjustWidth(JLabel label, int width, Rectangle rowBounds) {
+		if (rowBounds != null) {
+			width -= rowBounds.x;
+			if (label.getIcon() != null) {
+				width -= label.getIcon().getIconWidth();
+				width -= label.getIconTextGap();
+			}
+		}
+		return width;
 	}
 
 	/**

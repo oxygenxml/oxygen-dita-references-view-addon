@@ -69,6 +69,28 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 			// Notify the caret about the change.
 			searchForNodeMatchingCaret();
 		}
+
+		/**
+		 * Search and select the treeNode corresponding the caret in Editor.
+		 */
+		private void searchForNodeMatchingCaret() {
+			if (getCaretOffset() > 0) {
+				int caretOffset = getCaretOffset();
+
+				DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();
+				TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset,
+						editorPage.get());
+
+				// select the returned path matching the caret
+				if (pathForSelectionInTree != null) {
+					treeSelectionInhibitor.setInhibitTreeSelectionListener(true);
+					refTree.expandPath(pathForSelectionInTree);
+					refTree.setSelectionPath(pathForSelectionInTree);
+					treeSelectionInhibitor.setInhibitTreeSelectionListener(false);
+				}
+
+			}
+		}
 	}
 
 	/**
@@ -78,26 +100,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 */
 	protected abstract int getCaretOffset();
 
-	/**
-	 * Search and select the treeNode corresponding the caret in Editor.
-	 */
-	private void searchForNodeMatchingCaret() {
-		if (getCaretOffset() > 0) {
-			int caretOffset = getCaretOffset();			
-
-			DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();
-			TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset, editorPage.get());
-
-			// select the returned path matching the caret
-			if (pathForSelectionInTree != null) {
-				treeSelectionInhibitor.setInhibitTreeSelectionListener(true);
-				refTree.expandPath(pathForSelectionInTree);
-				refTree.setSelectionPath(pathForSelectionInTree);
-				treeSelectionInhibitor.setInhibitTreeSelectionListener(false);
-			}
-
-		}
-	}
+	
 
 	/**
 	 * Visit all the reference nodes recursively to find the matching one for caret.
@@ -122,8 +125,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 
 			if (startNodeOffset <= caretOffset && caretOffset <= endNodeOffset) {
 				// Found the node at the corresponding caret
-				TreePath currentPath = parent;
-				return currentPath;
+				return parent;
 			}
 		}
 

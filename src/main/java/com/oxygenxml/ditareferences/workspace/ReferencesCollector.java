@@ -53,7 +53,7 @@ public abstract class ReferencesCollector {
 	 * @throws XPathException
 	 * @throws AuthorOperationException
 	 */
-	public void collectReferences(WSEditorPage textPage, DefaultMutableTreeNode root) throws XPathException, AuthorOperationException {
+	public void collectReferences(WSEditorPage textPage, DefaultMutableTreeNode root) throws XPathException{
 		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(Tags.IMAGE_REFERENCES);
 		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(Tags.CROSS_REFERENCES);
 		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);

@@ -178,8 +178,7 @@ public class ReferencesTree extends Tree {
 	 * @throws XPathException
 	 * @throws AuthorOperationException
 	 */
-	private void setPreliminaryTree(WSEditor editorAccess)
-			throws XPathExpressionException, XPathException, AuthorOperationException {
+	private void setPreliminaryTree(WSEditor editorAccess) throws XPathException, AuthorOperationException {
 
 		// set root for ReferencesTree
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(Tags.ROOT_REFERENCES);
