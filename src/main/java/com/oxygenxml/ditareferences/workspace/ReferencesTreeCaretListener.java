@@ -76,7 +76,6 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 		private void searchForNodeMatchingCaret() {
 			if (getCaretOffset() > 0) {
 				int caretOffset = getCaretOffset();
-
 				DefaultMutableTreeNode root = (DefaultMutableTreeNode) refTree.getModel().getRoot();
 				TreePath pathForSelectionInTree = visitAllNodes(refTree, new TreePath(root), caretOffset,
 						editorPage.get());
@@ -88,7 +87,6 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 					refTree.setSelectionPath(pathForSelectionInTree);
 					treeSelectionInhibitor.setInhibitTreeSelectionListener(false);
 				}
-
 			}
 		}
 

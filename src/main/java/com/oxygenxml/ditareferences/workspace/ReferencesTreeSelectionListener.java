@@ -74,25 +74,32 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 			if (node != null) {
 				// retrieve the node that was selected
 				if (refTree.getEditorAccess() != null) {
-					if (refTree.getEditorAccess().getCurrentPage() != null) {
-						// if node is a leaf
-						if (node.getUserObject() instanceof NodeRange) {
-							NodeRange range = (NodeRange) node.getUserObject();
-							WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
-							int[] nodeOffsets = range.getNodeOffsets(editorPage);
-							int startOffset = nodeOffsets[0];
-							int endOffset = nodeOffsets[1];
+					if (isLeafNode(node)) {
+						NodeRange range = (NodeRange) node.getUserObject();
+						WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
+						int[] nodeOffsets = range.getNodeOffsets(editorPage);
+						int startOffset = nodeOffsets[0];
+						int endOffset = nodeOffsets[1];
 
-							caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
-							// select in editorPage the corresponding reference Element
-							selectRange(editorPage, startOffset, endOffset);
-							caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
-						}
+						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
+						// select in editorPage the corresponding reference Element
+						selectRange(editorPage, startOffset, endOffset);
+						caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
 					}
 				} else {
 					LOGGER.error("EDITOR NULL");
 				}
 			}
+		}
+		
+		/**
+		 * Check for valid leaf node in the current editorAccess.
+		 * 
+		 * @param node The leaf node
+		 * @return true if node is a leaf node from current editoAccess
+		 */
+		private boolean isLeafNode(DefaultMutableTreeNode node) {
+			return refTree.getEditorAccess().getCurrentPage() != null && node.getUserObject() instanceof NodeRange;
 		}
 
 		/**
