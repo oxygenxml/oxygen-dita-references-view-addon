@@ -27,9 +27,9 @@ public class StringUtilities {
 		String toDisplayString = referenceAttributeValue;
 
 		char[] charArray = referenceAttributeValue.toCharArray();
-//		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
-//			toDisplayString = referenceAttributeValue;
-//		} else {
+		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
+			toDisplayString = referenceAttributeValue;
+		} else {
 		// search through delimiters for
 		for (int i = referenceAttributeValue.length() - 1; i >= 0; i--) {
 			if (referenceAttributeValue.charAt(i) == '#' || referenceAttributeValue.charAt(i) == '/'
@@ -49,7 +49,7 @@ public class StringUtilities {
 				}
 			}
 		}
-		// }
+		 }
 		return toDisplayString;
 	}
 }
