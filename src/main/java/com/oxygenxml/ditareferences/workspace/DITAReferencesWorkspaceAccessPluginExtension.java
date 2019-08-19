@@ -28,8 +28,6 @@ import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
-import ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer;
-import ro.sync.exml.workspace.api.standalone.ViewInfo;
 
 /**
  * Plugin extension.
@@ -103,6 +101,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 
 			@Override
 			public void editorClosed(URL editorLocation) {
+				// An edited XML document has been closed.
 			}
 
 			@Override
@@ -112,6 +111,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 
 			@Override
 			public void editorRelocated(URL previousEditorLocation, URL newEditorLocation) {
+				// The editor was relocated (Save as was called).
 			}
 
 			/**
@@ -161,40 +161,37 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		 * Add Icon, Title and ScrollPane for side-view. ScrollPane should let the whole
 		 * part of node text to be painted in the Layout without adding extra "...".
 		 */
-		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
-			@Override
-			public void customizeView(ViewInfo viewInfo) {
-				if ("DITAReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
-					
-					JScrollPane scrollPane = new JScrollPane(refTree);
-					scrollPane.addComponentListener(new ComponentAdapter() {
-						@Override
-						public void componentResized(ComponentEvent e) {
-							SwingUtilities.invokeLater(() -> {
-								// remember the selected path
-								TreePath selectionPath = refTree.getSelectionPath();
-								((DefaultTreeModel) refTree.getModel())
-										.nodeStructureChanged((TreeNode) refTree.getModel().getRoot());
+		pluginWorkspaceAccess.addViewComponentCustomizer(viewInfo -> {
+			if ("DITAReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
+				
+				JScrollPane scrollPane = new JScrollPane(refTree);
+				scrollPane.addComponentListener(new ComponentAdapter() {
+					@Override
+					public void componentResized(ComponentEvent e) {
+						SwingUtilities.invokeLater(() -> {
+							// remember the selected path
+							TreePath selectionPath = refTree.getSelectionPath();
+							((DefaultTreeModel) refTree.getModel())
+									.nodeStructureChanged((TreeNode) refTree.getModel().getRoot());
 
-								// expand all rows with same selected path after side-view scrolled
-								refTree.expandAllRows();
-								refTree.setSelectionPath(selectionPath);
-							});
+							// expand all rows with same selected path after side-view scrolled
+							refTree.expandAllRows();
+							refTree.setSelectionPath(selectionPath);
+						});
 
-						}
-					});
-					// set side-view ScrollPane
-					viewInfo.setComponent(scrollPane);
+					}
+				});
+				// set side-view ScrollPane
+				viewInfo.setComponent(scrollPane);
 
-					// set side-view Title
-					viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
+				// set side-view Title
+				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
 
-					// set side-view Icon
-					ImageIcon DITAReferencesIcon = new ImageIcon(
-							getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
-					
-					viewInfo.setIcon(DITAReferencesIcon);
-				}
+				// set side-view Icon
+				ImageIcon ditaReferencesIcon = new ImageIcon(
+						getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
+				
+				viewInfo.setIcon(ditaReferencesIcon);
 			}
 		});
 	}

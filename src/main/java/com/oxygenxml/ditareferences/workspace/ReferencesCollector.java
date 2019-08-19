@@ -23,6 +23,8 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  */
 public abstract class ReferencesCollector {
 	
+	private static final String CLASS = "class";
+
 	private static final Logger LOGGER = Logger.getLogger(ReferencesCollector.class);
 
 	/**
@@ -64,7 +66,7 @@ public abstract class ReferencesCollector {
 
 		// DITA topics with outgoing references
 		// The root element is the first in the list of references
-		if (ranges.size() >= 1) {
+		if (!ranges.isEmpty()) {
 			// DITA Topic or Composite
 			if (isDITARoot(ranges.get(0))) {
 
@@ -73,49 +75,10 @@ public abstract class ReferencesCollector {
 					root.add(noReferencesFound);
 				} else {
 					// It is an interesting XML document, it's DITA.
-					for (int i = 1; i < ranges.size(); i++) {
-						NodeRange refRange = ranges.get(i);
-						String classAttrValue = refRange.getAttributeValue("class");
-
-						if (classAttrValue != null) {
-							if (classAttrValue.contains(" topic/image ")) {
-
-								// add image nodeRanges in "image references" category of tree
-								imageReferences.add(new DefaultMutableTreeNode(refRange));
-							} else if (classAttrValue.contains(" topic/xref ")) {
-
-								// add xref nodeRanges in "cross references" category of tree
-								crossReferences.add(new DefaultMutableTreeNode(refRange));
-							} else if (classAttrValue.contains(" topic/link ")) {
-
-								// add link nodeRanges in "related links references" category of tree
-								relatedLinks.add(new DefaultMutableTreeNode(refRange));
-							} else if (refRange.getAttributeValue("conkeyref") != null
-									|| refRange.getAttributeValue("conref") != null) {
-
-								// add conref/conkeyref nodeRanges in "content references" category of tree
-								contentReferences.add(new DefaultMutableTreeNode(refRange));
-							} else {
-
-								// add key references to values defined in the DITAMAP
-								contentReferences.add(new DefaultMutableTreeNode(refRange));
-							}
-						}
-					}
+					addElementsInCategory(imageReferences, crossReferences, contentReferences, relatedLinks, ranges);
+					
 					// Do not add empty categories to the referencesTree
-					if (imageReferences.getChildCount() != 0) {
-						root.add(imageReferences);
-					}
-					if (crossReferences.getChildCount() != 0) {
-						root.add(crossReferences);
-					}
-					if (contentReferences.getChildCount() != 0) {
-						root.add(contentReferences);
-					}
-					if (relatedLinks.getChildCount() != 0) {
-						root.add(relatedLinks);
-					}
-
+					addReferenceCategories(root, imageReferences, crossReferences, contentReferences, relatedLinks);
 				}
 			} else {
 				// an XML file which is not DITA: HTML for example
@@ -131,13 +94,81 @@ public abstract class ReferencesCollector {
 	}
 
 	/**
+	 * Add elements in a references category.
+	 * 
+	 * @param imageReferences   The image references category
+	 * @param crossReferences   The cross references category
+	 * @param contentReferences The content references category
+	 * @param relatedLinks      The related links category
+	 * @param ranges            The node ranges
+	 */
+	private void addElementsInCategory(DefaultMutableTreeNode imageReferences, DefaultMutableTreeNode crossReferences,
+			DefaultMutableTreeNode contentReferences, DefaultMutableTreeNode relatedLinks, List<NodeRange> ranges) {
+		for (int i = 1; i < ranges.size(); i++) {
+			NodeRange refRange = ranges.get(i);
+			String classAttrValue = refRange.getAttributeValue(CLASS);
+
+			if (classAttrValue != null) {
+				if (classAttrValue.contains(" topic/image ")) {
+
+					// add image nodeRanges in "image references" category of tree
+					imageReferences.add(new DefaultMutableTreeNode(refRange));
+				} else if (classAttrValue.contains(" topic/xref ")) {
+
+					// add xref nodeRanges in "cross references" category of tree
+					crossReferences.add(new DefaultMutableTreeNode(refRange));
+				} else if (classAttrValue.contains(" topic/link ")) {
+
+					// add link nodeRanges in "related links references" category of tree
+					relatedLinks.add(new DefaultMutableTreeNode(refRange));
+				} else if (refRange.getAttributeValue("conkeyref") != null
+						|| refRange.getAttributeValue("conref") != null) {
+
+					// add conref/conkeyref nodeRanges in "content references" category of tree
+					contentReferences.add(new DefaultMutableTreeNode(refRange));
+				} else {
+
+					// add key references to values defined in the DITAMAP
+					contentReferences.add(new DefaultMutableTreeNode(refRange));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add categories in tree which are not empty.
+	 * 
+	 * @param root              The ReferencesTree root
+	 * @param imageReferences   The image references category
+	 * @param crossReferences   The cross references category
+	 * @param contentReferences The content references category
+	 * @param relatedLinks      The related links category
+	 */
+	private void addReferenceCategories(DefaultMutableTreeNode root, DefaultMutableTreeNode imageReferences,
+			DefaultMutableTreeNode crossReferences, DefaultMutableTreeNode contentReferences,
+			DefaultMutableTreeNode relatedLinks) {
+		if (imageReferences.getChildCount() != 0) {
+			root.add(imageReferences);
+		}
+		if (crossReferences.getChildCount() != 0) {
+			root.add(crossReferences);
+		}
+		if (contentReferences.getChildCount() != 0) {
+			root.add(contentReferences);
+		}
+		if (relatedLinks.getChildCount() != 0) {
+			root.add(relatedLinks);
+		}
+	}
+
+	/**
 	 * Check for DITA Topic or Composite.
 	 * 
 	 * @param range The corresponding nodeRange
 	 * @return true if root shows DITA file
 	 */
 	private boolean isDITARoot(NodeRange range) {
-		return (range.getAttributeValue("class") != null && range.getAttributeValue("class").contains("topic/topic"))
+		return (range.getAttributeValue(CLASS) != null && range.getAttributeValue(CLASS).contains("topic/topic"))
 				|| range.getNodeName().equals("dita");
 	}
 	

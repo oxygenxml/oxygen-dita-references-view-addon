@@ -45,17 +45,15 @@ public class EnterForReferencesKeyAdapter extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			handleEnterKey(e);
+			handleEnterKey();
 		}
 	}
 
 	/**
 	 * Enable the reference opening when ENTER Key is pressed after a Leaf Node is
 	 * selected.
-	 * 
-	 * @param e The KeyEvent
 	 */
-	private void handleEnterKey(KeyEvent e) {
+	private void handleEnterKey() {
 		TreePath currentLocationPath = refTree.getSelectionPath();
 		if (currentLocationPath != null) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentLocationPath.getLastPathComponent();

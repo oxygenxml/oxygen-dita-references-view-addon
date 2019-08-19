@@ -6,12 +6,13 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 /**
  * Implement internationalization tags using PluginResourceBundle.
  * 
- * @author Alexandra Dinisor
+ * @author Alexandra_Dinisor
  *
  */
 public class DITAReferencesTranslator implements Translator {
 
 	public DITAReferencesTranslator() {
+		// empty constructor
 	}
 	
 	@Override

@@ -18,13 +18,13 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 @SuppressWarnings("serial")
 public class OpenReferenceAction extends AbstractAction {
-
+	private static final String FORMAT = "format";
+	
 	/* The OpenReferenceAction Logger. */
 	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
 	private NodeRange nodeRange;
 	private WSEditor editorAccess;
-
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private KeysProvider keysProvider;
 
@@ -72,7 +72,7 @@ public class OpenReferenceAction extends AbstractAction {
 		String keyrefAttr = nodeRange.getAttributeValue("keyref");
 		String conrefAttr = nodeRange.getAttributeValue("conref");
 		String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
-		String formatAttr = nodeRange.getAttributeValue("format");
+		String formatAttr = nodeRange.getAttributeValue(FORMAT);
 		URL url = null;
 		URL editorLocation = editorAccess.getEditorLocation();
 		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider.getKeys(editorLocation);
@@ -93,7 +93,7 @@ public class OpenReferenceAction extends AbstractAction {
 				KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
 				if (value != null) {
 					url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
-					formatAttr = value.getAttributes().get("format");
+					formatAttr = value.getAttributes().get(FORMAT);
 					openReferences(url, nodeRange, formatAttr);
 				}
 
@@ -101,13 +101,12 @@ public class OpenReferenceAction extends AbstractAction {
 				KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
 				if (value != null) {
 					url = value.getHrefLocation();
-					formatAttr = value.getAttributes().get("format");
+					formatAttr = value.getAttributes().get(FORMAT);
 					openReferences(url, nodeRange, formatAttr);
 				}
 			}
 		} catch (MalformedURLException e1) {
 			LOGGER.error(e1, e1);
-			e1.printStackTrace();
 		}
 	}
 
@@ -138,10 +137,8 @@ public class OpenReferenceAction extends AbstractAction {
 	 * 
 	 * @param keyAttrValue The key reference attribute value
 	 * @param keys         The LinkedHashMap with all the keys
-	 * @throws MalformedURLException
 	 */
-	private KeyInfo getKeyInfoFromReference(String keyAttrValue, LinkedHashMap<String, KeyInfo> keys)
-			throws MalformedURLException {
+	private KeyInfo getKeyInfoFromReference(String keyAttrValue, LinkedHashMap<String, KeyInfo> keys) {
 		StringTokenizer st = new StringTokenizer(keyAttrValue, "/");
 		String keyName = null;
 		if (st.hasMoreTokens()) {
@@ -152,7 +149,7 @@ public class OpenReferenceAction extends AbstractAction {
 
 	/**
 	 * Open references from attribute with either Oxygen or an associated
-	 * application depending on its type: images, DITA, HTML, PDF etc.
+	 * application depending on its type: images, DITA topic, HTML, PDF etc.
 	 * 
 	 * @param url                     Target URL, the URL to open
 	 * @param nodeRange               The nodeRange
@@ -166,36 +163,70 @@ public class OpenReferenceAction extends AbstractAction {
 
 		// it's image
 		if (classAttr != null && classAttr.contains(" topic/image ")) {
-			if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(url)) {
-				pluginWorkspaceAccess.open(url, null, ContentTypes.IMAGE_CONTENT_TYPE);
-			} else {
-				// image needs extension for URL if none in attributeValue
-				if (formatAttr != null) {
-					URL imageUrl = new URL(url.toString() + "." + formatAttr);
-					if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(imageUrl)) {
-						pluginWorkspaceAccess.open(imageUrl, null, ContentTypes.IMAGE_CONTENT_TYPE);
-					}
-				}
-			}
+			openImageReference(url, formatAttr);
 		} else {
 			if (formatAttr != null) {
-				// it's DITA
-				if (formatAttr.equals("dita") || formatAttr.equals("ditamap")) {
-					pluginWorkspaceAccess.open(url);
-				} else {
-					// it's binary resource, not handled by Oxygen
-					pluginWorkspaceAccess.openInExternalApplication(url, true);
-				}
+				openReferenceWithFormatAttr(url, formatAttr);
 			} else {
-				// binary resource or a HTML format to be opened in browser
-				if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)
-						|| (formatAttr != null && formatAttr.equals("html"))) {
-					pluginWorkspaceAccess.openInExternalApplication(url, true);
-				} else {
-					// it's DITA
-					pluginWorkspaceAccess.open(url);
+				openReferenceWithoutFormatAttr(url, formatAttr);
+			}
+		}
+	}
+	
+	/**
+	 * Open image references from format attribute.
+	 * 
+	 * @param url        The target URL
+	 * @param formatAttr The format attribute
+	 * @throws MalformedURLException
+	 */
+	private void openImageReference(URL url, String formatAttr) throws MalformedURLException {
+		if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(url)) {
+			pluginWorkspaceAccess.open(url, null, ContentTypes.IMAGE_CONTENT_TYPE);
+		} else {
+			// image needs extension for URL if none in attributeValue
+			if (formatAttr != null) {
+				URL imageUrl = new URL(url.toString() + "." + formatAttr);
+				if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(imageUrl)) {
+					pluginWorkspaceAccess.open(imageUrl, null, ContentTypes.IMAGE_CONTENT_TYPE);
 				}
 			}
 		}
 	}
+
+	/**
+	 * Open reference with NO format attribute. For example, a resource opened in
+	 * external application, a web link or DITA topic.
+	 * 
+	 * @param url        The target URL, the URL to open
+	 * @param formatAttr The format Attribute
+	 */
+	private void openReferenceWithoutFormatAttr(URL url, String formatAttr) {
+		// binary resource or a HTML format to be opened in browser
+		if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)
+				|| (formatAttr != null && formatAttr.equals("html"))) {
+			pluginWorkspaceAccess.openInExternalApplication(url, true);
+		} else {
+			// it's DITA
+			pluginWorkspaceAccess.open(url);
+		}
+	}
+
+	/**
+	 * Open references with format attribute. For example, DITA topic or resource
+	 * opened in external application.
+	 * 
+	 * @param url        The target URL, the URL to open
+	 * @param formatAttr The format Attribute
+	 */
+	private void openReferenceWithFormatAttr(URL url, String formatAttr) {
+		// it's DITA
+		if (formatAttr.equals("dita") || formatAttr.equals("ditamap")) {
+			pluginWorkspaceAccess.open(url);
+		} else {
+			// it's binary resource, not handled by Oxygen
+			pluginWorkspaceAccess.openInExternalApplication(url, true);
+		}
+	}
+	
 }

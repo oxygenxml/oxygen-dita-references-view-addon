@@ -138,7 +138,6 @@ public class ReferencesTree extends Tree {
 				this.setNoRefsAvailableTree();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error(e, e);
 			this.setNoRefsAvailableTree();
 		}

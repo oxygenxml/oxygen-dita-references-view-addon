@@ -3,7 +3,7 @@ package com.oxygenxml.ditareferences.translator;
 /**
  * Translation interface for the keys.
  * 
- * @author Alexandra Dinisor
+ * @author Alexandra_Dinisor
  *
  */
 public interface Translator {

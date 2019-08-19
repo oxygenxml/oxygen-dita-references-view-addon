@@ -3,7 +3,7 @@ package com.oxygenxml.ditareferences.translator;
 /**
  * Tags used for internationalization.
  * 
- * @author Alexandra Dinisor
+ * @author Alexandra_Dinisor
  *
  */
 public class Tags {
