@@ -12,5 +12,7 @@ The following references are presented in the side view for an opened DITA topic
 
 Features of the side view:
 
+* Side view user interface is translated in English and German.
 * Works both in the Author and the Text editing modes.
 * Selection in the side view is synchronized with the caret location in the editor area.
+* Double click or ENTER on a reference to open the target location.
