@@ -78,13 +78,15 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 						NodeRange range = (NodeRange) node.getUserObject();
 						WSEditorPage editorPage = refTree.getEditorAccess().getCurrentPage();
 						int[] nodeOffsets = range.getNodeOffsets(editorPage);
-						int startOffset = nodeOffsets[0];
-						int endOffset = nodeOffsets[1];
+						if(nodeOffsets != null) {
+							int startOffset = nodeOffsets[0];
+							int endOffset = nodeOffsets[1];
 
-						caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
-						// select in editorPage the corresponding reference Element
-						selectRange(editorPage, startOffset, endOffset);
-						caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
+							caretSelectionInhibitor.setInhibitCaretSelectionListener(true);
+							// select in editorPage the corresponding reference Element
+							selectRange(editorPage, startOffset, endOffset);
+							caretSelectionInhibitor.setInhibitCaretSelectionListener(false);
+						}
 					}
 				} else {
 					LOGGER.error("EDITOR NULL");
@@ -114,6 +116,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 				((WSTextEditorPage) page).select(startOffset, endOffset);
 			} else {
 				((WSAuthorEditorPage) page).select(startOffset, endOffset);
+				((WSAuthorEditorPage) page).scrollCaretToVisible();
 			}
 		}
 	}

@@ -56,8 +56,13 @@ public class Tags {
 	public static final String RELATED_LINKS = "Related_links";
 
 	/**
-	 * Label for References PopUpMenu.
+	 * Label for Opening References in PopUpMenu.
 	 */
 	public static final String OPEN_REFERENCE = "Open_reference";
-	
+
+	/**
+	 * Label for Showing Definition Location in PopUpMenu for relLinks.
+	 */
+	public static final String SHOW_DEFINITION_LOCATION = "Show_definition_location";
+
 }

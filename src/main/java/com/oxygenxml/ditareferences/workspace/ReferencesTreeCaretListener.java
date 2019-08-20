@@ -58,7 +58,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	}
 
 	/**
-	 * Listener for Caret Updates in Text/Author Page.
+	 * Listener for Caret Updates in TextPage /AuthorPage.
 	 * 
 	 * @author Alexandra_Dinisor
 	 *
@@ -93,9 +93,9 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	}
 
 	/**
-	 * Get the caret offset for Text/Author Page.
+	 * Get the caret offset for TextPage / AuthorPage.
 	 * 
-	 * @return The Caret Offset
+	 * @return the Caret Offset
 	 */
 	protected abstract int getCaretOffset();
 
@@ -106,7 +106,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * @param parent      The path from parent
 	 * @param caretOffset The caretOffset
 	 * @param textPage    The XML textPage
-	 * @return The TreePath for the selected Node
+	 * @return the TreePath for the selected Node
 	 */
 	private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset, final WSEditorPage page) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
@@ -117,12 +117,14 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 
 			// get node offsets corresponding the caret
 			int[] nodeOffsets = nodeRangeElem.getNodeOffsets(page);
-			int startNodeOffset = nodeOffsets[0];
-			int endNodeOffset = nodeOffsets[1];
+			if(nodeOffsets != null) {
+				int startNodeOffset = nodeOffsets[0];
+				int endNodeOffset = nodeOffsets[1];
 
-			if (startNodeOffset <= caretOffset && caretOffset <= endNodeOffset) {
-				// Found the node at the corresponding caret
-				return parent;
+				if (startNodeOffset <= caretOffset && caretOffset <= endNodeOffset) {
+					// Found the node at the corresponding caret
+					return parent;
+				}
 			}
 		}
 

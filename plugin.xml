@@ -4,7 +4,7 @@
 
 <plugin
  id="com.oxygenxml.plugin.WorkspaceAccess"
- name="DITAReferencesWorkspaceAccess"
+ name="DITA References"
  description="Test"
  version="${project.version}"
  vendor="oXygen XML"

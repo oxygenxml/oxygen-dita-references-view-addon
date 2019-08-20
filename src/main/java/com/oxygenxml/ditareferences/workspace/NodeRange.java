@@ -25,14 +25,15 @@ public interface NodeRange {
 	 * element in the textPage.
 	 * 
 	 * @param editorPage The EditorPage: Text/Author
-	 * @return An array with start and end offsets of Element in Text/Author Page
+	 * @return An array with start and end offsets of Element in Text/Author Page.
+	 *         Can be <code>null</code>.
 	 */
 	int[] getNodeOffsets(WSEditorPage editorPage);
 
 	/**
 	 * Get the nodeName.
 	 * 
-	 * @return the nodeName. Never <code>null</code>
+	 * @return the nodeName. Never <code>null</code>.
 	 */
 	String getNodeName();
 

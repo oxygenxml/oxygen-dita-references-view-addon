@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.oxygenxml.ditareferences.translator.Tags;
 import com.oxygenxml.ditareferences.translator.Translator;
+import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
@@ -29,10 +30,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	private ImageIcon linkIcon = null;
 	private ImageIcon contentIcon = null;
 	private ImageIcon crossIcon = null;
-
-	/* Icons for reference categories depending on status: expanded/collapsed. */
-	private ImageIcon collapsedIcon = null;
-	private ImageIcon expandedIcon = null;
+	private ImageIcon relLinkIcon = null;
 
 	/**
 	 * Construct Renderer by including the icons for leaf nodes and reference
@@ -64,20 +62,15 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		if (linkUrl != null) {
 			this.linkIcon = (ImageIcon) imageUtilities.loadIcon(linkUrl);
 		}
-
-		URL collapsedUrl = StandalonePluginWorkspace.class.getResource("/images/Collapsed16_dark.png");
-		if (collapsedUrl != null) {
-			this.collapsedIcon = (ImageIcon) imageUtilities.loadIcon(collapsedUrl);
-		}
-
-		URL expandedUrl = StandalonePluginWorkspace.class.getResource("/images/Expanded16.png");
-		if (expandedUrl != null) {
-			this.expandedIcon = (ImageIcon) imageUtilities.loadIcon(expandedUrl);
+		
+		URL relLinkUrl = StandalonePluginWorkspace.class.getResource("/images/RelTable16.png");
+		if (relLinkUrl != null) {
+			this.relLinkIcon = (ImageIcon) imageUtilities.loadIcon(relLinkUrl);
 		}
 
 	}
 	
-	/* only at first method call compute width of node text */
+	/* compute width of node text only at first method call  */
 	private int inProgress = 0;
 
 	@Override
@@ -107,13 +100,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				setIconForLeafNode(label, nodeRange);
 				
 			} else {
-				// decide if expanded/collapsed icons are needed when at least 1 reference is
-				// found in tree
-				boolean hasReferences = true;
-
 				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
-					hasReferences = setTextForCategoryNode(value, label, hasReferences);
-					setIconForCategoryNode(expanded, label, hasReferences);
+					setTextForCategoryNode(value, label);
 				}
 			}
 		}
@@ -178,15 +166,12 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	}
 
 	/**
-	 * Set translated text for reference category and change value for boolean
-	 * "hasReferences", if the ReferencesTree has at least 1 reference inside.
+	 * Set translated text for reference category.
 	 * 
-	 * @param value         The Node Value
-	 * @param label         The Node Label
-	 * @param hasReferences Boolean hasReferences
-	 * @return
+	 * @param value The Node Value
+	 * @param label The Node Label
 	 */
-	private boolean setTextForCategoryNode(Object value, JLabel label, boolean hasReferences) {
+	private void setTextForCategoryNode(Object value, JLabel label) {
 		String toDisplayCategory = null;
 
 		if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
@@ -199,31 +184,12 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 			toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
 			toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
-			hasReferences = false;
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
 			toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
-			hasReferences = false;
 		}
 		label.setText(toDisplayCategory);
-		return hasReferences;
 	}
 
-	/**
-	 * Set icon for category node depending on status: expanded/collapsed.
-	 * 
-	 * @param expanded      If category node is expanded
-	 * @param label         The Node Label
-	 * @param hasReferences
-	 */
-	private void setIconForCategoryNode(boolean expanded, JLabel label, boolean hasReferences) {
-		if (hasReferences) {
-			if (expanded) {
-				label.setIcon(expandedIcon);
-			} else {
-				label.setIcon(collapsedIcon);
-			}
-		}
-	}
 
 	/**
 	 * Set icon for each leaf node depending on reference category.
@@ -233,14 +199,19 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 */
 	private void setIconForLeafNode(JLabel label, NodeRange nodeRange) {
 		String classAttrValue = nodeRange.getAttributeValue("class");
-
+				
 		if (classAttrValue != null) {
 			if (classAttrValue.contains(" topic/image ")) {
 				label.setIcon(imageIcon);
 			} else if (classAttrValue.contains(" topic/xref ")) {
 				label.setIcon(crossIcon);
 			} else if (classAttrValue.contains(" topic/link ")) {
-				label.setIcon(linkIcon);
+				// make difference between related links and links from relationship table
+				if (nodeRange instanceof RelLinkNodeRange) {
+					label.setIcon(relLinkIcon);
+				} else {
+					label.setIcon(linkIcon);
+				}
 			} else if (nodeRange.getAttributeValue("conkeyref") != null
 					|| nodeRange.getAttributeValue("conref") != null) {
 				label.setIcon(contentIcon);

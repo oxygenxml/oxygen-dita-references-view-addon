@@ -71,13 +71,21 @@
         <val lang="ja_JP">Related links</val>
         <val lang="nl_NL">Related links</val>        
     </key> 
-        <key value="Open_reference">
+    <key value="Open_reference">
         <comment>Open the reference in an application.</comment>
         <val lang="en_US">Open reference</val>
         <val lang="de_DE">Referenz öffnen</val>
         <val lang="fr_FR">Open reference</val>
         <val lang="ja_JP">Open reference</val>
         <val lang="nl_NL">Open reference</val>        
+    </key>
+	<key value="Show_definition_location">
+        <comment>Show the definition location in an application.</comment>
+        <val lang="en_US">Show definition location</val>
+        <val lang="de_DE">Definitionsort anzeigen</val>
+        <val lang="fr_FR">Show definition location</val>
+        <val lang="ja_JP">Show definition location</val>
+        <val lang="nl_NL">Show definition location</val>        
     </key>
 
 </translation>

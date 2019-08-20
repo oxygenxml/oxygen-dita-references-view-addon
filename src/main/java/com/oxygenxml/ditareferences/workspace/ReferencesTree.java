@@ -59,8 +59,10 @@ public class ReferencesTree extends Tree {
 			StandalonePluginWorkspace pluginWorkspaceAccess, 
 			KeysProvider keysProvider,
 			Translator translator) {
+		
+		//this.setToggleClickCount(1);
 		this.setRootVisible(false);
-		this.setShowsRootHandles(false);
+		this.setShowsRootHandles(true);
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 

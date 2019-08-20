@@ -9,6 +9,7 @@ import javax.swing.tree.TreePath;
 
 import com.oxygenxml.ditareferences.translator.Tags;
 import com.oxygenxml.ditareferences.translator.Translator;
+import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
@@ -61,14 +62,16 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 
 	private void handleContextMenu(MouseEvent releasedEvent) {
 		if (releasedEvent.isPopupTrigger()) {
-			processRightClick(releasedEvent, translator.getTranslation(Tags.OPEN_REFERENCE));
+			processRightClick(releasedEvent, 
+					translator.getTranslation(Tags.OPEN_REFERENCE),
+					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		}
 	}
 
 	/**
 	 * Enable "Open Reference" in PopupMenu when right clicked.
 	 */
-	private void processRightClick(MouseEvent event, String itemName) {
+	private void processRightClick(MouseEvent event, String openRefName, String showDefLocationName) {
 		refTree.requestFocus();
 		TreePath currentLocationPath = refTree.getPathForLocation(event.getX(), event.getY());
 		if (currentLocationPath != null) {
@@ -78,9 +81,15 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 			// it must be Leaf Node
 			if (node.getUserObject() instanceof NodeRange) {
 				JPopupMenu menu = new JPopupMenu();
-				if (itemName != null) {
+				if (openRefName != null) {
 					menu.add(new OpenReferenceAction((NodeRange) node.getUserObject(), editorAccess,
-							pluginWorkspaceAccess, keysProvider, itemName));
+							pluginWorkspaceAccess, keysProvider, openRefName));
+					
+					// add "Show Definition Location" item in PopUpMenu
+					if (node.getUserObject() instanceof RelLinkNodeRange) {
+						menu.add(new ShowDefinitionLocationAction((RelLinkNodeRange) node.getUserObject(), editorAccess,
+								pluginWorkspaceAccess, showDefLocationName));
+					}
 					menu.show(refTree, event.getX(), event.getY());
 				}
 			}
