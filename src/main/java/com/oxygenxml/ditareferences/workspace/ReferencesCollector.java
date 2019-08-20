@@ -73,16 +73,7 @@ public abstract class ReferencesCollector {
 			// DITA Topic or Composite
 			if (isDITARoot(ranges.get(0))) {
 
-				// add links from relationship table if any
-				if (editorPage != null && editorPage.getParentEditor() != null) {
-					List<RelLink> relLinks = RellinksAccessor
-							.getRelationshipTableTargetURLs(editorPage.getParentEditor().getEditorLocation());
-					if (!relLinks.isEmpty()) {
-						for (int i = 0; i < relLinks.size(); i++) {
-							ranges.add(new RelLinkNodeRangeImpl(relLinks.get(i)));
-						}
-					}
-				}
+				addLinksFromRelTable(editorPage, ranges);
 
 				// DITA topic but no reference found.
 				if (ranges.size() == 1) {
@@ -107,13 +98,31 @@ public abstract class ReferencesCollector {
 	}
 
 	/**
+	 * Add links from relationship table if any.
+	 * 
+	 * @param editorPage The TextPage/AuthorPage
+	 * @param ranges     The nodeRanges
+	 */
+	private void addLinksFromRelTable(WSEditorPage editorPage, List<NodeRange> ranges) {
+		if (editorPage != null && editorPage.getParentEditor() != null) {
+			List<RelLink> relLinks = RellinksAccessor
+					.getRelationshipTableTargetURLs(editorPage.getParentEditor().getEditorLocation());
+			if (!relLinks.isEmpty()) {
+				for (int i = 0; i < relLinks.size(); i++) {
+					ranges.add(new RelLinkNodeRangeImpl(relLinks.get(i)));
+				}
+			}
+		}
+	}
+
+	/**
 	 * Add elements in a references category.
 	 * 
 	 * @param imageReferences   The image references category
 	 * @param crossReferences   The cross references category
 	 * @param contentReferences The content references category
 	 * @param relatedLinks      The related links category
-	 * @param ranges            The node ranges
+	 * @param ranges            The nodeRanges
 	 */
 	private void addElementsInCategory(DefaultMutableTreeNode imageReferences, DefaultMutableTreeNode crossReferences,
 			DefaultMutableTreeNode contentReferences, DefaultMutableTreeNode relatedLinks, List<NodeRange> ranges) {

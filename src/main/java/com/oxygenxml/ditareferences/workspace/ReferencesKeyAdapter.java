@@ -60,11 +60,22 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			handleOpenReference();
-		}
-		if (e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU) {
+		} else if (e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU) {
 			handleContextMenuButton(translator.getTranslation(Tags.OPEN_REFERENCE),
 					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
+		} else if ((e.getKeyCode() == KeyEvent.VK_C)
+				&& ((e.getModifiers() | KeyEvent.CTRL_MASK) == KeyEvent.CTRL_MASK)) {
+			handleCopyButton();
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void handleCopyButton() {
+		refTree.requestFocus();
+		
+		
 	}
 
 	/**
@@ -92,7 +103,7 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 					int rowForSelectedPath = refTree.getRowForPath(currentSelectedPath);
 					if (rowForSelectedPath >= 0) {
 						Rectangle rowBounds = refTree.getRowBounds(rowForSelectedPath);
-						menu.show(refTree, rowBounds.width, rowBounds.height);
+						menu.show(refTree, rowBounds.width, rowBounds.y);
 					}
 				}
 			}

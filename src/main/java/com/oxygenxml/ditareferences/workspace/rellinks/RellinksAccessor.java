@@ -6,6 +6,10 @@ import java.util.List;
 
 public class RellinksAccessor {
 	
+	private  RellinksAccessor() {
+		
+	}
+	
 	public static boolean forTests = false;
 
 	public static List<RelLink> getRelationshipTableTargetURLs(URL topicURL) {
