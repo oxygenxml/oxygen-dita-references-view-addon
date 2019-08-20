@@ -43,7 +43,7 @@ public class ReferencesTree extends Tree {
 	}
 
 	private ReferencesMouseAdapter refMouseAdapter;
-	private EnterForReferencesKeyAdapter enterKeyAdapter;
+	private ReferencesKeyAdapter enterKeyAdapter;
 	private ReferencesTreeSelectionListener refTreeSelectionListener;
 	private TextPageReferencesTreeCaretListener textPageCaretListener;
 	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
@@ -107,7 +107,7 @@ public class ReferencesTree extends Tree {
 		this.addMouseListener(this.refMouseAdapter);
 
 		// Key Adapter for Leaf Nodes when Enter Key is pressed
-		this.enterKeyAdapter = new EnterForReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider);
+		this.enterKeyAdapter = new ReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addKeyListener(this.enterKeyAdapter);
 	}
 

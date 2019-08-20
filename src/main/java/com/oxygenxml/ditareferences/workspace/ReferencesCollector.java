@@ -157,7 +157,7 @@ public abstract class ReferencesCollector {
 	private void addReferenceCategories(DefaultMutableTreeNode root, DefaultMutableTreeNode imageReferences,
 			DefaultMutableTreeNode crossReferences, DefaultMutableTreeNode contentReferences,
 			DefaultMutableTreeNode relatedLinks) {
-		
+
 		if (imageReferences.getChildCount() != 0) {
 			root.add(imageReferences);
 		}
@@ -182,5 +182,5 @@ public abstract class ReferencesCollector {
 		return (range.getAttributeValue(CLASS) != null && range.getAttributeValue(CLASS).contains("topic/topic"))
 				|| range.getNodeName().equals("dita");
 	}
-	
+
 }
