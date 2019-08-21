@@ -14,4 +14,30 @@
             </keywords>
         </topicmeta>
     </keydef>
+    <reltable title="Reltable">
+        <relheader>
+            <relcolspec/>
+            <relcolspec/>
+        </relheader>
+        <relrow>
+            <relcell>
+                <topicref href="sample.dita"/>
+            </relcell>
+            <relcell>
+                <topicref keyref="sample2"/>
+            </relcell>
+        </relrow>
+        <relrow>
+            <relcell>
+                <topicref href="sample.dita"/>
+            </relcell>
+            <relcell>
+                <topicref keyref="google" format="html"/>
+            </relcell>
+        </relrow>
+        <relrow>
+            <relcell/>
+            <relcell/>
+        </relrow>
+    </reltable>
 </map>
