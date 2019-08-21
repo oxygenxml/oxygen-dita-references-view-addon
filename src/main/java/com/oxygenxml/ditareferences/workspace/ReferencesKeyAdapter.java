@@ -16,7 +16,8 @@ import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
- * Adapter when pressing Enter Key to open the reference.
+ * Key Adapter for Enter when opening reference, Context Menu button to open
+ * popUp Menu and Ctrl+C to copy the node text.
  * 
  * @Alexandra_Dinisor
  *
@@ -43,9 +44,9 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	 * Construct the Key Adapter.
 	 * 
 	 * @param refTree               The ReferencesTree
-	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
-	 * @param keysProvider          The keysProvider
-	 * @param editorAccess          The editorAccess
+	 * @param pluginWorkspaceAccess The PluginWorkspaceAccess
+	 * @param keysProvider          The KeysProvider
+	 * @param editorAccess          The EditorAccess
 	 */
 	public ReferencesKeyAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
 			KeysProvider keysProvider, Translator translator) {
@@ -60,22 +61,27 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			handleOpenReference();
-		} else if (e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU) {
-			handleContextMenuButton(translator.getTranslation(Tags.OPEN_REFERENCE),
-					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		} else if ((e.getKeyCode() == KeyEvent.VK_C)
 				&& ((e.getModifiers() | KeyEvent.CTRL_MASK) == KeyEvent.CTRL_MASK)) {
-			handleCopyButton();
+			handleCopyButton(e);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU) {
+			handleContextMenuButton(translator.getTranslation(Tags.OPEN_REFERENCE),
+					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		}
 	}
 
 	/**
-	 * 
+	 * Enable the leaf node text to be copied
 	 */
-	private void handleCopyButton() {
+	private void handleCopyButton(KeyEvent e) {
 		refTree.requestFocus();
-		
-		
+		System.err.println("copy button triggered");
+
 	}
 
 	/**
@@ -112,7 +118,7 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	}
 
 	/**
-	 * Enable the reference opening when ENTER Key is pressed after a Leaf Node is
+	 * Enable the reference opening when Enter Key is pressed after a Leaf Node is
 	 * selected.
 	 */
 	private void handleOpenReference() {

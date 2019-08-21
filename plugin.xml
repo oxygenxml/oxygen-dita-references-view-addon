@@ -5,9 +5,9 @@
 <plugin
  id="com.oxygenxml.plugin.WorkspaceAccess"
  name="DITA References"
- description="Test"
+ description="This side-view shows all outgoing references for the current opened DITA topic."
  version="${project.version}"
- vendor="oXygen XML"
+ vendor="Syncro Soft"
  class="com.oxygenxml.ditareferences.workspace.WorkspaceAccessPlugin"
  classLoaderType="preferReferencedResources">
  
