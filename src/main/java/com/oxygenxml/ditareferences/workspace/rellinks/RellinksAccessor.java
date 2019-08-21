@@ -8,14 +8,18 @@ import java.util.List;
 public class RellinksAccessor {
 	
 	private  RellinksAccessor() {
-		
+		// private constructor
 	}
 	
 	public static boolean forTests = false;
 
+	/**
+	 * Get RelationshipTable Target Urls using reflexion.
+	 * @param topicURL
+	 * @return A list of Relationship Links from RelTable
+	 */
 	public static List<RelLink> getRelationshipTableTargetURLs(URL topicURL) {
-		List<RelLink> links = new ArrayList<RelLink>();
-		forTests = false;
+		List<RelLink> links = new ArrayList<>();
 
 		try {
 			Class ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
@@ -28,23 +32,24 @@ public class RellinksAccessor {
 					Class relLinkClass = relLink.getClass();
 					Method getSource = relLinkClass.getMethod("getSourceURL");
 					URL sourceURL = (URL) getSource.invoke(relLink);
-					// if (topicURL.equals(sourceURL)) {
-					Method getTarget = relLinkClass.getMethod("getTargetURL");
-					URL targetURL = (URL) getTarget.invoke(relLink);
+					
+					if (topicURL.equals(sourceURL)) {
+						Method getTarget = relLinkClass.getMethod("getTargetURL");
+						URL targetURL = (URL) getTarget.invoke(relLink);
 
-					Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
-					String targetFormat = (String) getTargetFormat.invoke(relLink);
+						Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
+						String targetFormat = (String) getTargetFormat.invoke(relLink);
 
-					Method getTargetScope = relLinkClass.getMethod("getTargetScope");
-					String targetScope = (String) getTargetScope.invoke(relLink);
+						Method getTargetScope = relLinkClass.getMethod("getTargetScope");
+						String targetScope = (String) getTargetScope.invoke(relLink);
 
-					Method getTargetDefinitionLocation = relLinkClass.getMethod("getTargetDefinitionLocation");
-					URL targetDefLocationURL = (URL) getTargetDefinitionLocation.invoke(relLink);
+						Method getTargetDefinitionLocation = relLinkClass.getMethod("getTargetDefinitionLocation");
+						URL targetDefLocationURL = (URL) getTargetDefinitionLocation.invoke(relLink);
 
-					RelLinkImpl relLinkImpl = new RelLinkImpl(sourceURL, targetURL, targetFormat, targetScope,
-							targetDefLocationURL);
-					links.add(relLinkImpl);
-					// }
+						RelLinkImpl relLinkImpl = new RelLinkImpl(sourceURL, targetURL, targetFormat, targetScope,
+								targetDefLocationURL);
+						links.add(relLinkImpl);
+					}
 				}
 			}
 		} catch (Exception e) {
