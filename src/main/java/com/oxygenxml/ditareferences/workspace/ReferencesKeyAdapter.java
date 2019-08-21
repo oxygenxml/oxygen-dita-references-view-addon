@@ -17,7 +17,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
  * Key Adapter for Enter when opening reference, Context Menu button to open
- * popUp Menu and Ctrl+C to copy the node text.
+ * popUp Menu.
  * 
  * @Alexandra_Dinisor
  *
@@ -61,9 +61,6 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			handleOpenReference();
-		} else if ((e.getKeyCode() == KeyEvent.VK_C)
-				&& ((e.getModifiers() | KeyEvent.CTRL_MASK) == KeyEvent.CTRL_MASK)) {
-			handleCopyButton(e);
 		}
 	}
 
@@ -73,15 +70,6 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 			handleContextMenuButton(translator.getTranslation(Tags.OPEN_REFERENCE),
 					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		}
-	}
-
-	/**
-	 * Enable the leaf node text to be copied
-	 */
-	private void handleCopyButton(KeyEvent e) {
-		refTree.requestFocus();
-		System.err.println("copy button triggered");
-
 	}
 
 	/**

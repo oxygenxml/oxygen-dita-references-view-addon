@@ -55,16 +55,16 @@ public class ReferencesTree extends Tree {
 	 * @param keysProvider          The Map with the current DITAMAP keys
 	 * @param translator            The translator
 	 */
-	public ReferencesTree(
-			StandalonePluginWorkspace pluginWorkspaceAccess, 
-			KeysProvider keysProvider,
+	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
 			Translator translator) {
-		
-		//this.setToggleClickCount(1);
+
 		this.setRootVisible(false);
 		this.setShowsRootHandles(true);
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
+
+		// set transferHandler to copy text of references node
+		this.setTransferHandler(new RefNodeTransferHandler());
 
 		// set cellRenderer for ReferencesTree
 		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator));
@@ -76,6 +76,7 @@ public class ReferencesTree extends Tree {
 		this.refTreeSelectionListener = new ReferencesTreeSelectionListener(this);
 		this.getSelectionModel().addTreeSelectionListener(this.refTreeSelectionListener);
 				
+		
 		// install caret listener for textPage and check if current page corresponds
 		this.textPageCaretListener = new TextPageReferencesTreeCaretListener(
 				() -> {
