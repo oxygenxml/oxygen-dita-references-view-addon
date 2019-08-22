@@ -141,9 +141,11 @@ public class ReferencesTree extends Tree {
 				this.setNoRefsAvailableTree();
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e, e);
+			if(LOGGER.isDebugEnabled()) {
+				LOGGER.debug(e, e);
+			}
 			this.setNoRefsAvailableTree();
-		}
+		} 
 	}
 
 	/**
