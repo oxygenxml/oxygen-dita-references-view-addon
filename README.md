@@ -8,7 +8,7 @@ The following references are presented in the side view for an opened DITA topic
 * Key references (various elements with keyref)
 * Content References (conref or conkeyref)
 * Related links (link with href or keyref)
-* Related links defined in relationship tables (planned future improvement)
+* Related links defined in relationship tables (Oxygen 22 or newer)
 
 Features of the side view:
 
