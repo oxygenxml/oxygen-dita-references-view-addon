@@ -143,8 +143,9 @@ public class OpenReferenceInTextPageTest extends TestCase {
 				keyMap.put("myPDF", firstValue);
 				keyMap.put("sample2", secondValue);
 				return keyMap;
+				
 			} catch (MalformedURLException e) {
-				LOGGER.error(e, e);
+				LOGGER.debug(e, e);
 			}
 			return null;
 		}

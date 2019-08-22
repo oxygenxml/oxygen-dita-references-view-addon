@@ -65,7 +65,7 @@ public class TestUtil {
 			}
 			return nodes;
 		} catch (XPathExpressionException e) {
-			LOGGER.error(e, e);
+			LOGGER.debug(e, e);
 		}
 		return null;
 	}

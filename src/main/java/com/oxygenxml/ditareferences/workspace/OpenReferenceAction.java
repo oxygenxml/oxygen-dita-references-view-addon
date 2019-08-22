@@ -106,7 +106,7 @@ public class OpenReferenceAction extends AbstractAction {
 				}
 			}
 		} catch (MalformedURLException e1) {
-			LOGGER.error(e1, e1);
+			LOGGER.debug(e1, e1);
 		}
 	}
 

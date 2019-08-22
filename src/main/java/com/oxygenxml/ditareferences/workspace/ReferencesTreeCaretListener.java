@@ -10,13 +10,9 @@ import javax.swing.Timer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
-
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 
 public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implements CaretSelectionInhibitor {
-
-	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeCaretListener.class);
 
 	protected Supplier<T> editorPage;
 	private ReferencesTree refTree;

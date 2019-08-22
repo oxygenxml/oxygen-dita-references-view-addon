@@ -89,7 +89,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 						}
 					}
 				} else {
-					LOGGER.error("EDITOR NULL");
+					LOGGER.debug("EDITOR NULL");
 				}
 			}
 		}

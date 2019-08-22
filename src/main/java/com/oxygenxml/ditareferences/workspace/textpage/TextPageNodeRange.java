@@ -63,7 +63,7 @@ public class TextPageNodeRange implements NodeRange {
 			return finalOffsets;
 
 		} catch (BadLocationException e) {
-			LOGGER.error(e, e);
+			LOGGER.debug(e, e);
 		}
 		return finalOffsets;
 	}

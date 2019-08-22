@@ -57,7 +57,7 @@ public class RellinksAccessor {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error(e, e);
+			LOGGER.debug(e, e);
 		}
 
 		return links;

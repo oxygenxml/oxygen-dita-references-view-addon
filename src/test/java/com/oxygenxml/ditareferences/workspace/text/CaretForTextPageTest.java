@@ -139,7 +139,6 @@ public class CaretForTextPageTest extends TestCase {
 
 		// set the caret inside the "xref" element in the XML textPage
 		textPage.setCaretPosition(textArea.getText().indexOf("<xref") + 5);
-
 		try {
 			Thread.sleep(1000);
 			assertEquals(1, tree.getSelectionModel().getSelectionCount());
@@ -147,8 +146,9 @@ public class CaretForTextPageTest extends TestCase {
 			NodeRange selectedNodeRange = (NodeRange) ((DefaultMutableTreeNode) tree.getSelectionPath()
 					.getLastPathComponent()).getUserObject();
 			assertEquals("www.wikipedia.com", selectedNodeRange.getAttributeValue("href"));
+			
 		} catch (InterruptedException e) {
-			LOGGER.error(e, e);
+			LOGGER.debug(e, e);
 		}
 
 	}
