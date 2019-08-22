@@ -5,16 +5,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class RellinksAccessor {
-	
-	private  RellinksAccessor() {
+	private static final Logger LOGGER = Logger.getLogger(RellinksAccessor.class);
+
+	private RellinksAccessor() {
 		// private constructor
 	}
-	
+
 	public static boolean forTests = false;
 
 	/**
-	 * Get RelationshipTable Target Urls using reflexion.
+	 * Get RelationshipTable Target URLs using reflection.
+	 * 
 	 * @param topicURL
 	 * @return A list of Relationship Links from RelTable
 	 */
@@ -32,7 +36,7 @@ public class RellinksAccessor {
 					Class relLinkClass = relLink.getClass();
 					Method getSource = relLinkClass.getMethod("getSourceURL");
 					URL sourceURL = (URL) getSource.invoke(relLink);
-					
+
 					if (topicURL.equals(sourceURL)) {
 						Method getTarget = relLinkClass.getMethod("getTargetURL");
 						URL targetURL = (URL) getTarget.invoke(relLink);
@@ -53,18 +57,10 @@ public class RellinksAccessor {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e, e);
 		}
 
 		return links;
-	}
-	
-//	public static void main(String[] args) throws MalformedURLException {
-//		RellinksAccessor.forTests = true;
-//		List<RelLink> list = RellinksAccessor.getRelationshipTableTargetURLs(new File("test/source1.dita").toURI().toURL());
-//		for (int i = 0; i < list.size(); i++) {
-//			System.err.println(list.get(i).getTargetDefinitionLocation());
-//		}
-//	}
+	}	
 	
 }

@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
@@ -31,6 +32,8 @@ import ro.sync.exml.workspace.api.util.UtilAccess;
  *
  */
 public class OpenReferenceInAuthorPageTest extends TestCase {
+	private static final Logger LOGGER = Logger.getLogger(OpenReferenceInAuthorPageTest.class);
+	
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
 	private final ArrayList<URL> urlToExternal = new ArrayList<URL>();
@@ -87,7 +90,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 				keyMap.put("sample2", secondValue);
 				return keyMap;
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				LOGGER.error(e, e);
 			}
 			return null;
 		}

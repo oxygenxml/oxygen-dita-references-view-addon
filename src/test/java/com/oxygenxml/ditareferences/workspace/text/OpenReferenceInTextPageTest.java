@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
@@ -35,6 +36,7 @@ import ro.sync.util.URLUtil;
  *
  */
 public class OpenReferenceInTextPageTest extends TestCase {
+	private static final Logger LOGGER = Logger.getLogger(OpenReferenceInTextPageTest.class);
 	
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
 			+ "    <title class=\"- topic/title \">sample</title>\n"
@@ -142,7 +144,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 				keyMap.put("sample2", secondValue);
 				return keyMap;
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				LOGGER.error(e, e);
 			}
 			return null;
 		}

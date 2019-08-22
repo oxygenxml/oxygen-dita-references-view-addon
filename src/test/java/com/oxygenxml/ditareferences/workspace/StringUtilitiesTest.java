@@ -24,7 +24,6 @@ public class StringUtilitiesTest extends TestCase {
 		text = "gears.dita#gears_topic/idler_gear";
 		expected = "idler_gear";
 		advanceWidth = fontMetrics.charsWidth(text.toCharArray(), 0, text.length());
-		System.out.println("advanceWidth for " + text + ": " + advanceWidth);
 		trimmed = StringUtilities.trimNodeText(fontMetrics, text, width);
 		assertEquals(expected, trimmed);
 	}
@@ -35,7 +34,6 @@ public class StringUtilitiesTest extends TestCase {
 		width = 200;
 		text = "gears_topic/idler_gear";
 		advanceWidth = fontMetrics.charsWidth(text.toCharArray(), 0, text.length());
-		System.out.println("advanceWidth for " + text + ": " + advanceWidth);
 		expected = "gears_topic/idler_gear";
 		trimmed = StringUtilities.trimNodeText(fontMetrics, text, width);
 		assertEquals(expected, trimmed);
@@ -47,10 +45,8 @@ public class StringUtilitiesTest extends TestCase {
 		text = "abcdefghij.dita#gears_topic/idler_gear";
 		expected = "gears_topic/idler_gear";
 		advanceWidth = fontMetrics.charsWidth(text.toCharArray(), 0, text.length());
-		System.out.println("advanceWidth for " + text + ": " + advanceWidth);
 
 		trimmed = StringUtilities.trimNodeText(fontMetrics, text, width);
-		System.out.println(trimmed);
 		assertEquals(expected, trimmed);	
 	}
 	
@@ -61,7 +57,6 @@ public class StringUtilitiesTest extends TestCase {
 		expected = text;
 		advanceWidth = fontMetrics.charsWidth(text.toCharArray(), 0, text.length());
 		trimmed = StringUtilities.trimNodeText(fontMetrics, text, width);
-		System.out.println("advanceWidth for " + text + ": " + advanceWidth);
 		assertEquals(expected, trimmed);
 	}
 

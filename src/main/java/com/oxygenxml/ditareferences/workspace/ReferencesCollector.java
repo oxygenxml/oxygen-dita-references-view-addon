@@ -104,8 +104,7 @@ public abstract class ReferencesCollector {
 	 * @param ranges     The nodeRanges
 	 */
 	private void addLinksFromRelTable(WSEditorPage editorPage, List<NodeRange> ranges) {
-		if (editorPage != null && editorPage.getParentEditor() != null) {
-			
+		if (editorPage != null && editorPage.getParentEditor() != null) {		
 			List<RelLink> relLinks = RellinksAccessor
 					.getRelationshipTableTargetURLs(editorPage.getParentEditor().getEditorLocation());
 			if (!relLinks.isEmpty()) {

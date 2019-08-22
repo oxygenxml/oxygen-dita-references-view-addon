@@ -7,6 +7,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
@@ -29,7 +30,8 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  *
  */
 public class CaretForTextPageTest extends TestCase {
-
+	private static final Logger LOGGER = Logger.getLogger(CaretForTextPageTest.class);
+	
 	private List<Integer> selectionOffsets = new ArrayList<Integer>();
 
 	/**
@@ -146,7 +148,7 @@ public class CaretForTextPageTest extends TestCase {
 					.getLastPathComponent()).getUserObject();
 			assertEquals("www.wikipedia.com", selectedNodeRange.getAttributeValue("href"));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOGGER.error(e, e);
 		}
 
 	}

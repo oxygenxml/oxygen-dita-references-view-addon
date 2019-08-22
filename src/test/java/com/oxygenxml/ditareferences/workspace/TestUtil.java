@@ -20,6 +20,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -33,8 +34,11 @@ import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.util.URLUtil;
 
-public class TestUtil {	
 
+
+public class TestUtil {	
+	private final static Logger LOGGER = Logger.getLogger(TestUtil.class);
+			
 	/**
 	 * The XPath expression with all possible references available in the current
 	 * DITA content.
@@ -61,7 +65,7 @@ public class TestUtil {
 			}
 			return nodes;
 		} catch (XPathExpressionException e) {
-			e.printStackTrace();
+			LOGGER.error(e, e);
 		}
 		return null;
 	}
