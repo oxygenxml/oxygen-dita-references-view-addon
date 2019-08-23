@@ -24,7 +24,7 @@ public class RefNodeTransferHandler extends TransferHandler {
 	 * the referencesTree.
 	 */
 	@Override
-	public void exportToClipboard(JComponent comp, Clipboard clip, int action) throws IllegalStateException {
+	public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
 		if (action == TransferHandler.COPY) {
 			if (comp instanceof ReferencesTree) {
 				ReferencesTree refTree = (ReferencesTree) comp;
@@ -39,8 +39,7 @@ public class RefNodeTransferHandler extends TransferHandler {
 				Transferable t = new StringSelection(label.getText());
 				try {
 					clip.setContents(t, null);
-					exportDone(comp, t, action);
-					return;
+					exportDone(comp, t, action);					
 				} catch (IllegalStateException ise) {
 					exportDone(comp, t, NONE);
 					throw ise;

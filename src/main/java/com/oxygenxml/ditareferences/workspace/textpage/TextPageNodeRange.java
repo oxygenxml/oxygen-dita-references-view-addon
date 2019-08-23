@@ -21,7 +21,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 public class TextPageNodeRange implements NodeRange {
 
 	/* The referencesTree Logger. */
-	private static final Logger LOGGER = Logger.getLogger(NodeRange.class);
+	private static final Logger LOGGER = Logger.getLogger(TextPageNodeRange.class);
 
 	/* The XML element. */
 	private Element element;

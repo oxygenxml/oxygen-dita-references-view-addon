@@ -113,5 +113,15 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
+	
+	/**
+	 * Check if path is selected in ReferencesTree.
+	 * 
+	 * @param currentLocationPath The current locationPath
+	 * @return true is path is selected
+	 */
+	private boolean isPathSelected(TreePath currentLocationPath) {
+		return (currentLocationPath != null && refTree.getSelectionModel().getSelectionPath() != null);
+	}
 
 }

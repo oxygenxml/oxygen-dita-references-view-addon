@@ -27,7 +27,7 @@ public class TextReferencesCollector extends ReferencesCollector {
 	@Override
 	protected List<NodeRange> collect(WSEditorPage page) throws XPathException {
 		WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) page;
-		List<NodeRange> ranges = new ArrayList<NodeRange>();
+		List<NodeRange> ranges = new ArrayList<>();
 
 		Object[] referenceNodes = textPage.evaluateXPath(ALL_REFS_XPATH_EXPRESSION);
 		WSXMLTextNodeRange[] referenceTextNodeRanges = textPage

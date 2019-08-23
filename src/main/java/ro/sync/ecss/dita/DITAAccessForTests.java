@@ -10,6 +10,10 @@ import com.oxygenxml.ditareferences.workspace.rellinks.RelLink;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkImpl;
 
 public class DITAAccessForTests{
+	
+	private DITAAccessForTests() {
+		//private constructor
+	}
 	 /**
 	   * Get the list of related links from all the relationship tables defined in the DITA Maps.
 	   * @param originatorURL The topic for which we are searching for outgoing links.
@@ -19,7 +23,7 @@ public class DITAAccessForTests{
 	   * @since 22
 	   */
 	public static List<RelLink> getRelatedLinksFromReltable(URL originatorURL){
-		List<RelLink> links = new ArrayList<RelLink>();
+		List<RelLink> links = new ArrayList<>();
 		try {
 			links.add(new RelLinkImpl(
 					new File("test/source1.dita").toURI().toURL(), 
