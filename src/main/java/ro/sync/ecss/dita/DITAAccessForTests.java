@@ -33,8 +33,9 @@ public class DITAAccessForTests{
 					new File("test/source1.dita").toURI().toURL(), 
 					new URL("http://www.google.com"), "html", "external", new File("test/defLocation3.dita").toURI().toURL()));
 		} catch (MalformedURLException e) {
-			//e.printStackTrace();
+			
 		}
 		return links;
 	}
+	
 }

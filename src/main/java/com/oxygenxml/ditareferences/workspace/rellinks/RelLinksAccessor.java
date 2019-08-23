@@ -36,10 +36,10 @@ public class RelLinksAccessor {
 					Class relLinkClass = relLink.getClass();
 					Method getSource = relLinkClass.getMethod("getSourceURL");
 					URL sourceURL = (URL) getSource.invoke(relLink);
-					
+
 					if (topicURL.equals(sourceURL)) {
 						Method getTarget = relLinkClass.getMethod("getTargetURL");
-						URL targetURL = (URL) getTarget.invoke(relLink);						
+						URL targetURL = (URL) getTarget.invoke(relLink);
 
 						Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
 						String targetFormat = (String) getTargetFormat.invoke(relLink);
@@ -61,6 +61,6 @@ public class RelLinksAccessor {
 		}
 
 		return links;
-	}	
-	
+	}
+
 }

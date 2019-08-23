@@ -19,7 +19,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 @SuppressWarnings("serial")
 public class OpenReferenceAction extends AbstractAction {
 	private static final String FORMAT = "format";
-	
+
 	/* The OpenReferenceAction Logger. */
 	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
@@ -75,7 +75,7 @@ public class OpenReferenceAction extends AbstractAction {
 		String formatAttr = nodeRange.getAttributeValue(FORMAT);
 		URL url = null;
 		URL editorLocation = editorAccess.getEditorLocation();
-		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider.getKeys(editorLocation);
+		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider != null ? keysProvider.getKeys(editorLocation) : null;
 
 		try {
 			if (hrefAttr != null) {
@@ -172,7 +172,7 @@ public class OpenReferenceAction extends AbstractAction {
 			}
 		}
 	}
-	
+
 	/**
 	 * Open image references from format attribute.
 	 * 
@@ -228,5 +228,5 @@ public class OpenReferenceAction extends AbstractAction {
 			pluginWorkspaceAccess.openInExternalApplication(url, true);
 		}
 	}
-	
+
 }
