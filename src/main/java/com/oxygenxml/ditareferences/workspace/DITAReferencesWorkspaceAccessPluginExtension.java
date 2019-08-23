@@ -155,7 +155,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				bindTreeWithEditor(editorLocation);
 			}
 
-		}, pluginWorkspaceAccess.MAIN_EDITING_AREA);
+		}, PluginWorkspace.MAIN_EDITING_AREA);
 
 		/**
 		 * Add Icon, Title and ScrollPane for side-view. ScrollPane should let the whole
@@ -215,9 +215,9 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		WSEditor editorAccess = null;
 		if (editorLocation != null) {
 			editorAccess = pluginWorkspaceAccess.getEditorAccess(editorLocation,
-					pluginWorkspaceAccess.MAIN_EDITING_AREA);
+					PluginWorkspace.MAIN_EDITING_AREA);
 		} else {
-			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(pluginWorkspaceAccess.MAIN_EDITING_AREA);
+			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
 		}
 		refTree.refreshReferenceTree(editorAccess);
 	}

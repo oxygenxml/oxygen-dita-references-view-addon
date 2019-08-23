@@ -101,8 +101,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	 */
 	private void processDoubleClick(MouseEvent event) {
 		TreePath currentLocationPath = refTree.getPathForLocation(event.getX(), event.getY());
-		if (currentLocationPath != null) {
-			if (refTree.getSelectionModel().getSelectionPath() != null) {
+		if (isPathSelected(currentLocationPath)) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentLocationPath.getLastPathComponent();
 
 				// it must be Leaf Node
@@ -112,7 +111,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 				}
 			}
 		}
-	}
+
 	
 	/**
 	 * Check if path is selected in ReferencesTree.
