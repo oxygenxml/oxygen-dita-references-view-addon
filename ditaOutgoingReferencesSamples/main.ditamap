@@ -36,8 +36,12 @@
             </relcell>
         </relrow>
         <relrow>
-            <relcell/>
-            <relcell/>
+            <relcell>
+                <topicref href="sample2.dita"/>
+            </relcell>
+            <relcell>
+                <topicref href="sample.dita"/>
+            </relcell>
         </relrow>
     </reltable>
 </map>

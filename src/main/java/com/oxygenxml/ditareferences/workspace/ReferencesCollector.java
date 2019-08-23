@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import com.oxygenxml.ditareferences.translator.Tags;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLink;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRangeImpl;
-import com.oxygenxml.ditareferences.workspace.rellinks.RellinksAccessor;
+import com.oxygenxml.ditareferences.workspace.rellinks.RelLinksAccessor;
 
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
@@ -105,7 +105,7 @@ public abstract class ReferencesCollector {
 	 */
 	private void addLinksFromRelTable(WSEditorPage editorPage, List<NodeRange> ranges) {
 		if (editorPage != null && editorPage.getParentEditor() != null) {		
-			List<RelLink> relLinks = RellinksAccessor
+			List<RelLink> relLinks = RelLinksAccessor
 					.getRelationshipTableTargetURLs(editorPage.getParentEditor().getEditorLocation());
 			if (!relLinks.isEmpty()) {
 				for (int i = 0; i < relLinks.size(); i++) {

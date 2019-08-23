@@ -87,7 +87,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 					
 					// add "Show Definition Location" item in PopUpMenu
 					if (node.getUserObject() instanceof RelLinkNodeRange) {
-						menu.add(new ShowDefinitionLocationAction((RelLinkNodeRange) node.getUserObject(), editorAccess,
+						menu.add(new ShowDefinitionLocationAction((RelLinkNodeRange) node.getUserObject(),
 								pluginWorkspaceAccess, showDefLocationName));
 					}
 					menu.show(refTree, event.getX(), event.getY());

@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-public class RellinksAccessor {
-	private static final Logger LOGGER = Logger.getLogger(RellinksAccessor.class);
+public class RelLinksAccessor {
+	private static final Logger LOGGER = Logger.getLogger(RelLinksAccessor.class);
 
-	private RellinksAccessor() {
+	private RelLinksAccessor() {
 		// private constructor
 	}
 
@@ -36,10 +36,10 @@ public class RellinksAccessor {
 					Class relLinkClass = relLink.getClass();
 					Method getSource = relLinkClass.getMethod("getSourceURL");
 					URL sourceURL = (URL) getSource.invoke(relLink);
-
+					
 					if (topicURL.equals(sourceURL)) {
 						Method getTarget = relLinkClass.getMethod("getTargetURL");
-						URL targetURL = (URL) getTarget.invoke(relLink);
+						URL targetURL = (URL) getTarget.invoke(relLink);						
 
 						Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
 						String targetFormat = (String) getTargetFormat.invoke(relLink);
