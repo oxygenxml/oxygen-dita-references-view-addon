@@ -1,6 +1,7 @@
 package com.oxygenxml.ditareferences.workspace;
 
 import java.awt.Rectangle;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -71,8 +72,7 @@ public class RelLinksTest extends TestCase{
 								try {
 									// set the source File to match the method
 									// ro.sync.ecss.dita.DITAAccessForTests.getRelatedLinksFromReltable(URL).
-									editorLocationUrl = new URL(
-											"file:/C:/Users/test/Documents/oxygen-dita-outgoing-references-view/test/source1.dita");
+									editorLocationUrl = new File("test/source1.dita").toURI().toURL();
 								} catch (MalformedURLException e) {
 									LOGGER.debug(e, e);
 								}
