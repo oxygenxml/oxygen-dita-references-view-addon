@@ -90,19 +90,23 @@ public class OpenReferenceAction extends AbstractAction {
 				openReferences(url, nodeRange, formatAttr);
 
 			} else if (keyrefAttr != null) {
-				KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
-				if (value != null) {
-					url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
-					formatAttr = value.getAttributes().get(FORMAT);
-					openReferences(url, nodeRange, formatAttr);
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
+					if (value != null) {
+						url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
+						formatAttr = value.getAttributes().get(FORMAT);
+						openReferences(url, nodeRange, formatAttr);
+					}
 				}
 
 			} else if (conkeyrefAttr != null) {
-				KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
-				if (value != null) {
-					url = value.getHrefLocation();
-					formatAttr = value.getAttributes().get(FORMAT);
-					openReferences(url, nodeRange, formatAttr);
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
+					if (value != null) {
+						url = value.getHrefLocation();
+						formatAttr = value.getAttributes().get(FORMAT);
+						openReferences(url, nodeRange, formatAttr);
+					}
 				}
 			}
 		} catch (MalformedURLException e1) {
