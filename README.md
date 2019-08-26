@@ -21,7 +21,7 @@ Features of the side view:
 How to install
 --------------
 1. In Oxygen, go to **Help->Install new add-ons** to open an add-on selection dialog box.
-1. Enter or paste https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/blob/master/addon.xml in the **Show add-ons** from field.
+1. Enter or paste https://raw.githubusercontent.com/oxygenxml/oxygen-dita-outgoing-references-view/master/build/addon.xml in the **Show add-ons** from field.
 1. Select the **DITA Outgoing References View** add-on and click **Next**.
 1. Select the **I accept all terms of the end user license agreement** option and click **Finish**.
 1. Restart the application.
