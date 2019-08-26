@@ -24,7 +24,9 @@
                 <topicref href="sample.dita"/>
             </relcell>
             <relcell>
-                <topicref keyref="sample2"/>
+                <topicref keyref="sample2">
+                    <topicref href="sample3.dita#unbenannt1"/>
+                </topicref>
             </relcell>
         </relrow>
         <relrow>
@@ -37,11 +39,12 @@
         </relrow>
         <relrow>
             <relcell>
-                <topicref href="sample2.dita"/>
+                <topicref href="sample2.dita" linking="sourceonly"/>
             </relcell>
             <relcell>
                 <topicref href="sample.dita"/>
             </relcell>
         </relrow>
     </reltable>
+    <topicref href="sample3.dita"/>
 </map>
