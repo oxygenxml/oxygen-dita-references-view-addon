@@ -39,13 +39,13 @@
         <val lang="ja_JP">Root</val>
         <val lang="nl_NL">Root</val>        
     </key> 
-    <key value="Image_references">
-        <comment>Image references (direct or indirect).</comment>
-        <val lang="en_US">Image references</val>
-        <val lang="de_DE">Bildreferenzen</val> 
-        <val lang="fr_FR">Image references</val>
-        <val lang="ja_JP">Image references</val>
-        <val lang="nl_NL">Image references</val>
+    <key value="Media_references">
+        <comment>Media references (direct or indirect).</comment>
+        <val lang="en_US">Media</val>
+        <val lang="de_DE">Medien</val> 
+        <val lang="fr_FR">Media</val>
+        <val lang="ja_JP">Media</val>
+        <val lang="nl_NL">Media</val>
     </key> 
     <key value="Content_references">
         <comment>The content references.</comment>

@@ -8,6 +8,12 @@
                         <ul id="ul_zr3_ykk_33b">
                                 <li>Direct image ref <image href="image.png"/></li>
                                 <li>Indirect image <image keyref="image"/></li>
+                                <li>Direct audio file <object data="http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3"           
+                                        outputclass="audio" /></li>
+                                <li>Indirect audio file <object datakeyref="launch"           
+                                        outputclass="audio" class="- topic/object "/></li>
+                                <li> <object data="https://www.youtube.com/embed/ydU-YrG_INk" outputclass="iframe"/> </li>
+                                
                         </ul>
                 </section>
                 <section id="section_i2f_5jk_33b">

@@ -79,6 +79,7 @@ public class TextPageNodeRange implements NodeRange {
 	public String getAttributeValue(String attributeName) {
 		if (element != null) {
 			NamedNodeMap attrs = element.getAttributes();
+			
 			if (attrs != null) {
 				Node attr = attrs.getNamedItem(attributeName);
 				if (attr != null) {

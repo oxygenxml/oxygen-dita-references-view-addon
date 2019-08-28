@@ -27,6 +27,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
 	/* Icons for leaf nodes. */
 	private ImageIcon imageIcon = null;
+	private ImageIcon mediaIcon = null;
 	private ImageIcon linkIcon = null;
 	private ImageIcon contentIcon = null;
 	private ImageIcon crossIcon = null;
@@ -46,6 +47,11 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		URL imageUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementImage16.png");
 		if (imageUrl != null) {
 			this.imageIcon = (ImageIcon) imageUtilities.loadIcon(imageUrl);
+		}
+		
+		URL mediaUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementMedia16.png");
+		if (mediaUrl != null) {
+			this.mediaIcon = (ImageIcon) imageUtilities.loadIcon(mediaUrl);
 		}
 
 		URL crossUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementXref16.png");
@@ -159,6 +165,21 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 						this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr,
 								width));
 						this.setToolTipText(hrefAttr);
+					} else {
+						String dataAttr = nodeRange.getAttributeValue("data");
+						if (dataAttr != null) {
+							this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), dataAttr,
+									width));
+							this.setToolTipText(dataAttr);
+						} else {
+							String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
+
+							if (datakeyrefAttr != null) {
+								this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()),
+										datakeyrefAttr, width));
+								this.setToolTipText(datakeyrefAttr);
+							}
+						}
 					}
 				}
 			}
@@ -174,8 +195,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	private void setTextForCategoryNode(Object value, JLabel label) {
 		String toDisplayCategory = null;
 
-		if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.IMAGE_REFERENCES)) {
-			toDisplayCategory = translator.getTranslation(Tags.IMAGE_REFERENCES);
+		if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.MEDIA_REFERENCES)) {
+			toDisplayCategory = translator.getTranslation(Tags.MEDIA_REFERENCES);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
 			toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
@@ -203,6 +224,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		if (classAttrValue != null) {
 			if (classAttrValue.contains(" topic/image ")) {
 				label.setIcon(imageIcon);
+			} else if(classAttrValue.contains(" topic/object ")) {
+				label.setIcon(mediaIcon);
 			} else if (classAttrValue.contains(" topic/xref ")) {
 				label.setIcon(crossIcon);
 			} else if (classAttrValue.contains(" topic/link ")) {

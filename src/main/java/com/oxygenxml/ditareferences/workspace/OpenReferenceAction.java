@@ -72,11 +72,14 @@ public class OpenReferenceAction extends AbstractAction {
 		String keyrefAttr = nodeRange.getAttributeValue("keyref");
 		String conrefAttr = nodeRange.getAttributeValue("conref");
 		String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
+		String dataAttr = nodeRange.getAttributeValue("data");
+		String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
 		String formatAttr = nodeRange.getAttributeValue(FORMAT);
+
 		URL url = null;
 		URL editorLocation = editorAccess.getEditorLocation();
 		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider != null ? keysProvider.getKeys(editorLocation) : null;
-
+		
 		try {
 			if (hrefAttr != null) {
 				// possible URL if the protocol name is already inserted in the href reference
@@ -108,7 +111,20 @@ public class OpenReferenceAction extends AbstractAction {
 						openReferences(url, nodeRange, formatAttr);
 					}
 				}
+			} else if (datakeyrefAttr != null) {
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(datakeyrefAttr, referencesKeys);
+					if (value != null) {
+						url = value.getHrefLocation();
+						formatAttr = value.getAttributes().get(FORMAT);
+						openReferences(url, nodeRange, formatAttr);
+					}
+				}
+			} else if (dataAttr != null) {
+				URL dataUrl = new URL(editorLocation, dataAttr);				
+				openReferences(dataUrl, nodeRange, formatAttr);
 			}
+			
 		} catch (MalformedURLException e1) {
 			LOGGER.debug(e1, e1);
 		}
@@ -153,7 +169,8 @@ public class OpenReferenceAction extends AbstractAction {
 
 	/**
 	 * Open references from attribute with either Oxygen or an associated
-	 * application depending on its type: images, DITA topic, HTML, PDF etc.
+	 * application depending on its type: images, audio / video files, DITA topic,
+	 * HTML, PDF etc.
 	 * 
 	 * @param url                     Target URL, the URL to open
 	 * @param nodeRange               The nodeRange
@@ -165,16 +182,23 @@ public class OpenReferenceAction extends AbstractAction {
 	private void openReferences(URL url, NodeRange nodeRange, String formatAttr) throws MalformedURLException {
 		String classAttr = nodeRange.getAttributeValue("class");
 
-		// it's image
-		if (classAttr != null && classAttr.contains(" topic/image ")) {
-			openImageReference(url, formatAttr);
-		} else {
-			if (formatAttr != null) {
-				openReferenceWithFormatAttr(url, formatAttr);
+		if (classAttr != null) {
+			// it's image
+			if (classAttr.contains(" topic/image ")) {
+				openImageReference(url, formatAttr);
+			} else
+			// it's object file: audio / video
+			if (classAttr.contains(" topic/object ")) {
+				pluginWorkspaceAccess.openInExternalApplication(url, true);
 			} else {
-				openReferenceWithoutFormatAttr(url, formatAttr);
+				if (formatAttr != null) {
+					openReferenceWithFormatAttr(url, formatAttr);
+				} else {
+					openReferenceWithoutFormatAttr(url, formatAttr);
+				}
 			}
 		}
+
 	}
 
 	/**
@@ -207,8 +231,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 */
 	private void openReferenceWithoutFormatAttr(URL url, String formatAttr) {
 		// binary resource or a HTML format to be opened in browser
-		if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)
-				|| (formatAttr != null && formatAttr.equals("html"))) {
+		if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)) {
 			pluginWorkspaceAccess.openInExternalApplication(url, true);
 		} else {
 			// it's DITA

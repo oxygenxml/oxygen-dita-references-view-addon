@@ -46,6 +46,8 @@ public class OpenReferenceInTextPageTest extends TestCase {
 			+ "            <p>Link to external resource <xref keyref=\"google\"/> </p>\n"
 			+ "            <p class=\"- topic/p \" conref=\"sample2.dita#sample2/i1\"/>\n"
 			+ "            <p class=\"- topic/p \" conkeyref=\"sample2/i1\" conrefend=\"bla.dita#test/i3\"/> \n"
+			+ "            <object data=\"http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3\" \n" 
+			+ "                                    outputclass=\"audio\" class=\"- topic/object \" />  \n" 	
 			+ "    </body>\n "
 			+ "    <related-links>\n"
 			+ "            <link class=\"- topic/link \" href=\"www.google.com\" format=\"html\" scope=\"external\"/>\n"
@@ -77,7 +79,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 
 					@Override
 					public WSXMLTextNodeRange[] findElementsByXPath(String xpathExpression) throws XPathException {
-						return new WSXMLTextNodeRange[14];
+						return new WSXMLTextNodeRange[15];
 					}
 				};
 			}
@@ -158,7 +160,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_ImageWithExtension() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		assertEquals(13, tree.getRowCount());
+		assertEquals(14, tree.getRowCount());
 
 		TreePath path = tree.getPathForRow(1);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -186,6 +188,25 @@ public class OpenReferenceInTextPageTest extends TestCase {
 		TestUtil.simulateDoubleClick(tree);
 		assertTrue("Should have worked " + String.valueOf(urlToImage.get(0)), urlToImage.get(0).toString().endsWith("/image.png"));
 	}
+	
+	/**
+	 * Open reference in image perspective of image with no extension.
+	 */
+	@Test
+	public void testOpenRef_AudioReference() {
+		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
+		tree.refreshReferenceTree(editorAccess);
+		
+		TreePath path = tree.getPathForRow(3);
+		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
+				false, true, true, 3, false);
+		assertEquals("http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3", label.getText());
+
+		tree.setSelectionRow(3);
+		TestUtil.simulateDoubleClick(tree);
+		assertTrue("Should have worked " + String.valueOf(urlToExternal.get(0)),
+				urlToExternal.get(0).toString().endsWith("www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3"));
+	}
 
 	/**
 	 * Open DITA Topic from conref reference.
@@ -194,12 +215,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromConRef() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(4);
+		TreePath path = tree.getPathForRow(5);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 4, false);
+				false, true, true, 5, false);
 		assertEquals("sample2.dita#sample2/i1", label.getText());
 
-		tree.setSelectionRow(4);
+		tree.setSelectionRow(5);
 		TestUtil.simulateDoubleClick(tree);
 		assertTrue("Should have worked " + String.valueOf(urlToDITA.get(0)), urlToDITA.get(0).toString().endsWith("/sample2.dita#sample2/i1"));
 	}
@@ -211,12 +232,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromConKeyRef() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(5);
+		TreePath path = tree.getPathForRow(6);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 5, false);
+				false, true, true, 6, false);
 		assertEquals("sample2/i1", label.getText());
 
-		tree.setSelectionRow(5);
+		tree.setSelectionRow(6);
 		TestUtil.simulateDoubleClick(tree);
 		assertEquals("file:/C:/Users/test/Documents/sample2.dita", urlToDITA.get(0).toString());
 	}
@@ -228,12 +249,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_HTMLFormat() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(7);
+		TreePath path = tree.getPathForRow(8);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 7, false);
+				false, true, true, 8, false);
 		assertEquals("www.google.com", label.getText());
 
-		tree.setSelectionRow(7);
+		tree.setSelectionRow(8);
 		TestUtil.simulateDoubleClick(tree);
 		assertEquals("http://www.google.com", urlToExternal.get(0).toString());
 	}
@@ -245,12 +266,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopic() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(8);
+		TreePath path = tree.getPathForRow(9);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 8, false);
+				false, true, true, 9, false);
 		assertEquals("sample2.dita", label.getText());
 
-		tree.setSelectionRow(8);
+		tree.setSelectionRow(9);
 		TestUtil.simulateDoubleClick(tree);
 	}
 
@@ -261,12 +282,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_BinaryResourceWithFormat() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(9);
+		TreePath path = tree.getPathForRow(10);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 9, false);
+				false, true, true, 10, false);
 		assertEquals("test.pdf", label.getText());
 
-		tree.setSelectionRow(9);
+		tree.setSelectionRow(10);
 		TestUtil.simulateDoubleClick(tree);
 		assertTrue("Should have worked " + String.valueOf(urlToExternal.get(0)), urlToExternal.get(0).toString().endsWith("/test.pdf"));
 	}
@@ -278,12 +299,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromKeyref() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(11);
+		TreePath path = tree.getPathForRow(12);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 11, false);
+				false, true, true, 12, false);
 		assertEquals("sample2", label.getText());
 
-		tree.setSelectionRow(11);
+		tree.setSelectionRow(12);
 		TestUtil.simulateDoubleClick(tree);
 		assertEquals("file:/C:/Users/test/Documents/sample2.dita", urlToDITA.get(0).toString());
 	}
@@ -295,12 +316,12 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_BinaryResourceFromKeyref() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
-		TreePath path = tree.getPathForRow(12);
+		TreePath path = tree.getPathForRow(13);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 12, false);
+				false, true, true, 13, false);
 		assertEquals("myPDF", label.getText());
 
-		tree.setSelectionRow(12);
+		tree.setSelectionRow(13);
 		TestUtil.simulateDoubleClick(tree);
 		assertEquals("file:/C:/Users/test/Documents/test.pdf", urlToExternal.get(0).toString());
 	}

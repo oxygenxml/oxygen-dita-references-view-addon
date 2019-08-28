@@ -5,6 +5,7 @@
     <keydef keys="image" href="image.png" format="png"/>
     <keydef keys="google" href="https://www.google.com" format="html" scope="external"/>
     <keydef keys="myPDF" href="test.pdf" format="pdf"/>
+    <keydef keys="launch" href="http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3" scope="external" format="html"></keydef>
     <topicref href="sample.dita"/>
     <topicref href="sample2.dita" keys="sample2"/>
     <keydef keys="simpleKey">

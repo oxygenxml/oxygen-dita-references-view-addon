@@ -36,7 +36,7 @@ public abstract class ReferencesCollector {
 	 */
 	protected static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
-			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))]";
+			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))] | //object";
 
 	/**
 	 * Collect the NodeRanges from the XPath evaluation.
@@ -57,7 +57,7 @@ public abstract class ReferencesCollector {
 	 * @throws AuthorOperationException
 	 */
 	public void collectReferences(WSEditorPage editorPage, DefaultMutableTreeNode root) throws XPathException{
-		DefaultMutableTreeNode imageReferences = new DefaultMutableTreeNode(Tags.IMAGE_REFERENCES);
+		DefaultMutableTreeNode mediaReferences = new DefaultMutableTreeNode(Tags.MEDIA_REFERENCES);
 		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(Tags.CROSS_REFERENCES);
 		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);
 		DefaultMutableTreeNode relatedLinks = new DefaultMutableTreeNode(Tags.RELATED_LINKS);
@@ -65,7 +65,7 @@ public abstract class ReferencesCollector {
 		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 
 		// get NodeRanges for TextPage / AuthorPage
-		List<NodeRange> ranges = collect(editorPage);
+		List<NodeRange> ranges = collect(editorPage);	
 
 		// The root element is the first in the list of references
 		if (!ranges.isEmpty()) {
@@ -80,10 +80,10 @@ public abstract class ReferencesCollector {
 					root.add(noReferencesFound);
 				} else {
 					// It is an interesting XML document, it's DITA.
-					addElementsInCategory(imageReferences, crossReferences, contentReferences, relatedLinks, ranges);
+					addElementsInCategory(mediaReferences, crossReferences, contentReferences, relatedLinks, ranges);
 
 					// Do not add empty categories to referencesTree.
-					addReferenceCategories(root, imageReferences, crossReferences, contentReferences, relatedLinks);
+					addReferenceCategories(root, mediaReferences, crossReferences, contentReferences, relatedLinks);
 				}
 			} else {
 				// an XML file which is not DITA: HTML for example
@@ -118,13 +118,13 @@ public abstract class ReferencesCollector {
 	/**
 	 * Add elements in a references category.
 	 * 
-	 * @param imageReferences   The image references category
+	 * @param mediaReferences   The media references category
 	 * @param crossReferences   The cross references category
 	 * @param contentReferences The content references category
 	 * @param relatedLinks      The related links category
 	 * @param ranges            The nodeRanges
 	 */
-	private void addElementsInCategory(DefaultMutableTreeNode imageReferences, DefaultMutableTreeNode crossReferences,
+	private void addElementsInCategory(DefaultMutableTreeNode mediaReferences, DefaultMutableTreeNode crossReferences,
 			DefaultMutableTreeNode contentReferences, DefaultMutableTreeNode relatedLinks, List<NodeRange> ranges) {
 		for (int i = 1; i < ranges.size(); i++) {
 			NodeRange refRange = ranges.get(i);
@@ -132,8 +132,8 @@ public abstract class ReferencesCollector {
 
 			if (classAttrValue != null) {
 				// add image nodeRanges in "image references" category of tree
-				if (classAttrValue.contains(" topic/image ")) {
-					imageReferences.add(new DefaultMutableTreeNode(refRange));
+				if (classAttrValue.contains(" topic/image ") || classAttrValue.contains(" topic/object ")) {						
+					mediaReferences.add(new DefaultMutableTreeNode(refRange));
 				} else
 				// add xref nodeRanges in "cross references" category of tree
 				if (classAttrValue.contains(" topic/xref ")) {
@@ -158,17 +158,17 @@ public abstract class ReferencesCollector {
 	 * Add categories in tree which are not empty.
 	 * 
 	 * @param root              The ReferencesTree root
-	 * @param imageReferences   The image references category
+	 * @param mediaReferences   The media references category
 	 * @param crossReferences   The cross references category
 	 * @param contentReferences The content references category
 	 * @param relatedLinks      The related links category
 	 */
-	private void addReferenceCategories(DefaultMutableTreeNode root, DefaultMutableTreeNode imageReferences,
+	private void addReferenceCategories(DefaultMutableTreeNode root, DefaultMutableTreeNode mediaReferences,
 			DefaultMutableTreeNode crossReferences, DefaultMutableTreeNode contentReferences,
 			DefaultMutableTreeNode relatedLinks) {
 
-		if (imageReferences.getChildCount() != 0) {
-			root.add(imageReferences);
+		if (mediaReferences.getChildCount() != 0) {
+			root.add(mediaReferences);
 		}
 		if (crossReferences.getChildCount() != 0) {
 			root.add(crossReferences);

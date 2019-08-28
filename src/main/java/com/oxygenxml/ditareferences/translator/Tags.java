@@ -38,7 +38,7 @@ public class Tags {
 	/**
 	 * Label for image references (direct and indirect).
 	 */
-	public static final String IMAGE_REFERENCES = "Image_references";
+	public static final String MEDIA_REFERENCES = "Media_references";
 
 	/**
 	 * Label for content references (conref and conkeyref).

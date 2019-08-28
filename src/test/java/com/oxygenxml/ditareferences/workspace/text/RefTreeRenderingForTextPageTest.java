@@ -39,6 +39,8 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 			+ "            <p>Link to external resource <xref keyref=\"google\"/> </p>\n"
 			+ "            <p class=\"- topic/p \" conref=\"sample2.dita#sample2/i1\"/>\n"
 			+ "            <p class=\"- topic/p \" conkeyref=\"sample2/i1\" conrefend=\"bla.dita#test/i3\"/> \n"
+			+ "            <object data=\"http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3\" \n" 
+			+ "                                    outputclass=\"audio\" class=\"- topic/object \" />  \n" 		
 			+ "    </body>\n " + "    <related-links>\n"
 			+ "            <link class=\"- topic/link \" href=\"www.google.com\" format=\"html\" scope=\"external\"/>\n"
 			+ "            <link class=\"- topic/link \" href=\"sample2.dita\"/>\n"
@@ -160,21 +162,21 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	@Test
 	public void test_DITAWithAllRefsInTextMode() {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 14));
+		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 15));
 
 		TreePath path = tree.getPathForRow(1);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				true, true, true, 1, true);
 		assertEquals("image.png", label.getText());
 
-		path = tree.getPathForRow(7);
-		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
-				true, true, 7, true);
-		assertEquals("www.google.com", label.getText());
-
 		path = tree.getPathForRow(8);
 		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
 				true, true, 8, true);
+		assertEquals("www.google.com", label.getText());
+
+		path = tree.getPathForRow(9);
+		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
+				true, true, 9, true);
 		assertEquals("sample2.dita", label.getText());
 	}
 

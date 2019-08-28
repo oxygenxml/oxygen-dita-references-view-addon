@@ -26,6 +26,7 @@ public class TextReferencesCollector extends ReferencesCollector {
 
 	@Override
 	protected List<NodeRange> collect(WSEditorPage page) throws XPathException {
+		
 		WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) page;
 		List<NodeRange> ranges = new ArrayList<>();
 
@@ -38,7 +39,7 @@ public class TextReferencesCollector extends ReferencesCollector {
 			for (int i = 0; i < referenceNodes.length; i++) {
 				Element currentElement = (Element) referenceNodes[i];
 				NodeRange refRange = new TextPageNodeRange(currentElement, referenceTextNodeRanges[i]);
-				ranges.add(refRange);
+				ranges.add(refRange);				
 			}
 		}
 

@@ -45,7 +45,7 @@ public class TestUtil {
 	 */
 	protected static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
-			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))]";
+			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))] |//object";
 	
 	/**
 	 * Evaluate the xPath expression in case of a DITA topic.
