@@ -111,22 +111,39 @@ public class OpenReferenceAction extends AbstractAction {
 						openReferences(url, nodeRange, formatAttr);
 					}
 				}
-			} else if (datakeyrefAttr != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(datakeyrefAttr, referencesKeys);
-					if (value != null) {
-						url = value.getHrefLocation();
-						formatAttr = value.getAttributes().get(FORMAT);
-						openReferences(url, nodeRange, formatAttr);
-					}
-				}
-			} else if (dataAttr != null) {
-				URL dataUrl = new URL(editorLocation, dataAttr);				
-				openReferences(dataUrl, nodeRange, formatAttr);
-			}
+			} else
+				openAudioVideoReferences(dataAttr, datakeyrefAttr, formatAttr, editorLocation, referencesKeys);
 			
 		} catch (MalformedURLException e1) {
 			LOGGER.debug(e1, e1);
+		}
+	}
+
+	/**
+	 * Open audio and video references.
+	 * 
+	 * @param dataAttr       The data attribute
+	 * @param datakeyrefAttr The dataKeyRef attribute
+	 * @param formatAttr     The format attribute
+	 * @param editorLocation The editorLocation
+	 * @param referencesKeys The LinkedHashMap of refKeys
+	 * @throws MalformedURLException
+	 */
+	private void openAudioVideoReferences(String dataAttr, String datakeyrefAttr, String formatAttr, URL editorLocation,
+			LinkedHashMap<String, KeyInfo> referencesKeys) throws MalformedURLException {
+		URL url;
+		if (datakeyrefAttr != null) {
+			if (referencesKeys != null) {
+				KeyInfo value = getKeyInfoFromReference(datakeyrefAttr, referencesKeys);
+				if (value != null) {
+					url = value.getHrefLocation();
+					formatAttr = value.getAttributes().get(FORMAT);
+					openReferences(url, nodeRange, formatAttr);
+				}
+			}
+		} else if (dataAttr != null) {
+			URL dataUrl = new URL(editorLocation, dataAttr);				
+			openReferences(dataUrl, nodeRange, formatAttr);
 		}
 	}
 
@@ -194,7 +211,7 @@ public class OpenReferenceAction extends AbstractAction {
 				if (formatAttr != null) {
 					openReferenceWithFormatAttr(url, formatAttr);
 				} else {
-					openReferenceWithoutFormatAttr(url, formatAttr);
+					openReferenceWithoutFormatAttr(url);
 				}
 			}
 		}
@@ -229,7 +246,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @param url        The target URL, the URL to open
 	 * @param formatAttr The format Attribute
 	 */
-	private void openReferenceWithoutFormatAttr(URL url, String formatAttr) {
+	private void openReferenceWithoutFormatAttr(URL url) {
 		// binary resource or a HTML format to be opened in browser
 		if (pluginWorkspaceAccess.getUtilAccess().isUnhandledBinaryResourceURL(url)) {
 			pluginWorkspaceAccess.openInExternalApplication(url, true);
