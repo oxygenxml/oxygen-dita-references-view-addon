@@ -48,7 +48,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		if (imageUrl != null) {
 			this.imageIcon = (ImageIcon) imageUtilities.loadIcon(imageUrl);
 		}
-		
+
 		URL mediaUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementMedia16.png");
 		if (mediaUrl != null) {
 			this.mediaIcon = (ImageIcon) imageUtilities.loadIcon(mediaUrl);
@@ -68,22 +68,22 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		if (linkUrl != null) {
 			this.linkIcon = (ImageIcon) imageUtilities.loadIcon(linkUrl);
 		}
-		
+
 		URL relLinkUrl = StandalonePluginWorkspace.class.getResource("/images/RelTable16.png");
 		if (relLinkUrl != null) {
 			this.relLinkIcon = (ImageIcon) imageUtilities.loadIcon(relLinkUrl);
 		}
 
 	}
-	
-	/* compute width of node text only at first method call  */
+
+	/* compute width of node text only at first method call */
 	private int inProgress = 0;
 
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf,
 			int row, boolean hasFocus) {
-		
-		inProgress++;		
+
+		inProgress++;
 		JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		label.setIcon(null);
 
@@ -97,21 +97,21 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 			if (((DefaultMutableTreeNode) value).getUserObject() instanceof NodeRange) {
 				NodeRange nodeRange = (NodeRange) ((DefaultMutableTreeNode) value).getUserObject();
 
-				// compute width for node text 
-				if (inProgress == 1) {					
+				// compute width for node text
+				if (inProgress == 1) {
 					Rectangle rowBounds = tree.getRowBounds(row);
 					width = adjustWidth(label, width, rowBounds);
 				}
 				setTextAndToolTipForLeafNode(label, width, nodeRange);
 				setIconForLeafNode(label, nodeRange);
-				
+
 			} else {
 				if (((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
 					setTextForCategoryNode(value, label);
 				}
 			}
 		}
-		
+
 		inProgress--;
 		return label;
 	}
@@ -144,40 +144,41 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * @param nodeRange The NodeRange
 	 */
 	private void setTextAndToolTipForLeafNode(JLabel label, int width, NodeRange nodeRange) {
-		String hrefAttr = nodeRange.getAttributeValue("href");
-		if (hrefAttr != null) {
-			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), hrefAttr, width));
-			this.setToolTipText(hrefAttr);
+
+		String keyrefAttr = nodeRange.getAttributeValue("keyref");
+		if (keyrefAttr != null) {
+			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), keyrefAttr, width));
+			this.setToolTipText(keyrefAttr);
 		} else {
-			String keyrefAttr = nodeRange.getAttributeValue("keyref");
-			if (keyrefAttr != null) {
-				this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), keyrefAttr, width));
-				this.setToolTipText(hrefAttr);
+			String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
+			if (datakeyrefAttr != null) {
+				this.setText(
+						StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), datakeyrefAttr, width));
+				this.setToolTipText(datakeyrefAttr);
 			} else {
-				String conrefAttr = nodeRange.getAttributeValue("conref");
-				if (conrefAttr != null) {
+				String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
+				if (conkeyrefAttr != null) {
 					this.setText(
-							StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr, width));
-					this.setToolTipText(hrefAttr);
+							StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr, width));
+					this.setToolTipText(conkeyrefAttr);
 				} else {
-					String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
-					if (conkeyrefAttr != null) {
-						this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr,
-								width));
+					String hrefAttr = nodeRange.getAttributeValue("href");
+					if (hrefAttr != null) {
+						this.setText(
+								StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), hrefAttr, width));
 						this.setToolTipText(hrefAttr);
 					} else {
-						String dataAttr = nodeRange.getAttributeValue("data");
-						if (dataAttr != null) {
-							this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), dataAttr,
+						String conrefAttr = nodeRange.getAttributeValue("conref");
+						if (conrefAttr != null) {
+							this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr,
 									width));
-							this.setToolTipText(dataAttr);
+							this.setToolTipText(conrefAttr);
 						} else {
-							String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
-
-							if (datakeyrefAttr != null) {
+							String dataAttr = nodeRange.getAttributeValue("data");
+							if (dataAttr != null) {
 								this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()),
-										datakeyrefAttr, width));
-								this.setToolTipText(datakeyrefAttr);
+										dataAttr, width));
+								this.setToolTipText(dataAttr);
 							}
 						}
 					}
@@ -211,7 +212,6 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		label.setText(toDisplayCategory);
 	}
 
-
 	/**
 	 * Set icon for each leaf node depending on reference category.
 	 * 
@@ -220,11 +220,11 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 */
 	private void setIconForLeafNode(JLabel label, NodeRange nodeRange) {
 		String classAttrValue = nodeRange.getAttributeValue("class");
-				
+
 		if (classAttrValue != null) {
 			if (classAttrValue.contains(" topic/image ")) {
 				label.setIcon(imageIcon);
-			} else if(classAttrValue.contains(" topic/object ")) {
+			} else if (classAttrValue.contains(" topic/object ")) {
 				label.setIcon(mediaIcon);
 			} else if (classAttrValue.contains(" topic/xref ")) {
 				label.setIcon(crossIcon);

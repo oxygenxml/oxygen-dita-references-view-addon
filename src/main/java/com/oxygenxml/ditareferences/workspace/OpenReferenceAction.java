@@ -34,7 +34,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @param nodeRange             The nodeRange to be clicked
 	 * @param editorAccess          The editor access
 	 * @param pluginWorkspaceAccess The pluginWorkspace access
-	 * @param keysProvider          The name of the contextual menu item
+	 * @param keysProvider          The HashMap with keys
 	 * @param actionName            The name of the action.
 	 */
 	public OpenReferenceAction(NodeRange nodeRange, WSEditor editorAccess,
@@ -53,6 +53,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * @param nodeRange             The nodeRange to be clicked
 	 * @param editorAccess          The editor access
 	 * @param pluginWorkspaceAccess The pluginWorkspace access
+	 * @param keyProvider           The HashMap with keys
 	 */
 	public OpenReferenceAction(NodeRange nodeRange, WSEditor editorAccess,
 			StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider) {
@@ -68,82 +69,64 @@ public class OpenReferenceAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// attributes of the leaf nodes
-		String hrefAttr = nodeRange.getAttributeValue("href");
-		String keyrefAttr = nodeRange.getAttributeValue("keyref");
-		String conrefAttr = nodeRange.getAttributeValue("conref");
-		String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
-		String dataAttr = nodeRange.getAttributeValue("data");
-		String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
-		String formatAttr = nodeRange.getAttributeValue(FORMAT);
+		String hrefAttrValue = nodeRange.getAttributeValue("href");
+		String keyrefAttrValue = nodeRange.getAttributeValue("keyref");
+		String conrefAttrValue = nodeRange.getAttributeValue("conref");
+		String conkeyrefAttrValue = nodeRange.getAttributeValue("conkeyref");
+		String dataAttrValue = nodeRange.getAttributeValue("data");
+		String datakeyrefAttrValue = nodeRange.getAttributeValue("datakeyref");
+		String formatAttrValue = nodeRange.getAttributeValue(FORMAT);
+		String classAttrValue = nodeRange.getAttributeValue("class");
 
-		URL url = null;
 		URL editorLocation = editorAccess.getEditorLocation();
 		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider != null ? keysProvider.getKeys(editorLocation) : null;
 		
 		try {
-			if (hrefAttr != null) {
+			if (keyrefAttrValue != null) {
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(keyrefAttrValue, referencesKeys);
+					if (value != null) {
+						URL url = getURLForHTTPHost(formatAttrValue, value.getHrefValue(), value.getHrefLocation());
+						formatAttrValue = value.getAttributes().get(FORMAT);
+						openReferences(url, classAttrValue, formatAttrValue);
+					}
+				}
+			} else if (conkeyrefAttrValue != null) {
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(conkeyrefAttrValue, referencesKeys);
+					if (value != null) {
+						URL url = value.getHrefLocation();
+						formatAttrValue = value.getAttributes().get(FORMAT);
+						openReferences(url, classAttrValue, formatAttrValue);
+					}
+				}
+			} else if (datakeyrefAttrValue != null) {
+				if (referencesKeys != null) {
+					KeyInfo value = getKeyInfoFromReference(datakeyrefAttrValue, referencesKeys);
+					if (value != null) {
+						URL url = value.getHrefLocation();
+						formatAttrValue = value.getAttributes().get(FORMAT);
+						openReferences(url, classAttrValue, formatAttrValue);
+					}
+				}
+			} else if (hrefAttrValue != null) {
 				// possible URL if the protocol name is already inserted in the href reference
 				// by user, otherwise it needs to be added
-				URL possibleURL = new URL(editorLocation, hrefAttr);
-				url = getURLForHTTPHost(formatAttr, hrefAttr, possibleURL);
-				openReferences(url, nodeRange, formatAttr);
+				URL possibleURL = new URL(editorLocation, hrefAttrValue);
+				URL url = getURLForHTTPHost(formatAttrValue, hrefAttrValue, possibleURL);
+				openReferences(url, classAttrValue, formatAttrValue);	
+				
+			} else if (conrefAttrValue != null) {
+				URL url = new URL(editorLocation, conrefAttrValue);
+				openReferences(url, classAttrValue, formatAttrValue);
+				
+			} else if (dataAttrValue != null) {
+				URL dataUrl = new URL(editorLocation, dataAttrValue);
+				openReferences(dataUrl, classAttrValue, formatAttrValue);
+			}
 
-			} else if (conrefAttr != null) {
-				url = new URL(editorLocation, conrefAttr);
-				openReferences(url, nodeRange, formatAttr);
-
-			} else if (keyrefAttr != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(keyrefAttr, referencesKeys);
-					if (value != null) {
-						url = getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation());
-						formatAttr = value.getAttributes().get(FORMAT);
-						openReferences(url, nodeRange, formatAttr);
-					}
-				}
-
-			} else if (conkeyrefAttr != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
-					if (value != null) {
-						url = value.getHrefLocation();
-						formatAttr = value.getAttributes().get(FORMAT);
-						openReferences(url, nodeRange, formatAttr);
-					}
-				}
-			} else
-				openAudioVideoReferences(dataAttr, datakeyrefAttr, formatAttr, editorLocation, referencesKeys);
-			
 		} catch (MalformedURLException e1) {
 			LOGGER.debug(e1, e1);
-		}
-	}
-
-	/**
-	 * Open audio and video references.
-	 * 
-	 * @param dataAttr       The data attribute
-	 * @param datakeyrefAttr The dataKeyRef attribute
-	 * @param formatAttr     The format attribute
-	 * @param editorLocation The editorLocation
-	 * @param referencesKeys The LinkedHashMap of refKeys
-	 * @throws MalformedURLException
-	 */
-	private void openAudioVideoReferences(String dataAttr, String datakeyrefAttr, String formatAttr, URL editorLocation,
-			LinkedHashMap<String, KeyInfo> referencesKeys) throws MalformedURLException {
-		URL url;
-		if (datakeyrefAttr != null) {
-			if (referencesKeys != null) {
-				KeyInfo value = getKeyInfoFromReference(datakeyrefAttr, referencesKeys);
-				if (value != null) {
-					url = value.getHrefLocation();
-					formatAttr = value.getAttributes().get(FORMAT);
-					openReferences(url, nodeRange, formatAttr);
-				}
-			}
-		} else if (dataAttr != null) {
-			URL dataUrl = new URL(editorLocation, dataAttr);				
-			openReferences(dataUrl, nodeRange, formatAttr);
 		}
 	}
 
@@ -152,16 +135,16 @@ public class OpenReferenceAction extends AbstractAction {
 	 * have the protocol name when new URL created. For example:
 	 * "http://www.google.com" if user types "www.google.com".
 	 * 
-	 * @param formatAttr  Format attribute to verify
-	 * @param hrefValue   The HREF value of the attribute
+	 * @param formatAttrValue  Format attribute value to verify
+	 * @param hrefAttrValue   The HREF value of the attribute
 	 * @param possibleURL The URL if no HTML format available
 	 * @return The target URL
 	 * @throws MalformedURLException
 	 */
-	private URL getURLForHTTPHost(String formatAttr, String hrefValue, URL possibleURL) throws MalformedURLException {
+	private URL getURLForHTTPHost(String formatAttrValue, String hrefAttrValue, URL possibleURL) throws MalformedURLException {
 		URL url;
-		if (formatAttr != null && formatAttr.equals("html") && !hrefValue.startsWith("http")) {
-			url = new URL("http://" + hrefValue);
+		if (formatAttrValue != null && formatAttrValue.equals("html") && !hrefAttrValue.startsWith("http")) {
+			url = new URL("http://" + hrefAttrValue);
 		} else {
 			url = possibleURL;
 		}
@@ -189,27 +172,24 @@ public class OpenReferenceAction extends AbstractAction {
 	 * application depending on its type: images, audio / video files, DITA topic,
 	 * HTML, PDF etc.
 	 * 
-	 * @param url                     Target URL, the URL to open
-	 * @param nodeRange               The nodeRange
-	 * @param referenceAttributeValue The attribute value
-	 * @param formatAttr              The format attribute
+	 * @param url            Target URL, the URL to open
+	 * @param classAttrValue The class attribute value
+	 * @param formatAttrValue     The format attribute value
 	 * @throws MalformedURLException
 	 * @throws DOMException
 	 */
-	private void openReferences(URL url, NodeRange nodeRange, String formatAttr) throws MalformedURLException {
-		String classAttr = nodeRange.getAttributeValue("class");
-
-		if (classAttr != null) {
+	private void openReferences(URL url, String classAttrValue, String formatAttrValue) throws MalformedURLException {
+		if (classAttrValue != null) {
 			// it's image
-			if (classAttr.contains(" topic/image ")) {
-				openImageReference(url, formatAttr);
+			if (classAttrValue.contains(" topic/image ")) {
+				openImageReference(url, formatAttrValue);
 			} else
 			// it's object file: audio / video
-			if (classAttr.contains(" topic/object ")) {
+			if (classAttrValue.contains(" topic/object ")) {
 				pluginWorkspaceAccess.openInExternalApplication(url, true);
 			} else {
-				if (formatAttr != null) {
-					openReferenceWithFormatAttr(url, formatAttr);
+				if (formatAttrValue != null) {
+					openReferenceWithFormatAttr(url, formatAttrValue);
 				} else {
 					openReferenceWithoutFormatAttr(url);
 				}
@@ -222,16 +202,16 @@ public class OpenReferenceAction extends AbstractAction {
 	 * Open image references from format attribute.
 	 * 
 	 * @param url        The target URL
-	 * @param formatAttr The format attribute
+	 * @param formatAttrValue The format attribute Value
 	 * @throws MalformedURLException
 	 */
-	private void openImageReference(URL url, String formatAttr) throws MalformedURLException {
+	private void openImageReference(URL url, String formatAttrValue) throws MalformedURLException {
 		if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(url)) {
 			pluginWorkspaceAccess.open(url, null, ContentTypes.IMAGE_CONTENT_TYPE);
 		} else {
 			// image needs extension for URL if none in attributeValue
-			if (formatAttr != null) {
-				URL imageUrl = new URL(url.toString() + "." + formatAttr);
+			if (formatAttrValue != null) {
+				URL imageUrl = new URL(url.toString() + "." + formatAttrValue);
 				if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(imageUrl)) {
 					pluginWorkspaceAccess.open(imageUrl, null, ContentTypes.IMAGE_CONTENT_TYPE);
 				}
@@ -244,7 +224,7 @@ public class OpenReferenceAction extends AbstractAction {
 	 * external application, a web link or DITA topic.
 	 * 
 	 * @param url        The target URL, the URL to open
-	 * @param formatAttr The format Attribute
+	 * @param formatAttr The format Attribute Value
 	 */
 	private void openReferenceWithoutFormatAttr(URL url) {
 		// binary resource or a HTML format to be opened in browser
@@ -261,11 +241,11 @@ public class OpenReferenceAction extends AbstractAction {
 	 * opened in external application.
 	 * 
 	 * @param url        The target URL, the URL to open
-	 * @param formatAttr The format Attribute
+	 * @param formatAttrValue The format Attribute Value
 	 */
-	private void openReferenceWithFormatAttr(URL url, String formatAttr) {
+	private void openReferenceWithFormatAttr(URL url, String formatAttrValue) {
 		// it's DITA
-		if (formatAttr.equals("dita") || formatAttr.equals("ditamap")) {
+		if (formatAttrValue.equals("dita") || formatAttrValue.equals("ditamap")) {
 			pluginWorkspaceAccess.open(url);
 		} else {
 			// it's binary resource, not handled by Oxygen

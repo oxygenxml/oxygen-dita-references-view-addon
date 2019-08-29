@@ -36,7 +36,7 @@ public abstract class ReferencesCollector {
 	 */
 	protected static final String ALL_REFS_XPATH_EXPRESSION = "/* | //*[contains(@class, ' topic/image ')] | //*[contains(@class, ' topic/xref ')]"
 			+ " | //*[contains(@class, ' topic/link ')] | //*[@conref] | //*[@conkeyref] | //*[@keyref  and not(contains(@class, ' topic/image ')) "
-			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))] | //object";
+			+ "and not(contains(@class, ' topic/link '))  and  not(contains(@class, ' topic/xref '))] | //*[contains(@class, ' topic/object ')]";
 
 	/**
 	 * Collect the NodeRanges from the XPath evaluation.
@@ -188,7 +188,7 @@ public abstract class ReferencesCollector {
 	 * @return true if root shows DITA file
 	 */
 	private boolean isDITARoot(NodeRange range) {
-		return (range.getAttributeValue(CLASS) != null && range.getAttributeValue(CLASS).contains("topic/topic"))
+		return (range.getAttributeValue(CLASS) != null && range.getAttributeValue(CLASS).contains(" topic/topic "))
 				|| range.getNodeName().equals("dita");
 	}
 
