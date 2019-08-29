@@ -4,6 +4,7 @@ Side view in Oxygen XML Editor which shows all outgoing references for the curre
 The following references are presented in the side view for an opened DITA topic:
 
 * Image References (image with href or keyref)
+* Other media resources (DITA objects ponting to video, audio or embeddable frames)
 * Cross references (xref with href or keyref)
 * Key references (various elements with keyref)
 * Content References (conref or conkeyref)
