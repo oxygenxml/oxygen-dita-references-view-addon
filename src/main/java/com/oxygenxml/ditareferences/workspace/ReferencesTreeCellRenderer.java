@@ -18,7 +18,12 @@ import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
-
+/**
+ * Tree cell renderer.
+ * 
+ *  TODO Code review: Move all location of the icons in {@link Icons} class.
+ *  Replace all the hard-coded values with constants from  {@link DITAConstants} 
+ */
 @SuppressWarnings("serial")
 public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 
@@ -222,7 +227,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		String classAttrValue = nodeRange.getAttributeValue("class");
 
 		if (classAttrValue != null) {
-			if (classAttrValue.contains(" topic/image ")) {
+			if (classAttrValue.contains(DITAConstants.IMAGE_CLASS)) {
 				label.setIcon(imageIcon);
 			} else if (classAttrValue.contains(" topic/object ")) {
 				label.setIcon(mediaIcon);
@@ -235,8 +240,8 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 				} else {
 					label.setIcon(linkIcon);
 				}
-			} else if (nodeRange.getAttributeValue("conkeyref") != null
-					|| nodeRange.getAttributeValue("conref") != null) {
+			} else if (nodeRange.getAttributeValue(DITAConstants.CONKEYREF) != null
+					|| nodeRange.getAttributeValue(DITAConstants.CONREF) != null) {
 				label.setIcon(contentIcon);
 			} else {
 				label.setIcon(contentIcon);

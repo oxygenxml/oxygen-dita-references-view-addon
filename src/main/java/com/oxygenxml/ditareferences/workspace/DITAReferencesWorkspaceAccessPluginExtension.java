@@ -26,6 +26,7 @@ import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
+import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
@@ -35,7 +36,16 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  * @author Alexandra_Dinisor
  */
 public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
-	private StandalonePluginWorkspace pluginWorkspaceAccess;
+  
+  /**
+   * View Id; defined in plugin.xml.
+   */
+	private static final String DITA_REFERENCES_WORKSPACE_ACCESS_ID = "DITAReferencesWorkspaceAccessID";
+
+	/**
+	 * Workspace access.
+	 */
+  private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/* Provider of keys for the current DITAMAP. */
 	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
@@ -162,7 +172,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		 * part of node text to be painted in the Layout without adding extra "...".
 		 */
 		pluginWorkspaceAccess.addViewComponentCustomizer(viewInfo -> {
-			if ("DITAReferencesWorkspaceAccessID".equals(viewInfo.getViewID())) {
+			if (DITA_REFERENCES_WORKSPACE_ACCESS_ID.equals(viewInfo.getViewID())) {
 				
 				JScrollPane scrollPane = new JScrollPane(refTree);
 				scrollPane.addComponentListener(new ComponentAdapter() {
@@ -188,10 +198,12 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
 
 				// set side-view Icon
-				ImageIcon ditaReferencesIcon = new ImageIcon(
-						getClass().getClassLoader().getResource("images/RefreshReferences16_dark.png"));
-				
-				viewInfo.setIcon(ditaReferencesIcon);
+				URL iconURL = getClass().getClassLoader().getResource(Icons.REFRESH_REFERENCE);
+				if (iconURL != null) {
+				  ImageUtilities imageUtilities = pluginWorkspaceAccess.getImageUtilities();
+				  ImageIcon icon = (ImageIcon)imageUtilities.loadIcon(iconURL);
+				  viewInfo.setIcon(icon);
+        }
 			}
 		});
 	}
