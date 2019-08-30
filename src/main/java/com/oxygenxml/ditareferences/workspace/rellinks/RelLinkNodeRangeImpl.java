@@ -2,6 +2,8 @@ package com.oxygenxml.ditareferences.workspace.rellinks;
 
 import java.net.URL;
 
+import com.oxygenxml.ditareferences.workspace.DITAConstants;
+
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 
 /**
@@ -26,15 +28,15 @@ public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
 
 	@Override
 	public String getAttributeValue(String attributeName) {
-		if("class".equals(attributeName)) {
-			return "- topic/link ";
-		} else if ("href".equals(attributeName)) {
+		if (DITAConstants.CLASS.equals(attributeName)) {
+			return DITAConstants.ONLY_LINK_CLASS;
+		} else if (DITAConstants.HREF.equals(attributeName)) {
 			return relLink.getTargetURL().toString();
-		} else if ("format".equals(attributeName)) {
+		} else if (DITAConstants.FORMAT.equals(attributeName)) {
 			return relLink.getTargetFormat();
-		} else if ("scope".equals(attributeName)) {
+		} else if (DITAConstants.SCOPE.equals(attributeName)) {
 			return relLink.getTargetScope();
-		} 
+		}
 		return null;
 	}
 
@@ -45,7 +47,7 @@ public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
 
 	@Override
 	public String getNodeName() {
-		return "link";
+		return DITAConstants.LINK_NAME;
 	}
 
 	@Override

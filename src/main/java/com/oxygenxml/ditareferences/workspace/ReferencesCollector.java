@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.oxygenxml.ditareferences.workspace;
 
 import java.util.List;
@@ -25,8 +22,6 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  *
  */
 public abstract class ReferencesCollector {
-	
-	private static final String CLASS = "class";
 
 	private static final Logger LOGGER = Logger.getLogger(ReferencesCollector.class);
 
@@ -52,11 +47,11 @@ public abstract class ReferencesCollector {
 	 * values of the leaf nodes.
 	 * 
 	 * @param editorPage The XML TextPage
-	 * @param root     The rootNode
+	 * @param root       The rootNode
 	 * @throws XPathException
 	 * @throws AuthorOperationException
 	 */
-	public void collectReferences(WSEditorPage editorPage, DefaultMutableTreeNode root) throws XPathException{
+	public void collectReferences(WSEditorPage editorPage, DefaultMutableTreeNode root) throws XPathException {
 		DefaultMutableTreeNode mediaReferences = new DefaultMutableTreeNode(Tags.MEDIA_REFERENCES);
 		DefaultMutableTreeNode crossReferences = new DefaultMutableTreeNode(Tags.CROSS_REFERENCES);
 		DefaultMutableTreeNode contentReferences = new DefaultMutableTreeNode(Tags.CONTENT_REFERENCES);
@@ -65,7 +60,7 @@ public abstract class ReferencesCollector {
 		DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 
 		// get NodeRanges for TextPage / AuthorPage
-		List<NodeRange> ranges = collect(editorPage);	
+		List<NodeRange> ranges = collect(editorPage);
 
 		// The root element is the first in the list of references
 		if (!ranges.isEmpty()) {
@@ -104,7 +99,7 @@ public abstract class ReferencesCollector {
 	 * @param ranges     The nodeRanges
 	 */
 	private void addLinksFromRelTable(WSEditorPage editorPage, List<NodeRange> ranges) {
-		if (editorPage != null && editorPage.getParentEditor() != null) {		
+		if (editorPage != null && editorPage.getParentEditor() != null) {
 			List<RelLink> relLinks = RelLinksAccessor
 					.getRelationshipTableTargetURLs(editorPage.getParentEditor().getEditorLocation());
 			if (!relLinks.isEmpty()) {
@@ -128,23 +123,24 @@ public abstract class ReferencesCollector {
 			DefaultMutableTreeNode contentReferences, DefaultMutableTreeNode relatedLinks, List<NodeRange> ranges) {
 		for (int i = 1; i < ranges.size(); i++) {
 			NodeRange refRange = ranges.get(i);
-			String classAttrValue = refRange.getAttributeValue(CLASS);
+			String classAttrValue = refRange.getAttributeValue(DITAConstants.CLASS);
 
 			if (classAttrValue != null) {
 				// add image nodeRanges in "image references" category of tree
-				if (classAttrValue.contains(" topic/image ") || classAttrValue.contains(" topic/object ")) {						
+				if (classAttrValue.contains(DITAConstants.IMAGE_CLASS) || classAttrValue.contains(DITAConstants.OBJECT_CLASS)) {
 					mediaReferences.add(new DefaultMutableTreeNode(refRange));
 				} else
 				// add xref nodeRanges in "cross references" category of tree
-				if (classAttrValue.contains(" topic/xref ")) {
+				if (classAttrValue.contains(DITAConstants.XREF_CLASS)) {
 					crossReferences.add(new DefaultMutableTreeNode(refRange));
 				} else
 				// add link nodeRanges in "related links references" category of tree
-				if (classAttrValue.contains(" topic/link ")) {
+				if (classAttrValue.contains(DITAConstants.LINK_CLASS)) {
 					relatedLinks.add(new DefaultMutableTreeNode(refRange));
 				} else
 				// add conref/conkeyref nodeRanges in "content references" category of tree
-				if (refRange.getAttributeValue("conkeyref") != null || refRange.getAttributeValue("conref") != null) {
+				if (refRange.getAttributeValue(DITAConstants.CONKEYREF) != null
+						|| refRange.getAttributeValue(DITAConstants.CONREF) != null) {
 					contentReferences.add(new DefaultMutableTreeNode(refRange));
 				} else {
 					// add key references to values defined in the DITAMAP
@@ -188,8 +184,9 @@ public abstract class ReferencesCollector {
 	 * @return true if root shows DITA file
 	 */
 	private boolean isDITARoot(NodeRange range) {
-		return (range.getAttributeValue(CLASS) != null && range.getAttributeValue(CLASS).contains(" topic/topic "))
-				|| range.getNodeName().equals("dita");
+		return (range.getAttributeValue(DITAConstants.CLASS) != null
+				&& range.getAttributeValue(DITAConstants.CLASS).contains(DITAConstants.TOPIC_CLASS))
+				|| range.getNodeName().equals(DITAConstants.FORMAT_DITA);
 	}
 
 }

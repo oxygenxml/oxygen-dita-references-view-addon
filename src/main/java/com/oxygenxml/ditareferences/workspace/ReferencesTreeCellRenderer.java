@@ -49,32 +49,32 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		super();
 		this.translator = translator;
 
-		URL imageUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementImage16.png");
+		URL imageUrl = StandalonePluginWorkspace.class.getResource(Icons.IMAGE_REFERENCE);
 		if (imageUrl != null) {
 			this.imageIcon = (ImageIcon) imageUtilities.loadIcon(imageUrl);
 		}
 
-		URL mediaUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementMedia16.png");
+		URL mediaUrl = StandalonePluginWorkspace.class.getResource(Icons.MEDIA_REFERENCE);
 		if (mediaUrl != null) {
 			this.mediaIcon = (ImageIcon) imageUtilities.loadIcon(mediaUrl);
 		}
 
-		URL crossUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementXref16.png");
+		URL crossUrl = StandalonePluginWorkspace.class.getResource(Icons.CROSS_REFERENCE);
 		if (crossUrl != null) {
 			this.crossIcon = (ImageIcon) imageUtilities.loadIcon(crossUrl);
 		}
 
-		URL contentUrl = StandalonePluginWorkspace.class.getResource("/images/Conref16.png");
+		URL contentUrl = StandalonePluginWorkspace.class.getResource(Icons.CONTENT_REFERENCE);
 		if (contentUrl != null) {
 			this.contentIcon = (ImageIcon) imageUtilities.loadIcon(contentUrl);
 		}
 
-		URL linkUrl = StandalonePluginWorkspace.class.getResource("/images/node-customizer/ElementLink16.png");
+		URL linkUrl = StandalonePluginWorkspace.class.getResource(Icons.LINK_REFERENCE);
 		if (linkUrl != null) {
 			this.linkIcon = (ImageIcon) imageUtilities.loadIcon(linkUrl);
 		}
 
-		URL relLinkUrl = StandalonePluginWorkspace.class.getResource("/images/RelTable16.png");
+		URL relLinkUrl = StandalonePluginWorkspace.class.getResource(Icons.REL_LINK_REFERENCE);
 		if (relLinkUrl != null) {
 			this.relLinkIcon = (ImageIcon) imageUtilities.loadIcon(relLinkUrl);
 		}
@@ -150,36 +150,36 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 */
 	private void setTextAndToolTipForLeafNode(JLabel label, int width, NodeRange nodeRange) {
 
-		String keyrefAttr = nodeRange.getAttributeValue("keyref");
+		String keyrefAttr = nodeRange.getAttributeValue(DITAConstants.KEYREF);
 		if (keyrefAttr != null) {
 			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), keyrefAttr, width));
 			this.setToolTipText(keyrefAttr);
 		} else {
-			String datakeyrefAttr = nodeRange.getAttributeValue("datakeyref");
+			String datakeyrefAttr = nodeRange.getAttributeValue(DITAConstants.DATAKEYREF);
 			if (datakeyrefAttr != null) {
 				this.setText(
 						StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), datakeyrefAttr, width));
 				this.setToolTipText(datakeyrefAttr);
 			} else {
-				String conkeyrefAttr = nodeRange.getAttributeValue("conkeyref");
+				String conkeyrefAttr = nodeRange.getAttributeValue(DITAConstants.CONKEYREF);
 				if (conkeyrefAttr != null) {
 					this.setText(
 							StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr, width));
 					this.setToolTipText(conkeyrefAttr);
 				} else {
-					String hrefAttr = nodeRange.getAttributeValue("href");
+					String hrefAttr = nodeRange.getAttributeValue(DITAConstants.HREF);
 					if (hrefAttr != null) {
 						this.setText(
 								StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), hrefAttr, width));
 						this.setToolTipText(hrefAttr);
 					} else {
-						String conrefAttr = nodeRange.getAttributeValue("conref");
+						String conrefAttr = nodeRange.getAttributeValue(DITAConstants.CONREF);
 						if (conrefAttr != null) {
 							this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr,
 									width));
 							this.setToolTipText(conrefAttr);
 						} else {
-							String dataAttr = nodeRange.getAttributeValue("data");
+							String dataAttr = nodeRange.getAttributeValue(DITAConstants.DATA);
 							if (dataAttr != null) {
 								this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()),
 										dataAttr, width));
@@ -224,16 +224,16 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * @param nodeRange The NodeRange
 	 */
 	private void setIconForLeafNode(JLabel label, NodeRange nodeRange) {
-		String classAttrValue = nodeRange.getAttributeValue("class");
+		String classAttrValue = nodeRange.getAttributeValue(DITAConstants.CLASS);
 
 		if (classAttrValue != null) {
 			if (classAttrValue.contains(DITAConstants.IMAGE_CLASS)) {
 				label.setIcon(imageIcon);
-			} else if (classAttrValue.contains(" topic/object ")) {
+			} else if (classAttrValue.contains(DITAConstants.OBJECT_CLASS)) {
 				label.setIcon(mediaIcon);
-			} else if (classAttrValue.contains(" topic/xref ")) {
+			} else if (classAttrValue.contains(DITAConstants.XREF_CLASS)) {
 				label.setIcon(crossIcon);
-			} else if (classAttrValue.contains(" topic/link ")) {
+			} else if (classAttrValue.contains(DITAConstants.LINK_CLASS)) {
 				// make difference between related links and links from relationship table
 				if (nodeRange instanceof RelLinkNodeRange) {
 					label.setIcon(relLinkIcon);
