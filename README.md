@@ -28,3 +28,9 @@ How to install
 1. Restart the application.
 
 Result: A **DITA References** side-view will now be available. This side-view includes actions in the contextual menu to open the selected outgoing reference or show the definition location in case of a related link defined in a relationship table in DITA Map.
+
+Copyright and License
+---------------------
+Copyright 2019 Syncro Soft SRL.
+
+This project is licensed under [Apache License 2.0](https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/blob/master/LICENSE)
