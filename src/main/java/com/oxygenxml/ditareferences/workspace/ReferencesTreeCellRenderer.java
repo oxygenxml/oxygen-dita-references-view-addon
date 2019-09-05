@@ -41,6 +41,7 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	private ImageIcon contentIcon = null;
 	private ImageIcon crossIcon = null;
 	private ImageIcon relLinkIcon = null;
+	private ImageIcon externalRefIcon = null;
 
 	/**
 	 * Construct Renderer by including the icons for leaf nodes and reference
@@ -82,6 +83,11 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		URL relLinkUrl = StandalonePluginWorkspace.class.getResource(Icons.REL_LINK_REFERENCE);
 		if (relLinkUrl != null) {
 			this.relLinkIcon = (ImageIcon) imageUtilities.loadIcon(relLinkUrl);
+		}
+		
+		URL externalRefUrl = StandalonePluginWorkspace.class.getResource(Icons.EXTERNAL_REFERENCE);
+		if (externalRefUrl != null) {
+			this.externalRefIcon = (ImageIcon) imageUtilities.loadIcon(externalRefUrl);
 		}
 
 	}
@@ -200,8 +206,12 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 */
 	private void setIconForLeafNode(JLabel label, NodeRange nodeRange) {
 		String classAttrValue = nodeRange.getAttributeValue(DITAConstants.CLASS);
+		String scopeAttribute = nodeRange.getAttributeValue(DITAConstants.SCOPE);
 
-		if (classAttrValue != null) {
+		// set icon for external reference
+		if (scopeAttribute != null && scopeAttribute.equals(DITAConstants.SCOPE_EXTERNAL)) {
+			label.setIcon(externalRefIcon);
+		} else if (classAttrValue != null) {
 			if (classAttrValue.contains(DITAConstants.IMAGE_CLASS)) {
 				label.setIcon(imageIcon);
 			} else if (classAttrValue.contains(DITAConstants.OBJECT_CLASS)) {

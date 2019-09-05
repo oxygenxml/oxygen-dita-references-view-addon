@@ -106,4 +106,9 @@ public interface DITAConstants {
 	 * The class particle alone of DITA links.
 	 */
 	String ONLY_LINK_CLASS = "- topic/link ";
+	
+	/**
+	 * The scope attribute of the 
+	 */
+	String SCOPE_EXTERNAL = "external";
 }

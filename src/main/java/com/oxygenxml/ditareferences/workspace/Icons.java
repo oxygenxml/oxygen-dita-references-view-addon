@@ -39,5 +39,9 @@ public class Icons {
 	 * Used as relLink reference icon.
 	 */
 	public static final String REL_LINK_REFERENCE = "/images/RelTable16.png";
-
+	
+	/**
+	 * Used as external reference icon.
+	 */
+	public static final String EXTERNAL_REFERENCE = "/images/OpenInBrowser16.png";
 }
