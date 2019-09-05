@@ -76,7 +76,6 @@ public abstract class ReferencesCollector {
 				} else {
 					// It is an interesting XML document, it's DITA.
 					addElementsInCategory(mediaReferences, crossReferences, contentReferences, relatedLinks, ranges);
-
 					// Do not add empty categories to referencesTree.
 					addReferenceCategories(root, mediaReferences, crossReferences, contentReferences, relatedLinks);
 				}
@@ -124,7 +123,6 @@ public abstract class ReferencesCollector {
 		for (int i = 1; i < ranges.size(); i++) {
 			NodeRange refRange = ranges.get(i);
 			String classAttrValue = refRange.getAttributeValue(DITAConstants.CLASS);
-
 			if (classAttrValue != null) {
 				// add image nodeRanges in "image references" category of tree
 				if (classAttrValue.contains(DITAConstants.IMAGE_CLASS) || classAttrValue.contains(DITAConstants.OBJECT_CLASS)) {

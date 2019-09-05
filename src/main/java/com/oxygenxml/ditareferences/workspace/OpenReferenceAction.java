@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
-import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
 
@@ -83,16 +82,16 @@ public class OpenReferenceAction extends AbstractAction {
 		try {
 			if (keyrefAttrValue != null) {
 				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(keyrefAttrValue, referencesKeys);
+					KeyInfo value = RefUtilities.getKeyInfoFromReference(keyrefAttrValue, referencesKeys);
 					if (value != null) {
-						URL url = getURLForHTTPHost(formatAttrValue, value.getHrefValue(), value.getHrefLocation());
+						URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, value.getHrefValue(), value.getHrefLocation());
 						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
 						openReferences(url, classAttrValue, formatAttrValue);
 					}
 				}
 			} else if (conkeyrefAttrValue != null) {
 				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(conkeyrefAttrValue, referencesKeys);
+					KeyInfo value = RefUtilities.getKeyInfoFromReference(conkeyrefAttrValue, referencesKeys);
 					if (value != null) {
 						URL url = value.getHrefLocation();
 						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
@@ -101,7 +100,7 @@ public class OpenReferenceAction extends AbstractAction {
 				}
 			} else if (datakeyrefAttrValue != null) {
 				if (referencesKeys != null) {
-					KeyInfo value = getKeyInfoFromReference(datakeyrefAttrValue, referencesKeys);
+					KeyInfo value = RefUtilities.getKeyInfoFromReference(datakeyrefAttrValue, referencesKeys);
 					if (value != null) {
 						URL url = value.getHrefLocation();
 						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
@@ -112,7 +111,7 @@ public class OpenReferenceAction extends AbstractAction {
 				// possible URL if the protocol name is already inserted in the href reference
 				// by user, otherwise it needs to be added
 				URL possibleURL = new URL(editorLocation, hrefAttrValue);
-				URL url = getURLForHTTPHost(formatAttrValue, hrefAttrValue, possibleURL);
+				URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, hrefAttrValue, possibleURL);
 				openReferences(url, classAttrValue, formatAttrValue);
 
 			} else if (conrefAttrValue != null) {
@@ -129,44 +128,8 @@ public class OpenReferenceAction extends AbstractAction {
 		}
 	}
 
-	/**
-	 * Get URL in case of no protocol in the attribute value. The HTTP Host should
-	 * have the protocol name when new URL created. For example:
-	 * "http://www.google.com" if user types "www.google.com".
-	 * 
-	 * @param formatAttrValue Format attribute value to verify
-	 * @param hrefAttrValue   The HREF value of the attribute
-	 * @param possibleURL     The URL if no HTML format available
-	 * @return The target URL
-	 * @throws MalformedURLException
-	 */
-	private URL getURLForHTTPHost(String formatAttrValue, String hrefAttrValue, URL possibleURL)
-			throws MalformedURLException {
-		URL url;
-		if (formatAttrValue != null && formatAttrValue.equals(DITAConstants.FORMAT_HTML)
-				&& !hrefAttrValue.startsWith(DITAConstants.PROTOCOL_HTTP)) {
-			url = new URL("http://" + hrefAttrValue);
-		} else {
-			url = possibleURL;
-		}
-		return url;
-	}
 
-	/**
-	 * Get the specific KeyInfo of the given key after removing the "/" if any. in
-	 * order to get the filename.
-	 * 
-	 * @param keyAttrValue The key reference attribute value
-	 * @param keys         The LinkedHashMap with all the keys
-	 */
-	private KeyInfo getKeyInfoFromReference(String keyAttrValue, LinkedHashMap<String, KeyInfo> keys) {
-		StringTokenizer st = new StringTokenizer(keyAttrValue, "/");
-		String keyName = null;
-		if (st.hasMoreTokens()) {
-			keyName = st.nextToken();
-		}
-		return keys.get(keyName);
-	}
+
 
 	/**
 	 * Open references from attribute with either Oxygen or an associated

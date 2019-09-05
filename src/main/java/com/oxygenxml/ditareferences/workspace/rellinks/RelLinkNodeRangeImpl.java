@@ -12,7 +12,7 @@ import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
  * @Alexandra_Dinisor
  *
  */
-public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
+public class RelLinkNodeRangeImpl extends RelLinkNodeRange {
 
 	/* The related link */
 	private RelLink relLink;
@@ -26,7 +26,6 @@ public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
 		this.relLink = relLink;
 	}
 
-	@Override
 	public String getAttributeValue(String attributeName) {
 		if (DITAConstants.CLASS.equals(attributeName)) {
 			return DITAConstants.ONLY_LINK_CLASS;
@@ -40,12 +39,10 @@ public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
 		return null;
 	}
 
-	@Override
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		return null;
 	}
 
-	@Override
 	public String getNodeName() {
 		return DITAConstants.LINK_NAME;
 	}
@@ -54,4 +51,9 @@ public class RelLinkNodeRangeImpl implements RelLinkNodeRange {
 	public URL getTargetDefinitionLocation() {
 		return relLink.getTargetDefinitionLocation();
 	}
+
+	public URL getEditorLocation() {
+		return null;
+	}
+
 }

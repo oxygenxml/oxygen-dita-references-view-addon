@@ -1,5 +1,8 @@
 package com.oxygenxml.ditareferences.workspace.textpage;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.swing.text.BadLocationException;
 
 import org.apache.log4j.Logger;
@@ -18,7 +21,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
  * 
  * @author Alexandra_Dinisor
  */
-public class TextPageNodeRange implements NodeRange {
+public class TextPageNodeRange extends NodeRange {
 
 	/* The referencesTree Logger. */
 	private static final Logger LOGGER = Logger.getLogger(TextPageNodeRange.class);
@@ -47,7 +50,6 @@ public class TextPageNodeRange implements NodeRange {
 	 * @param editorPage The XML textPage
 	 * @return An array with start and end offsets of DOM node in XML TextPage
 	 */
-	@Override
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) editorPage;
 		int[] finalOffsets = new int[2];
@@ -75,7 +77,6 @@ public class TextPageNodeRange implements NodeRange {
 	 * @param attributeName The attribute name
 	 * @return the attribute value or <code>null</code>
 	 */
-	@Override
 	public String getAttributeValue(String attributeName) {
 		if (element != null) {
 			NamedNodeMap attrs = element.getAttributes();
@@ -90,9 +91,17 @@ public class TextPageNodeRange implements NodeRange {
 		return null;
 	}
 
-	@Override
+
 	public String getNodeName() {
 		return element.getNodeName();
+	}
+
+	public URL getEditorLocation() {
+		try {
+			return new URL(element.getBaseURI());
+		} catch (MalformedURLException e) {
+			return null;
+		}
 	}
 
 }

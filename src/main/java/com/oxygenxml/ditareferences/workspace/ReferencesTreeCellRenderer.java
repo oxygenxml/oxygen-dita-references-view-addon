@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Rectangle;
 import java.net.URL;
+import java.util.LinkedHashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,6 +16,7 @@ import com.oxygenxml.ditareferences.translator.Tags;
 import com.oxygenxml.ditareferences.translator.Translator;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 
+import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
@@ -25,10 +27,12 @@ import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
  *  Replace all the hard-coded values with constants from  {@link DITAConstants} 
  */
 @SuppressWarnings("serial")
-public class ReferencesTreeCellRenderer extends TreeCellRenderer {
-
+public class ReferencesTreeCellRenderer extends TreeCellRenderer {	
 	/* The translator of the DITA reference categories. */
 	private Translator translator;
+
+	/* The keysProvider. */
+	private KeysProvider keysProvider;
 
 	/* Icons for leaf nodes. */
 	private ImageIcon imageIcon = null;
@@ -45,9 +49,10 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * @param imageUtilities The imageUtilities
 	 * @param translator     The translator for categories
 	 */
-	public ReferencesTreeCellRenderer(ImageUtilities imageUtilities, Translator translator) {
+	public ReferencesTreeCellRenderer(ImageUtilities imageUtilities, Translator translator, KeysProvider keysProvider) {
 		super();
 		this.translator = translator;
+		this.keysProvider = keysProvider;
 
 		URL imageUrl = StandalonePluginWorkspace.class.getResource(Icons.IMAGE_REFERENCE);
 		if (imageUrl != null) {
@@ -149,46 +154,16 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * @param nodeRange The NodeRange
 	 */
 	private void setTextAndToolTipForLeafNode(JLabel label, int width, NodeRange nodeRange) {
-
-		String keyrefAttr = nodeRange.getAttributeValue(DITAConstants.KEYREF);
-		if (keyrefAttr != null) {
-			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), keyrefAttr, width));
-			this.setToolTipText(keyrefAttr);
-		} else {
-			String datakeyrefAttr = nodeRange.getAttributeValue(DITAConstants.DATAKEYREF);
-			if (datakeyrefAttr != null) {
-				this.setText(
-						StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), datakeyrefAttr, width));
-				this.setToolTipText(datakeyrefAttr);
-			} else {
-				String conkeyrefAttr = nodeRange.getAttributeValue(DITAConstants.CONKEYREF);
-				if (conkeyrefAttr != null) {
-					this.setText(
-							StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conkeyrefAttr, width));
-					this.setToolTipText(conkeyrefAttr);
-				} else {
-					String hrefAttr = nodeRange.getAttributeValue(DITAConstants.HREF);
-					if (hrefAttr != null) {
-						this.setText(
-								StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), hrefAttr, width));
-						this.setToolTipText(hrefAttr);
-					} else {
-						String conrefAttr = nodeRange.getAttributeValue(DITAConstants.CONREF);
-						if (conrefAttr != null) {
-							this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), conrefAttr,
-									width));
-							this.setToolTipText(conrefAttr);
-						} else {
-							String dataAttr = nodeRange.getAttributeValue(DITAConstants.DATA);
-							if (dataAttr != null) {
-								this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()),
-										dataAttr, width));
-								this.setToolTipText(dataAttr);
-							}
-						}
-					}
-				}
-			}
+		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider != null ? keysProvider.getKeys(nodeRange.getEditorLocation()) : null;
+		
+		String displayedText = nodeRange.getDisplayText();
+		if (displayedText != null) {
+			this.setText(StringUtilities.trimNodeText(label.getFontMetrics(label.getFont()), displayedText, width));
+		}
+		
+		String toolTipText = nodeRange.getTooltipText(referencesKeys);
+		if (toolTipText != null) {
+			this.setToolTipText(toolTipText);
 		}
 	}
 

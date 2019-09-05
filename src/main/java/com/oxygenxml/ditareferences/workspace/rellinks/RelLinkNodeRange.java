@@ -4,7 +4,12 @@ import java.net.URL;
 
 import com.oxygenxml.ditareferences.workspace.NodeRange;
 
-public interface RelLinkNodeRange extends NodeRange {
-
-	URL getTargetDefinitionLocation();
+public abstract class RelLinkNodeRange extends NodeRange {
+	
+	/**
+	 * Get the URL of the target definition location of a relationship link.
+	 * 
+	 * @return the definition location URL
+	 */
+	public abstract URL getTargetDefinitionLocation();
 }

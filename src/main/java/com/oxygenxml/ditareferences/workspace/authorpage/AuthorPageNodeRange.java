@@ -1,5 +1,7 @@
 package com.oxygenxml.ditareferences.workspace.authorpage;
 
+import java.net.URL;
+
 import com.oxygenxml.ditareferences.workspace.NodeRange;
 
 import ro.sync.ecss.extensions.api.node.AttrValue;
@@ -12,7 +14,7 @@ import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
  * @author Alexandra_Dinisor
  *
  */
-public class AuthorPageNodeRange implements NodeRange {
+public class AuthorPageNodeRange extends NodeRange {
 
 	/* The Author element. */
 	private AuthorElement element;
@@ -40,6 +42,11 @@ public class AuthorPageNodeRange implements NodeRange {
 	@Override
 	public String getNodeName() {
 		return element.getDisplayName();
+	}
+
+	@Override
+	public URL getEditorLocation() {
+		return element.getXMLBaseURL();
 	}
 
 }

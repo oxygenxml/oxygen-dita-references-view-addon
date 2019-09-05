@@ -27,6 +27,7 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 @SuppressWarnings("serial")
 public class ReferencesTree extends Tree {
+	
 	/* The ReferencesTree Logger. */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
@@ -67,7 +68,7 @@ public class ReferencesTree extends Tree {
 		this.setTransferHandler(new RefNodeTransferHandler());
 
 		// set cellRenderer for ReferencesTree
-		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator));
+		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator, keysProvider));
 
 		// install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);

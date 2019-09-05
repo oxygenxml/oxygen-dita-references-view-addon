@@ -158,21 +158,23 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 
 	/**
 	 * DITA topic opened in Text Mode with ALL reference categories inside.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void test_DITAWithAllRefsInTextMode() {
+	public void test_DITAWithAllRefsInTextMode() throws InterruptedException {
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 15));
-
+		
 		TreePath path = tree.getPathForRow(1);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				true, true, true, 1, true);
 		assertEquals("image.png", label.getText());
 
 		path = tree.getPathForRow(8);
+		
 		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,
 				true, true, 8, true);
-		assertEquals("www.google.com", label.getText());
+		assertEquals("www.google.com", label.getToolTipText());
 
 		path = tree.getPathForRow(9);
 		label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true,

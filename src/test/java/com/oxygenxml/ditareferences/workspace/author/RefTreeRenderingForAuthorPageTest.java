@@ -44,7 +44,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 * DITA topic opened in Author Mode with cross reference.
 	 */
 	@Test
-	public void test_RenderingCrossReference() {
+	public void test_RenderingCrossReference() {		
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 

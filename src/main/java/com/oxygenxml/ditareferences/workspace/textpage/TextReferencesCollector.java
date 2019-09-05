@@ -42,7 +42,6 @@ public class TextReferencesCollector extends ReferencesCollector {
 				ranges.add(refRange);				
 			}
 		}
-
 		return ranges;
 	}
 }
