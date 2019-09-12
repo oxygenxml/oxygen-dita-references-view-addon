@@ -31,6 +31,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingImageReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
@@ -44,7 +45,8 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 * DITA topic opened in Author Mode with cross reference.
 	 */
 	@Test
-	public void test_RenderingCrossReference() {		
+	public void test_RenderingCrossReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
@@ -59,6 +61,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingContentReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
@@ -73,6 +76,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingLinkReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 

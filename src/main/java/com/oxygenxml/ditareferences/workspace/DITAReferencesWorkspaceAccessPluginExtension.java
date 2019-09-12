@@ -31,21 +31,17 @@ import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
- * Plugin extension.
+ * DITA Outgoing References Plugin extension.
  * 
  * @author Alexandra_Dinisor
  */
 public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
-  
-  /**
-   * View Id; defined in plugin.xml.
-   */
+
+	/* View Id; defined in plugin.xml. */
 	private static final String DITA_REFERENCES_WORKSPACE_ACCESS_ID = "DITAReferencesWorkspaceAccessID";
 
-	/**
-	 * Workspace access.
-	 */
-  private StandalonePluginWorkspace pluginWorkspaceAccess;
+	/* Workspace access. */
+	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/* Provider of keys for the current DITA Map. */
 	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
@@ -74,7 +70,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.refTree = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
-		
+
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 						
 			@Override
@@ -87,26 +83,27 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 			 */
 			@Override
 			public void editorOpened(URL editorLocation) {
-				updateTreeTimer.setRepeats(false);
-				WSEditor editorAccess = pluginWorkspaceAccess.getEditorAccess(editorLocation,
-						PluginWorkspace.MAIN_EDITING_AREA);
-				if (editorAccess != null) {
-					if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) {
-						// update listener for TextPage when editor opened in Text Mode
-						updateTreeTimer.restart();
-						WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
-						textPage.getDocument().addDocumentListener(textPageDocumentListener);
+					updateTreeTimer.setRepeats(false);
+					WSEditor editorAccess = pluginWorkspaceAccess.getEditorAccess(editorLocation,
+							PluginWorkspace.MAIN_EDITING_AREA);
+					if (editorAccess != null) {
+						if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) {
+							// update listener for TextPage when editor opened in Text Mode
+							updateTreeTimer.restart();
+							WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
+							textPage.getDocument().addDocumentListener(textPageDocumentListener);
 
-					} else if (EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())) {						
-						// update listener for AuthorPage when editor opened in Author Mode
-						updateTreeTimer.restart();
-						WSAuthorEditorPage authorPage = (WSAuthorEditorPage) editorAccess.getCurrentPage();
-						authorPage.getDocumentController().addAuthorListener(authorPageListener);
-						
-					} else {
-						updateTreeTimer.restart();
+						} else if (EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())) {
+							// update listener for AuthorPage when editor opened in Author Mode
+							updateTreeTimer.restart();
+							WSAuthorEditorPage authorPage = (WSAuthorEditorPage) editorAccess.getCurrentPage();
+							authorPage.getDocumentController().addAuthorListener(authorPageListener);
+
+						} else {
+							updateTreeTimer.restart();
+						}
 					}
-				}
+				//}
 			}
 
 			@Override
@@ -134,21 +131,24 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 						PluginWorkspace.MAIN_EDITING_AREA);
 				if (editorAccess != null) {
 					if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) {
-						updateTreeTimer.restart();
-						WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
+						if (refTree.isShowing()) {
+							updateTreeTimer.restart();
+							WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
 
-						// update the textPage Listener
-						textPage.getDocument().removeDocumentListener(textPageDocumentListener);
-						textPage.getDocument().addDocumentListener(textPageDocumentListener);
+							// update the textPage Listener
+							textPage.getDocument().removeDocumentListener(textPageDocumentListener);
+							textPage.getDocument().addDocumentListener(textPageDocumentListener);
+						}
 
 					} else if (EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())) {
 						updateTreeTimer.restart();
-						WSAuthorEditorPage authorPage = (WSAuthorEditorPage) editorAccess.getCurrentPage();
+						if (refTree.isShowing()) {
+							WSAuthorEditorPage authorPage = (WSAuthorEditorPage) editorAccess.getCurrentPage();
 
-						// update the authorPage Listener
-						authorPage.getDocumentController().removeAuthorListener(authorPageListener);
-						authorPage.getDocumentController().addAuthorListener(authorPageListener);
-
+							// update the authorPage Listener
+							authorPage.getDocumentController().removeAuthorListener(authorPageListener);
+							authorPage.getDocumentController().addAuthorListener(authorPageListener);
+						}
 					} else {
 						updateTreeTimer.restart();
 					}
@@ -166,7 +166,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 			}
 
 		}, PluginWorkspace.MAIN_EDITING_AREA);
-
+		
 		/**
 		 * Add Icon, Title and ScrollPane for side-view. ScrollPane should let the whole
 		 * part of node text to be painted in the Layout without adding extra "...".
@@ -200,11 +200,12 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				// set side-view Icon
 				URL iconURL = getClass().getClassLoader().getResource(Icons.REFRESH_REFERENCE);
 				if (iconURL != null) {
-				  ImageUtilities imageUtilities = pluginWorkspaceAccess.getImageUtilities();
-				  ImageIcon icon = (ImageIcon)imageUtilities.loadIcon(iconURL);
-				  viewInfo.setIcon(icon);
-        }
+					ImageUtilities imageUtilities = pluginWorkspaceAccess.getImageUtilities();
+					ImageIcon icon = (ImageIcon) imageUtilities.loadIcon(iconURL);
+					viewInfo.setIcon(icon);
+				}
 			}
+
 		});
 	}
 
@@ -231,7 +232,8 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		} else {
 			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
 		}
-		refTree.refreshReferenceTree(editorAccess);
+
+			refTree.refreshReferenceTree(editorAccess);
 	}
 
 	/**

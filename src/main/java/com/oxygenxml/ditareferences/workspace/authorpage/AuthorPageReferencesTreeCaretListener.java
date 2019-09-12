@@ -36,12 +36,21 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 	public void caretMoved(AuthorCaretEvent caretEvent) {
 		caretUpdate();
 	}
+	
+	/**
+	 * Unbind the current AuthorPage with its current Caret Listener.
+	 */
+	public void unbindAuthorPageWithCaret() {
+		if(editorPage != null && editorPage.get() != null) {
+			editorPage.get().removeAuthorCaretListener(this);
+		}
+	}
 
 	/**
 	 * Bind the current AuthorPage with its current Caret Listener.
 	 */
 	public void bindAuthorPageWithCaret() {
-		editorPage.get().removeAuthorCaretListener(this);
+		unbindAuthorPageWithCaret();
 		editorPage.get().addAuthorCaretListener(this);
 	}
 }

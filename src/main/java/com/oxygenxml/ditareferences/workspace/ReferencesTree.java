@@ -1,10 +1,12 @@
 package com.oxygenxml.ditareferences.workspace;
 
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.log4j.Logger;
 
@@ -15,7 +17,6 @@ import com.oxygenxml.ditareferences.workspace.authorpage.AuthorReferencesCollect
 import com.oxygenxml.ditareferences.workspace.textpage.TextPageReferencesTreeCaretListener;
 import com.oxygenxml.ditareferences.workspace.textpage.TextReferencesCollector;
 
-import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.exml.editor.EditorPageConstants;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
@@ -27,11 +28,20 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 @SuppressWarnings("serial")
 public class ReferencesTree extends Tree {
-	
-	/* The ReferencesTree Logger. */
+
+	/**
+	 * The ReferencesTree Logger.
+	 */
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
 
+	/**
+	 * The pluginWorkspaceAccess.
+	 */
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
+
+	/**
+	 * The editorAccess.
+	 */
 	private WSEditor editorAccess;
 
 	/**
@@ -50,10 +60,24 @@ public class ReferencesTree extends Tree {
 	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
 
 	/**
+	 * True if the tree is showing.
+	 */
+	private boolean isShowing = false;
+	
+	/**
+	 * Setter.
+	 * 
+	 * @param isShowing
+	 */
+	public void setShowing(boolean isShowing) {
+		this.isShowing = isShowing;
+	}
+
+	/**
 	 * Construct the ReferencesTree.
 	 * 
 	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
-	 * @param keysProvider          The Map with the current DITAMAP keys
+	 * @param keysProvider          The Map with the current DITA Map keys
 	 * @param translator            The translator
 	 */
 	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
@@ -115,6 +139,23 @@ public class ReferencesTree extends Tree {
 		// Key Adapter for Leaf Nodes when Enter Key is pressed
 		this.enterKeyAdapter = new ReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
 		this.addKeyListener(this.enterKeyAdapter);
+		
+		// add Hierarchy Listener when side-view is not hidden
+		this.addHierarchyListener(new HierarchyListener() {
+
+			@Override
+			public void hierarchyChanged(HierarchyEvent e) {
+				if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+					boolean oldShowing = ReferencesTree.this.isShowing;
+					ReferencesTree.this.isShowing = isShowing();
+					if (isShowing && !oldShowing) {
+						refreshReferenceTreeInternal(editorAccess);
+					} else if (!isShowing) {
+						refreshReferenceTreeInternal(null);
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -122,10 +163,27 @@ public class ReferencesTree extends Tree {
 	 * in Grid Mode etc.
 	 * 
 	 * @param editorAccess The current editorAccess
-	 * @throws XPathException
 	 */
 	public void refreshReferenceTree(WSEditor editorAccess) {
+		// Remove previous listeners from Author and Text page.
+		textPageCaretListener.unbindTextPageWithCaret();
+		authorPageCaretListener.unbindAuthorPageWithCaret();
+
 		this.editorAccess = editorAccess;
+		if (isShowing) {
+			refreshReferenceTreeInternal(editorAccess);
+		} else {
+			// Do nothing
+			refreshReferenceTreeInternal(null);
+		}
+	}
+
+	/**
+	 * Refresh referencesTree internal.
+	 * 
+	 * @param editorAccess The current editorAccess
+	 */
+	private void refreshReferenceTreeInternal(WSEditor editorAccess) {
 		this.refMouseAdapter.setEditorAccess(editorAccess);
 		this.enterKeyAdapter.setEditorAccess(editorAccess);
 
@@ -142,6 +200,7 @@ public class ReferencesTree extends Tree {
 					// Other content type, like CSS, or an XML opened in Grid mode.
 					this.setNoRefsAvailableTree();
 				}
+
 			} else {
 				this.setNoRefsAvailableTree();
 			}
@@ -184,9 +243,7 @@ public class ReferencesTree extends Tree {
 	 * Find out all the outgoing references and show them in ReferencesTree.
 	 * 
 	 * @param editorAccess The editorAccess
-	 * @throws XPathExpressionException
 	 * @throws XPathException
-	 * @throws AuthorOperationException
 	 */
 	private void setPreliminaryTree(WSEditor editorAccess) throws XPathException {
 

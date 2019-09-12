@@ -128,6 +128,7 @@ public class RelLinksTest extends TestCase{
 
 	@Test
 	public void test_RenderingRelLink() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		RelLinksAccessor.forTests = true;
 		tree.refreshReferenceTree(editorAccess);
@@ -149,6 +150,7 @@ public class RelLinksTest extends TestCase{
 
 	@Test
 	public void test_OpenExternalRelLink() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		RelLinksAccessor.forTests = true;
 		tree.refreshReferenceTree(editorAccess);

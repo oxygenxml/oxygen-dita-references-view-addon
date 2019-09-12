@@ -27,6 +27,7 @@ public class SelectLeafNodeForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_SelectNodeInTree() throws InterruptedException {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
 		tree.refreshReferenceTree(editorAdapter);

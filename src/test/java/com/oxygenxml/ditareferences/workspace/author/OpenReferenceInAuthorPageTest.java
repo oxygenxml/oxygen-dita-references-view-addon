@@ -104,6 +104,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_OpenImageReference() throws InterruptedException {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
 		tree.refreshReferenceTree(editorAdapter);
@@ -127,6 +128,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_OpenConrefReference() throws InterruptedException {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
 		tree.refreshReferenceTree(editorAdapter);
@@ -148,6 +150,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_OpenConkeyrefReference() throws InterruptedException {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
 		tree.refreshReferenceTree(editorAdapter);
@@ -169,6 +172,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_OpenBinaryResourceReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
 		tree.refreshReferenceTree(editorAdapter);

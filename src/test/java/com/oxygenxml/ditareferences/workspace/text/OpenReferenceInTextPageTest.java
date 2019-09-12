@@ -158,6 +158,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_ImageWithExtension() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		assertEquals(14, tree.getRowCount());
@@ -177,6 +178,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_ImageWithNoExtension() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(2);
@@ -194,6 +196,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_AudioReference() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		
@@ -213,6 +216,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromConRef() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(5);
@@ -230,6 +234,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromConKeyRef() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(6);
@@ -247,6 +252,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_HTMLFormat() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(8);
@@ -264,6 +270,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_DITATopic() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(9);
@@ -280,6 +287,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_BinaryResourceWithFormat() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(10);
@@ -297,6 +305,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_DITATopicFromKeyref() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(12);
@@ -314,6 +323,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testOpenRef_BinaryResourceFromKeyref() {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(editorAccess);
 		TreePath path = tree.getPathForRow(13);

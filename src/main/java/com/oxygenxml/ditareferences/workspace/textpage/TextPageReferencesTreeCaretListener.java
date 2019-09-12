@@ -40,11 +40,21 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 	}
 
 	/**
+	 * Remove the caret listener
+	 */
+	public void unbindTextPageWithCaret() {
+		if(editorPage != null && editorPage.get() != null) {
+			JTextArea currentTextComponent = (JTextArea) editorPage.get().getTextComponent();
+			currentTextComponent.removeCaretListener(this);
+		}
+	}
+	
+	/**
 	 * Bind the current TextPage with its current Caret Listener.
 	 */
 	public void bindTextPageWithCaret() {
+		unbindTextPageWithCaret();
 		JTextArea currentTextComponent = (JTextArea) editorPage.get().getTextComponent();
-		currentTextComponent.removeCaretListener(this);		
 		currentTextComponent.addCaretListener(this);
 	}
 }

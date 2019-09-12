@@ -55,6 +55,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_NoFileOpened() {
+		tree.setShowing(true);
 		tree.refreshReferenceTree(null);
 		TreePath path = tree.getPathForRow(0);
 		JLabel firstRowRenderLabel = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
@@ -68,6 +69,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_GridMode() {
+		tree.setShowing(true);
 		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
 			@Override
 			public String getCurrentPageID() {
@@ -86,6 +88,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_NoXMLFileTextMode() {
+		tree.setShowing(true);
 		tree.refreshReferenceTree(new WSEditorAdapterForTests() {
 			@Override
 			public String getCurrentPageID() {
@@ -103,8 +106,8 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_NoDITAFile() {
-
 		final String noDITAContent = "<root/>";
+		tree.setShowing(true);
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(noDITAContent, 1));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -118,6 +121,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	@Test
 	public void test_NoRefsInDITAComposite() {
 		final String ditaCompositeNoRefContent = "<dita/>";
+		tree.setShowing(true);
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaCompositeNoRefContent, 1));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -136,6 +140,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 				+ "            <p><xref class=\"- topic/xref \" href=\"https://docs.oracle.com/javase/7/docs/api/javax/swing/AbstractAction.html\"\n"
 				+ "                format=\"html\" scope=\"external\"/></p>\n" + "        </body>\n" + "    </topic>\n"
 				+ " </dita>";
+		tree.setShowing(true);
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaCompositeContent, 2));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -149,6 +154,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	@Test
 	public void test_DITATopicNoRefs() {
 		String ditaTopicNoRefsContent = "<gigel class=' topic/topic '/>";
+		tree.setShowing(true);
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicNoRefsContent, 1));
 		TreePath path = tree.getPathForRow(0);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -162,6 +168,7 @@ public class RefTreeRenderingForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_DITAWithAllRefsInTextMode() throws InterruptedException {
+		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refreshReferenceTree(createWSEditorAdapterForTextPage(ditaTopicAllRefsContent, 15));
 		

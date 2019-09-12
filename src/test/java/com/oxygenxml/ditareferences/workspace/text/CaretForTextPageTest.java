@@ -42,6 +42,7 @@ public class CaretForTextPageTest extends TestCase {
 	public void testCaretListener() {
 		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
 				null, new DITAReferencesTranslatorForTests());
+		tree.setShowing(true);
 
 		final String ditaContent = "<topic id=\"copyright\" class=\"- topic/topic \">\n"
 				+ "    <title>Copyright</title>\n" 
@@ -139,6 +140,7 @@ public class CaretForTextPageTest extends TestCase {
 
 		// set the caret inside the "xref" element in the XML textPage
 		textPage.setCaretPosition(textArea.getText().indexOf("<xref") + 5);
+		System.out.println(TestUtil.logTreeNodes(tree));
 		try {
 			Thread.sleep(1000);
 			assertEquals(1, tree.getSelectionModel().getSelectionCount());
