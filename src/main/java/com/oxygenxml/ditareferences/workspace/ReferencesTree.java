@@ -265,6 +265,7 @@ public class ReferencesTree extends Tree {
 
 		// updates for Caret and Selection Listener
 		installUpdateListeners(editorPage);
+		
 	}
 
 	/**

@@ -23,8 +23,8 @@ import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 /**
  * Tree cell renderer.
  * 
- *  TODO Code review: Move all location of the icons in {@link Icons} class.
- *  Replace all the hard-coded values with constants from  {@link DITAConstants} 
+ * @Alexandra_Dinisor
+ *
  */
 @SuppressWarnings("serial")
 public class ReferencesTreeCellRenderer extends TreeCellRenderer {	

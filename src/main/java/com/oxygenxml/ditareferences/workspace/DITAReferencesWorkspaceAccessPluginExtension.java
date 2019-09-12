@@ -103,7 +103,6 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 							updateTreeTimer.restart();
 						}
 					}
-				//}
 			}
 
 			@Override
