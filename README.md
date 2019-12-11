@@ -1,5 +1,5 @@
 # Oxygen DITA Outgoing References View
-Side view in Oxygen XML Editor which shows all outgoing references for the current opened DITA topic. 
+Side view in Oxygen XML Editor which shows all outgoing references for the current opened DITA topic. Available in the DITA perspective.
 
 The following references are presented in the side view for an opened DITA topic:
 
