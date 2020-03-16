@@ -3,7 +3,7 @@
 <!DOCTYPE plugin SYSTEM "../plugin.dtd">
 
 <plugin
- id="com.oxygenxml.plugin.WorkspaceAccess"
+ id="com.oxygenxml.dita.references"
  name="DITA References View"
  description="This side-view shows all outgoing references for the current opened DITA topic."
  version="${project.version}"
@@ -20,7 +20,7 @@
  <extension type="WorkspaceAccess" 
    class="com.oxygenxml.ditareferences.workspace.DITAReferencesWorkspaceAccessPluginExtension"/>
  
-  <view id="DITAReferencesWorkspaceAccessID" initialSide="EAST" initialRow="1" initialState="docked">
+  <view id="DITAReferencesView" initialSide="EAST" initialRow="1" initialState="docked">
       <perspective id="xslt_debugger" initialState="hidden"/>
       <perspective id="xquery_debugger" initialState="hidden"/>
       <perspective id="database" initialState="hidden"/>

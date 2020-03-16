@@ -38,7 +38,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 
 	/* View Id; defined in plugin.xml. */
-	private static final String DITA_REFERENCES_WORKSPACE_ACCESS_ID = "DITAReferencesWorkspaceAccessID";
+	private static final String DITA_REFERENCES_WORKSPACE_ACCESS_ID = "DITAReferencesView";
 
 	/* Workspace access. */
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
