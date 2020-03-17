@@ -8,7 +8,7 @@ public class Icons {
 	/**
 	 * Used as view icon.
 	 */
-	public static final String REFRESH_REFERENCE = "images/RefreshReferences16.png";
+	public static final String DITA_REFERENCES = "images/DITAReferences16.png";
 
 	/**
 	 * Used as image reference icon.
