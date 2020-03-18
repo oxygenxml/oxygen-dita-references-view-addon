@@ -5,10 +5,10 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
-        id="com.oxygenxml.plugin.WorkspaceAccess">
-        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/1.0.1/oxygen-dita-outgoing-references-view-1.0.1-plugin.jar"/>
-        <xt:version>1.0.1</xt:version>
-        <xt:oxy_version>17.0+</xt:oxy_version>
+        id="com.oxygenxml.dita.references">
+        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/1.0.2/oxygen-dita-outgoing-references-view-1.0.2-plugin.jar"/>
+        <xt:version>1.0.2</xt:version>
+        <xt:oxy_version>19.1+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Syncro Soft</xt:author>
         <xt:name>DITA References View</xt:name>
