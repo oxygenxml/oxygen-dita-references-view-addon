@@ -17,13 +17,6 @@
         <include>**/*</include>
       </includes>
     </fileSet>
-    <fileSet>
-      <directory>src/main/resources/images</directory>
-      <outputDirectory>images</outputDirectory>
-      <includes>
-        <include>**/*</include>
-      </includes>
-    </fileSet>
   </fileSets>
 
   <files>
