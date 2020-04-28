@@ -12,8 +12,7 @@
  classLoaderType="preferReferencedResources">
  
  <runtime>
-    <library name="lib/${project.build.finalName}-images.jar"/>
-    <library name="src\main\resources" scope="global"/>
+    <library name="src/main/resources"/>
     <library name="target/classes" />
 	<librariesFolder name="target/lib" />
 	<librariesFolder name="lib" />
