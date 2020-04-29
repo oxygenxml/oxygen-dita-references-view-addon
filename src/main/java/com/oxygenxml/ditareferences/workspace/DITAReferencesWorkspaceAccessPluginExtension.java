@@ -197,7 +197,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
 
 				// set side-view Icon
-				URL iconURL = getClass().getClassLoader().getResource(Icons.DITA_REFERENCES);
+				URL iconURL = getClass().getResource(Icons.DITA_REFERENCES);
 				if (iconURL != null) {
 					ImageUtilities imageUtilities = pluginWorkspaceAccess.getImageUtilities();
 					ImageIcon icon = (ImageIcon) imageUtilities.loadIcon(iconURL);
