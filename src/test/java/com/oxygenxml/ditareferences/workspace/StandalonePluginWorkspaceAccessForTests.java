@@ -2,6 +2,7 @@ package com.oxygenxml.ditareferences.workspace;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import ro.sync.diff.merge.api.MergedFileState;
 import ro.sync.ecss.extensions.api.OptionListener;
 import ro.sync.ecss.extensions.api.component.AuthorComponentException;
 import ro.sync.ecss.extensions.api.component.EditorComponentProvider;
+import ro.sync.ecss.extensions.api.node.AuthorDocumentProvider;
+import ro.sync.exml.workspace.api.OperationStatus;
 import ro.sync.exml.workspace.api.Platform;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.application.ApplicationType;
@@ -532,5 +535,32 @@ public class StandalonePluginWorkspaceAccessForTests implements StandalonePlugin
 		
 		return null;
 	}
+
+  public AuthorDocumentProvider createAuthorDocumentProvider(URL systemId, Reader documentReader) throws IOException {
+    return null;
+  }
+
+  public URL createNewEditor(URL saveTo, String extension, String contentType, String content) {
+    return null;
+  }
+
+  public File chooseDirectory(File startingDir) {
+    return null;
+  }
+
+  public void showStatusMessage(String statusMessage, OperationStatus status) {
+  }
+
+  public String serializePersistentObject(Object persistentObject) throws IOException {
+    return null;
+  }
+
+  public Object deserializePersistentObject(String persistentObjectStringRepresentation) throws IOException {
+    return null;
+  }
+
+  public boolean isViewAvailable(String viewID) {
+    return false;
+  }
 
 }

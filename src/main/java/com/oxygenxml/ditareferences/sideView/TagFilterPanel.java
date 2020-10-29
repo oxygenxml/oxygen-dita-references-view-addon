@@ -74,15 +74,18 @@ public abstract class TagFilterPanel extends JPanel {
           for(TagButton button : buttons) {
             String value = (String) button.getAction().getValue(Action.NAME);
             if(!value.contentEquals(reference) && button.isSelected()) {
-              button.setVisible(true);
               button.setSelected(false);
-            } else if (button.isSelected()){
-              button.setVisible(false);
+            } else if (value.contentEquals(reference) && !button.isSelected()){
+              button.setSelected(true);
+            } else if(button.isSelected()) {
               showPanel(value);
             }
           }
         }
       });
+      if(reference.contentEquals(ReferenceType.OUTCOMING.toString())) {
+        tagButton.doClick();
+      }
       tagButton.setOpaque(false);
       StringBuilder tooltip = new StringBuilder();
       tooltip.append("The");

@@ -12,7 +12,9 @@ import ro.sync.exml.workspace.api.editor.documenttype.DocumentTypeInformation;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.transformation.TransformationFeedback;
 import ro.sync.exml.workspace.api.editor.transformation.TransformationScenarioNotFoundException;
+import ro.sync.exml.workspace.api.editor.validation.OperationInProgressException;
 import ro.sync.exml.workspace.api.editor.validation.ValidationProblemsFilter;
+import ro.sync.exml.workspace.api.editor.validation.ValidationScenarioNotFoundException;
 import ro.sync.exml.workspace.api.listeners.WSEditorListener;
 import ro.sync.exml.workspace.api.listeners.WSEditorPageChangedListener;
 
@@ -180,5 +182,16 @@ public class WSEditorAdapterForTests implements WSEditor {
 		
 		return false;
 	}
+
+  @Override
+  public Thread runValidationScenarios(String[] scenarioNames)
+      throws ValidationScenarioNotFoundException, OperationInProgressException {
+    return null;
+  }
+
+  @Override
+  public String getContentType() {
+    return null;
+  }
 
 }

@@ -14,14 +14,18 @@ import com.oxygenxml.ditareferences.workspace.DITAConstants;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
 
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;
-import ro.sync.exml.editor.ContentTypes;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 @SuppressWarnings("serial")
 public class OpenReferenceAction extends AbstractAction {
+  
+  /**
+   * Application image mime type
+   */
+	private static final String APPLICATION_IMAGE = "application/image";
 
-	/* The OpenReferenceAction Logger. */
+  /* The OpenReferenceAction Logger. */
 	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
 	private NodeRange nodeRange;
@@ -174,13 +178,13 @@ public class OpenReferenceAction extends AbstractAction {
 	 */
 	private void openImageReference(URL url, String formatAttrValue) throws MalformedURLException {
 		if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(url)) {
-			pluginWorkspaceAccess.open(url, null, ContentTypes.IMAGE_CONTENT_TYPE);
+			pluginWorkspaceAccess.open(url, null, APPLICATION_IMAGE);
 		} else {
 			// image needs extension for URL if none in attributeValue
 			if (formatAttrValue != null) {
 				URL imageUrl = new URL(url.toString() + "." + formatAttrValue);
 				if (pluginWorkspaceAccess.getUtilAccess().isSupportedImageURL(imageUrl)) {
-					pluginWorkspaceAccess.open(imageUrl, null, ContentTypes.IMAGE_CONTENT_TYPE);
+					pluginWorkspaceAccess.open(imageUrl, null, APPLICATION_IMAGE);
 				}
 			}
 		}

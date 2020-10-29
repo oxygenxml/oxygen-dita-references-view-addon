@@ -12,7 +12,6 @@ import java.awt.CardLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -26,18 +25,6 @@ import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 @SuppressWarnings("serial")
 public class SideViewComponent extends JPanel {
   
-  /**
-   * Presenter panel key
-   */
-  private static final String PRESENTER_PANEL_KEY = "presenter_Panel";
-
-  /**
-   * Message of the presenter panel
-   */
-  private static final String PRESENTER_MESSAGE = 
-      "<html><p>This plugin let you see the incoming and outcoming references."
-      + " Please select one of the prefered reference above.</p></html>";
-
   /**
    * The buttons to filter the references
    */
@@ -76,11 +63,6 @@ public class SideViewComponent extends JPanel {
     });
     mainPanel.add(outcomingReferences, ReferenceType.OUTCOMING.toString());
     
-    //create and add the presenter panel 
-    JPanel presenter = new JPanel(new BorderLayout());
-    presenter.add(new JLabel(PRESENTER_MESSAGE), BorderLayout.NORTH);
-    mainPanel.add(presenter, PRESENTER_PANEL_KEY);  
-    
     //create and add the ongoing references panel
     JPanel incomingReferences = new JPanel();
     mainPanel.add(incomingReferences, ReferenceType.INCOMING.toString());
@@ -103,8 +85,6 @@ public class SideViewComponent extends JPanel {
     filterButtons.setTags(ReferenceType.values());
     add(filterButtons, BorderLayout.NORTH);
     
-    // first time we show the presenter panel
-    cards.show(presenter.getParent(), PRESENTER_PANEL_KEY);
     //add the panel with the cards to the component panel
     add(mainPanel, BorderLayout.CENTER);
   }

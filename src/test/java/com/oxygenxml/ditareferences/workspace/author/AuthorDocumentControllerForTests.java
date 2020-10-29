@@ -577,4 +577,17 @@ public class AuthorDocumentControllerForTests implements AuthorDocumentControlle
 	 
 	}
 
+  @Override
+  public void setPseudoClassUndoable(String pseudoClass, AuthorElement element) {
+  }
+
+  @Override
+  public void removePseudoClassUndoable(String pseudoClass, AuthorElement element) {
+  }
+
+  @Override
+  public AuthorNode getStrictCommonAncestor(AuthorNode[] nodes) {
+    return null;
+  }
+
 }
