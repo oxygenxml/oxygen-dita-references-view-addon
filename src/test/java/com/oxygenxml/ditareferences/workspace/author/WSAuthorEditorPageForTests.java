@@ -33,7 +33,6 @@ import ro.sync.exml.view.graphics.Point;
 import ro.sync.exml.view.graphics.Rectangle;
 import ro.sync.exml.workspace.api.editor.ReadOnlyReason;
 import ro.sync.exml.workspace.api.editor.WSEditor;
-import ro.sync.exml.workspace.api.editor.page.Anchor;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.author.actions.AuthorActionsProvider;
 import ro.sync.exml.workspace.api.editor.page.author.fold.AuthorFoldManager;
@@ -419,19 +418,5 @@ public class WSAuthorEditorPageForTests implements WSAuthorEditorPage {
 
 		return null;
 	}
-
-  @Override
-  public Anchor createAnchor(int offset) throws BadLocationException {
-    return null;
-  }
-
-  @Override
-  public int getOffsetForAnchor(Anchor anchor) throws BadLocationException {
-    return 0;
-  }
-
-  @Override
-  public void requestFocus() {
-  }
 
 }

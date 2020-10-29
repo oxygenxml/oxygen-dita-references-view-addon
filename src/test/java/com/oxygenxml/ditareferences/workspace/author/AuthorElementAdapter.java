@@ -3,7 +3,6 @@ package com.oxygenxml.ditareferences.workspace.author;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.text.BadLocationException;
 
@@ -12,7 +11,6 @@ import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.ecss.extensions.api.node.ContentIterator;
 import ro.sync.ecss.extensions.api.node.NamespaceContext;
 
 public class AuthorElementAdapter implements AuthorElement {
@@ -209,19 +207,5 @@ public class AuthorElementAdapter implements AuthorElement {
 		 
 		return null;
 	}
-
-  @Override
-  public ContentIterator getContentIterator() {
-    return null;
-  }
-
-  @Override
-  public void setAttributesNoNSUpdate(Map<String, AttrValue> attrs) {
-  }
-
-  @Override
-  public Set<String> getPseudoClassNames() {
-    return null;
-  }
 
 }
