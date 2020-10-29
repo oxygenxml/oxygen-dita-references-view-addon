@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.oxygenxml.ditareferences.sideView.SideViewComponent;
 import com.oxygenxml.ditareferences.translator.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.translator.Tags;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageListener;
@@ -173,25 +174,9 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		pluginWorkspaceAccess.addViewComponentCustomizer(viewInfo -> {
 			if (DITA_REFERENCES_WORKSPACE_ACCESS_ID.equals(viewInfo.getViewID())) {
 				
-				JScrollPane scrollPane = new JScrollPane(refTree);
-				scrollPane.addComponentListener(new ComponentAdapter() {
-					@Override
-					public void componentResized(ComponentEvent e) {
-						SwingUtilities.invokeLater(() -> {
-							// remember the selected path
-							TreePath selectionPath = refTree.getSelectionPath();
-							((DefaultTreeModel) refTree.getModel())
-									.nodeStructureChanged((TreeNode) refTree.getModel().getRoot());
-
-							// expand all rows with same selected path after side-view scrolled
-							refTree.expandAllRows();
-							refTree.setSelectionPath(selectionPath);
-						});
-
-					}
-				});
-				// set side-view ScrollPane
-				viewInfo.setComponent(scrollPane);
+				
+				// set side-view component
+				viewInfo.setComponent(new SideViewComponent(refTree));
 
 				// set side-view Title
 				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));

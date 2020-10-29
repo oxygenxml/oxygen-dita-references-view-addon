@@ -288,7 +288,7 @@ public class ReferencesTree extends Tree {
 	/**
 	 * Expand all nodes from the very beginning.
 	 */
-	protected void expandAllRows() {
+	public void expandAllRows() {
 		for (int i = 0; i < this.getRowCount(); i++) {
 			this.expandRow(i);
 		}
