@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -12,8 +12,12 @@ import javax.swing.JTree;
 import javax.swing.JViewport;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.oxygenxml.ditareferences.translator.Tags;
-import com.oxygenxml.ditareferences.translator.Translator;
+import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
+import com.oxygenxml.ditareferences.workspace.DITAConstants;
+import com.oxygenxml.ditareferences.workspace.Icons;
+import com.oxygenxml.ditareferences.workspace.KeysProvider;
+import com.oxygenxml.ditareferences.workspace.StringUtilities;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;

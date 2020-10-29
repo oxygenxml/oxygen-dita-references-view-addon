@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
@@ -9,6 +9,9 @@ import javax.swing.AbstractAction;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
+
+import com.oxygenxml.ditareferences.workspace.DITAConstants;
+import com.oxygenxml.ditareferences.workspace.KeysProvider;
 
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 import ro.sync.exml.editor.ContentTypes;

@@ -1,9 +1,11 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.StringTokenizer;
+
+import com.oxygenxml.ditareferences.workspace.DITAConstants;
 
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 

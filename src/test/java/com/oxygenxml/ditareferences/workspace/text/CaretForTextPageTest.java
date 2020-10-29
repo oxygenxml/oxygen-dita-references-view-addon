@@ -10,9 +10,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.oxygenxml.ditareferences.treeReferences.NodeRange;
+import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
-import com.oxygenxml.ditareferences.workspace.NodeRange;
-import com.oxygenxml.ditareferences.workspace.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 import com.oxygenxml.ditareferences.workspace.WSEditorAdapterForTests;

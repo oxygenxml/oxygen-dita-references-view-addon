@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.translator;
+package com.oxygenxml.ditareferences.i18n;
 
 /**
  * Tags used for internationalization.

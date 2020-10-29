@@ -14,7 +14,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.oxygenxml.ditareferences.workspace.ReferenceType;
+
+import com.oxygenxml.ditareferences.treeReferences.ReferenceType;
 
 /**
  * Tags filter panel with exclusive actions. Every time a filter is pressed it is hidden and the others are unselected.

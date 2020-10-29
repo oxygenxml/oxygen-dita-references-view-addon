@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.translator;
+package com.oxygenxml.ditareferences.i18n;
 
 /**
  * Translation interface for the keys.

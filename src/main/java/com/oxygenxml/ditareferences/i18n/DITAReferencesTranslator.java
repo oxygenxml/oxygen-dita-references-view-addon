@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.translator;
+package com.oxygenxml.ditareferences.i18n;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;

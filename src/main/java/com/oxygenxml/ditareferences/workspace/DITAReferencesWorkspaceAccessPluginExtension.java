@@ -2,21 +2,15 @@ package com.oxygenxml.ditareferences.workspace;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
+import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
+import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.sideView.SideViewComponent;
-import com.oxygenxml.ditareferences.translator.DITAReferencesTranslator;
-import com.oxygenxml.ditareferences.translator.Tags;
+import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageListener;
 import com.oxygenxml.ditareferences.workspace.textpage.TextPageListener;
 

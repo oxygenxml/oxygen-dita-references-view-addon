@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 /**
  * Set the inhibiter when needed. For example, when selection from tree to

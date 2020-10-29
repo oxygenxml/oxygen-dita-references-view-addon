@@ -3,8 +3,8 @@ package com.oxygenxml.ditareferences.workspace.authorpage;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oxygenxml.ditareferences.workspace.NodeRange;
-import com.oxygenxml.ditareferences.workspace.ReferencesCollector;
+import com.oxygenxml.ditareferences.treeReferences.NodeRange;
+import com.oxygenxml.ditareferences.treeReferences.ReferencesCollector;
 
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.ecss.extensions.api.node.AuthorElement;

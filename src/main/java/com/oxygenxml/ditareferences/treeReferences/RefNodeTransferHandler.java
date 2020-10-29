@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;

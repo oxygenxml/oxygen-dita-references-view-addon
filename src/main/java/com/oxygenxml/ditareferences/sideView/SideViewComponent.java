@@ -20,8 +20,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.oxygenxml.ditareferences.workspace.ReferenceType;
-import com.oxygenxml.ditareferences.workspace.ReferencesTree;
+import com.oxygenxml.ditareferences.treeReferences.ReferenceType;
+import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 
 @SuppressWarnings("serial")
 public class SideViewComponent extends JPanel {

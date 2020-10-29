@@ -5,7 +5,7 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 /**
  * Type of the references
  * @author mircea_badoi

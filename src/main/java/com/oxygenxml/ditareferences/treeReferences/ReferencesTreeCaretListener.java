@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -104,7 +104,8 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * @param textPage    The XML textPage
 	 * @return the TreePath for the selected Node
 	 */
-	private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset, final WSEditorPage page) {
+	@SuppressWarnings("rawtypes")
+  private TreePath visitAllNodes(JTree tree, TreePath parent, int caretOffset, final WSEditorPage page) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getLastPathComponent();
 
 		// it must be value node

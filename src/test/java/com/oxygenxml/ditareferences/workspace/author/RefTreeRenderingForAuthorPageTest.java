@@ -7,8 +7,8 @@ import javax.swing.tree.TreePath;
 
 import org.junit.Test;
 
+import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
-import com.oxygenxml.ditareferences.workspace.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 

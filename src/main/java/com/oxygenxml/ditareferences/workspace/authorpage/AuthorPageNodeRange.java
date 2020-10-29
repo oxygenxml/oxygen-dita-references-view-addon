@@ -2,7 +2,7 @@ package com.oxygenxml.ditareferences.workspace.authorpage;
 
 import java.net.URL;
 
-import com.oxygenxml.ditareferences.workspace.NodeRange;
+import com.oxygenxml.ditareferences.treeReferences.NodeRange;
 
 import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorElement;

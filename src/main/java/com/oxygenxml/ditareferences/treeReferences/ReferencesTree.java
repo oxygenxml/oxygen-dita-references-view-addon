@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -10,8 +10,9 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
-import com.oxygenxml.ditareferences.translator.Tags;
-import com.oxygenxml.ditareferences.translator.Translator;
+import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
+import com.oxygenxml.ditareferences.workspace.KeysProvider;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageReferencesTreeCaretListener;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorReferencesCollector;
 import com.oxygenxml.ditareferences.workspace.textpage.TextPageReferencesTreeCaretListener;

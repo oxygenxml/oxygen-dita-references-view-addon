@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.util.List;
 
@@ -6,7 +6,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.Logger;
 
-import com.oxygenxml.ditareferences.translator.Tags;
+import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.workspace.DITAConstants;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLink;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRangeImpl;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinksAccessor;

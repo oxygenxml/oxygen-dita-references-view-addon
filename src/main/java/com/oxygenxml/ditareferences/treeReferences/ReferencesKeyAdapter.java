@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.workspace;
+package com.oxygenxml.ditareferences.treeReferences;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -8,8 +8,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import com.oxygenxml.ditareferences.translator.Tags;
-import com.oxygenxml.ditareferences.translator.Translator;
+import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
+import com.oxygenxml.ditareferences.workspace.KeysProvider;
+import com.oxygenxml.ditareferences.workspace.ShowDefinitionLocationAction;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkNodeRange;
 
 import ro.sync.exml.workspace.api.editor.WSEditor;
