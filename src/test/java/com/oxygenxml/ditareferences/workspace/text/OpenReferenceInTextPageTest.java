@@ -160,7 +160,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_ImageWithExtension() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		assertEquals(14, tree.getRowCount());
 
 		TreePath path = tree.getPathForRow(1);
@@ -180,7 +180,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_ImageWithNoExtension() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(2);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 2, false);
@@ -198,7 +198,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_AudioReference() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		
 		TreePath path = tree.getPathForRow(3);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -218,7 +218,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromConRef() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(5);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 5, false);
@@ -236,7 +236,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromConKeyRef() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(6);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 6, false);
@@ -254,7 +254,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_HTMLFormat() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(8);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 8, false);
@@ -272,7 +272,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopic() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(9);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 9, false);
@@ -289,7 +289,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_BinaryResourceWithFormat() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(10);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 10, false);
@@ -307,7 +307,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_DITATopicFromKeyref() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(12);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 12, false);
@@ -325,7 +325,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 	public void testOpenRef_BinaryResourceFromKeyref() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 		TreePath path = tree.getPathForRow(13);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
 				false, true, true, 13, false);

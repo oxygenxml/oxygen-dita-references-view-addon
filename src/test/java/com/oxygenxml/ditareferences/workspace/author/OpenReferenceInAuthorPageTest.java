@@ -107,7 +107,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
-		tree.refreshReferenceTree(editorAdapter);
+		tree.refresh(editorAdapter);
 
 		assertEquals(10, tree.getRowCount());
 
@@ -131,7 +131,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
-		tree.refreshReferenceTree(editorAdapter);
+		tree.refresh(editorAdapter);
 
 		TreePath path = tree.getPathForRow(6);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -153,7 +153,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
-		tree.refreshReferenceTree(editorAdapter);
+		tree.refresh(editorAdapter);
 
 		TreePath path = tree.getPathForRow(7);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -175,7 +175,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
-		tree.refreshReferenceTree(editorAdapter);
+		tree.refresh(editorAdapter);
 
 		TreePath path = tree.getPathForRow(9);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),

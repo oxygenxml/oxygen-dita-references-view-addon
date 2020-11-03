@@ -32,7 +32,7 @@ public class CaretForAuthorPageTest extends TestCase {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		WSEditorAdapterForTests editorAdapter = TestUtil.createWSEditorAdapterForAuthorPage(elemArray);
-		tree.refreshReferenceTree(editorAdapter);
+		tree.refresh(editorAdapter);
 		WSAuthorEditorPageForTests authorPage = (WSAuthorEditorPageForTests) editorAdapter.getCurrentPage();
 
 		authorPage.setCaretPosition(elemArray[2].getStartOffset());

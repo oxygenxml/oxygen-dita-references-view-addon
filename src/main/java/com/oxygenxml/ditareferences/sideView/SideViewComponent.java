@@ -33,6 +33,7 @@ import com.oxygenxml.ditareferences.treeReferences.VersionUtil;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 import ro.sync.ui.Icons;
 
@@ -46,10 +47,10 @@ public class SideViewComponent extends JPanel {
   
   /**
    * Constructor
-   * @param references The references of the dita document
+   * @param outGoingRef The references of the dita document
    * @param onGoingRef 
    */
-  public SideViewComponent(ReferencesTree references, OnGoingReferencesTree onGoingRef) {
+  public SideViewComponent(ReferencesTree outGoingRef, OnGoingReferencesTree onGoingRef) {
     //set the layout for this JPanel
     setLayout(new BorderLayout());
     
@@ -59,19 +60,19 @@ public class SideViewComponent extends JPanel {
     mainPanel.setLayout(cards);
     
     //create and add the panel wit outgoing references
-    JScrollPane outcomingReferences = new JScrollPane(references);
+    JScrollPane outcomingReferences = new JScrollPane(outGoingRef);
     outcomingReferences.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent e) {
         SwingUtilities.invokeLater(() -> {
           // remember the selected path
-          TreePath selectionPath = references.getSelectionPath();
-          ((DefaultTreeModel) references.getModel())
-              .nodeStructureChanged((TreeNode) references.getModel().getRoot());
+          TreePath selectionPath = outGoingRef.getSelectionPath();
+          ((DefaultTreeModel) outGoingRef.getModel())
+              .nodeStructureChanged((TreeNode) outGoingRef.getModel().getRoot());
 
           // expand all rows with same selected path after side-view scrolled
-          references.expandAllRows();
-          references.setSelectionPath(selectionPath);
+          outGoingRef.expandAllRows();
+          outGoingRef.setSelectionPath(selectionPath);
         });
 
       }
@@ -117,7 +118,10 @@ public class SideViewComponent extends JPanel {
         
         @Override
         public void actionPerformed(ActionEvent e) {
-          onGoingRef.refresh();
+          PluginWorkspace pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+          WSEditor currentEditorAccess = pluginWorkspace.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
+          outGoingRef.refresh(currentEditorAccess);
+          onGoingRef.refresh(currentEditorAccess);
         }
       }, false);
       refreshButton.setIcon(icon);

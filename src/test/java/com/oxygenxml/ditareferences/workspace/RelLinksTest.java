@@ -132,7 +132,7 @@ public class RelLinksTest extends TestCase{
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		RelLinksAccessor.forTests = true;
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 
 		assertEquals(3, tree.getRowCount());
 
@@ -154,7 +154,7 @@ public class RelLinksTest extends TestCase{
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		RelLinksAccessor.forTests = true;
-		tree.refreshReferenceTree(editorAccess);
+		tree.refresh(editorAccess);
 
 		tree.setSelectionRow(2);
 		TestUtil.simulateDoubleClick(tree);

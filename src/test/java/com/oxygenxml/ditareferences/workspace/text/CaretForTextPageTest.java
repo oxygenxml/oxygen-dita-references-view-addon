@@ -136,7 +136,7 @@ public class CaretForTextPageTest extends TestCase {
 		WSXMLTextEditorPage textPage = (WSXMLTextEditorPage) editor.getCurrentPage();
 		JTextArea textArea = (JTextArea) textPage.getTextComponent();
 		textArea.setText(ditaContent);
-		tree.refreshReferenceTree(editor);
+		tree.refresh(editor);
 
 		// set the caret inside the "xref" element in the XML textPage
 		textPage.setCaretPosition(textArea.getText().indexOf("<xref") + 5);

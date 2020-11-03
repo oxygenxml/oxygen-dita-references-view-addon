@@ -82,7 +82,7 @@ public class SelectLeafNodeForTextPageTest extends TestCase {
 			}
 		};
 		tree.setShowing(true);
-		tree.refreshReferenceTree(editor);
+		tree.refresh(editor);
 		TreePath path = tree.getPathForRow(1);
 
 		tree.setSelectionPath(path);

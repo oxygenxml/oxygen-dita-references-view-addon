@@ -216,7 +216,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
 		}
 		  refTreeIn.refresh(editorAccess);
-			refTreeOut.refreshReferenceTree(editorAccess);
+			refTreeOut.refresh(editorAccess);
 	}
 
 	/**

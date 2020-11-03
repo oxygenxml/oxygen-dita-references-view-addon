@@ -78,11 +78,6 @@ public class OnGoingReferencesTree extends JPanel {
   private JTree referenceTree;
   
   /**
-   * The last used editor
-   */
-  private WSEditor lastEditor;
-  
-  /**
    * Timer for loading panel
    */
   private static Timer timer = new Timer(false) ;
@@ -162,20 +157,10 @@ public class OnGoingReferencesTree extends JPanel {
   }
   
   /**
-   * Refreshes the references in the last used editor
-   */
-  public void refresh() {
-    if (lastEditor instanceof WSEditor) {
-      refresh(lastEditor);
-    } 
-  }
-  
-  /**
    * Refreshes the references in the given editor
    * @param workspaceAccess the WSEditor
    */
   public void refresh(WSEditor workspaceAccess) {
-    lastEditor = workspaceAccess;
     Thread thread = new Thread(new Runnable() {
 
       @Override

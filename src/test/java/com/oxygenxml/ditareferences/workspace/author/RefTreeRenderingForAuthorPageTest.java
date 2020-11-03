@@ -33,7 +33,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	public void test_RenderingImageReference() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
+		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
 		TreePath path = tree.getPathForRow(1);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -48,7 +48,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	public void test_RenderingCrossReference() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
+		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
 		TreePath path = tree.getPathForRow(4);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -63,7 +63,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	public void test_RenderingContentReference() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
+		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
 		TreePath path = tree.getPathForRow(6);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
@@ -78,7 +78,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	public void test_RenderingLinkReference() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refreshReferenceTree(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
+		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
 		TreePath path = tree.getPathForRow(9);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),

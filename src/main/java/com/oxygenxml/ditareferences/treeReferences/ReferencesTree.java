@@ -165,7 +165,7 @@ public class ReferencesTree extends Tree {
 	 * 
 	 * @param editorAccess The current editorAccess
 	 */
-	public void refreshReferenceTree(WSEditor editorAccess) {
+	public void refresh(WSEditor editorAccess) {
 		// Remove previous listeners from Author and Text page.
 		textPageCaretListener.unbindTextPageWithCaret();
 		authorPageCaretListener.unbindAuthorPageWithCaret();
