@@ -10,6 +10,7 @@ import javax.swing.Timer;
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.sideView.SideViewComponent;
+import com.oxygenxml.ditareferences.treeReferences.OnGoingReferencesTree;
 import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageListener;
 import com.oxygenxml.ditareferences.workspace.textpage.TextPageListener;
@@ -42,7 +43,10 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
 
 	/* The tree with the outgoing references. */
-	private ReferencesTree refTree;
+	private ReferencesTree refTreeOut;
+	
+	/* The tree with the ongoing references. */
+	private OnGoingReferencesTree refTreeIn;
 
 	/* The timer for editor changes. */
 	private static final int TIMER_DELAY = 500;
@@ -64,7 +68,8 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.refTree = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
+		this.refTreeOut = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
+		this.refTreeIn = new OnGoingReferencesTree(pluginWorkspaceAccess);
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 						
@@ -125,7 +130,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 						PluginWorkspace.MAIN_EDITING_AREA);
 				if (editorAccess != null) {
 					if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) {
-						if (refTree.isShowing()) {
+						if (refTreeOut.isShowing()) {
 							updateTreeTimer.restart();
 							WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
 
@@ -136,7 +141,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 
 					} else if (EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())) {
 						updateTreeTimer.restart();
-						if (refTree.isShowing()) {
+						if (refTreeOut.isShowing()) {
 							WSAuthorEditorPage authorPage = (WSAuthorEditorPage) editorAccess.getCurrentPage();
 
 							// update the authorPage Listener
@@ -170,7 +175,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				
 				
 				// set side-view component
-				viewInfo.setComponent(new SideViewComponent(refTree));
+				viewInfo.setComponent(new SideViewComponent(refTreeOut, refTreeIn));
 
 				// set side-view Title
 				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
@@ -210,8 +215,8 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 		} else {
 			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
 		}
-
-			refTree.refreshReferenceTree(editorAccess);
+		  refTreeIn.refresh(editorAccess);
+			refTreeOut.refreshReferenceTree(editorAccess);
 	}
 
 	/**
