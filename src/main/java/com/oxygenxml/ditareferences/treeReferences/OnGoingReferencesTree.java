@@ -25,9 +25,12 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
@@ -126,34 +129,81 @@ public class OnGoingReferencesTree extends JPanel {
           e.consume();
           DefaultMutableTreeNode node = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
           if (node != null) {
-            DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) ((DefaultMutableTreeNode) node).getUserObject();
-            try {
-              StringBuilder urlToOpen = new StringBuilder();
-              urlToOpen.append(referenceInfo.getSystemID());
-              urlToOpen.append("#line=");
-              urlToOpen.append(referenceInfo.getLine());
-              urlToOpen.append(";column=");
-              urlToOpen.append(referenceInfo.getColumn());
-              URL url = new URL(urlToOpen.toString());
-              if(workspaceAccess.open(url)) {
-                SwingUtilities.invokeLater(new Runnable() {
+            Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
+            if(userObject instanceof DocumentPositionedInfo) {
+              DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) userObject;
+              try {
+                StringBuilder urlToOpen = new StringBuilder();
+                urlToOpen.append(referenceInfo.getSystemID());
+                urlToOpen.append("#line=");
+                urlToOpen.append(referenceInfo.getLine());
+                urlToOpen.append(";column=");
+                urlToOpen.append(referenceInfo.getColumn());
+                URL url = new URL(urlToOpen.toString());
+                if(workspaceAccess.open(url)) {
+                  SwingUtilities.invokeLater(new Runnable() {
 
-                  @Override
-                  public void run() {
-                    WSEditorPage currentPage = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA).getCurrentPage();
-                    selectRange(currentPage, referenceInfo);
-                  }
-                });
+                    @Override
+                    public void run() {
+                      WSEditorPage currentPage = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA).getCurrentPage();
+                      selectRange(currentPage, referenceInfo);
+                    }
+                  });
+                }
+              } catch (MalformedURLException e1) {
+                logger.error(e1, e1);
               }
-            } catch (MalformedURLException e1) {
-              logger.error(e1, e1);
             }
           }
         }
       }
     });
+    referenceTree.addTreeSelectionListener(new TreeSelectionListener() {
+      
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
+        DefaultTreeModel model = (DefaultTreeModel) referenceTree.getModel();
+        DefaultMutableTreeNode source = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
+        if(source != null) {
+          if(source.isLeaf()) {
+            Thread t = new Thread(new Runnable() {
+              
+              @Override
+              public void run() {
+                try {
+                  load(true, 500);
+                  DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo)(source.getUserObject());
+                  List<DocumentPositionedInfo> temp;
+                  URL editorLocation = new URL(referenceInfo.getSystemID());
+                  temp = searchOngoingRef(editorLocation);
+                    SwingUtilities.invokeLater(new Runnable() {
+                      
+                      @Override
+                      public void run() {
+                        for (int i = 0; i < temp.size() ; i++) {
+                        model.insertNodeInto(new DefaultMutableTreeNode(temp.get(i)), source, i);
+                        referenceTree.expandPath(referenceTree.getSelectionPath());
+                        }
+                      }
+                    });
+                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException
+                    | MalformedURLException e1) {
+                  e1.printStackTrace();
+                } finally {
+                  load(false, 0);
+                }
+              }
+            });
+            t.start();
+          }
+        }
+      }
+    });
+    
     //add tree
     this.add(referenceTree, References_ID);
+    referenceTree.getSelectionModel().setSelectionMode
+    (TreeSelectionModel.SINGLE_TREE_SELECTION);
   }
   
   /**
@@ -166,8 +216,21 @@ public class OnGoingReferencesTree extends JPanel {
       @Override
       public void run() {
         try {
-          load(true, 200);
-          searchAndCreateRefOngoingTree(workspaceAccess);
+          load(true, 300);
+          if(workspaceAccess != null) {
+
+            URL editorLocation = workspaceAccess.getEditorLocation();
+            List<DocumentPositionedInfo> temp = searchOngoingRef(editorLocation);
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
+            DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root);
+            DefaultMutableTreeNode ref ;
+            for (DocumentPositionedInfo documentPositionedInfo : temp) {
+              ref = new DefaultMutableTreeNode(documentPositionedInfo);
+              root.add(ref);
+            }
+            referenceTree.setCellRenderer(new OnGoingReferencesTreeCellRenderer());
+            referenceTree.setModel(referencesTreeModel);
+          }
 
         } catch (Exception e1) {
           e1.printStackTrace();
@@ -183,47 +246,37 @@ public class OnGoingReferencesTree extends JPanel {
   
   /**
    * Search for ongoing references and creates a tree with them
-   * @param workspaceAccess
+   * @param editorLocation The editor to search location
+   * @return The list of foun ongoing ref
    * @throws ClassNotFoundException
    * @throws NoSuchMethodException
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  private void searchAndCreateRefOngoingTree(WSEditor workspaceAccess)
+  private List<DocumentPositionedInfo> searchOngoingRef(URL editorLocation)
       throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    if(workspaceAccess != null) {
 
-      URL editorLocation = workspaceAccess.getEditorLocation();
-      if(VersionUtil.isOxygenVersionNewer(23, 0)){
-        Class<?> ditaAccess = Class.forName(RO_SYNC_ECSS_DITA_DITA_ACCESS);
-        Object graph = null;
-        if(!Equaler.verifyEquals(oldEditorUrl, editorLocation)) {
-          Method createReferencesGraph = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
-          createReferencesGraph.setAccessible(true);
-          graph = createReferencesGraph.invoke(null);
-        }
-        Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
-        searchReferences.setAccessible(true);
-        listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
+    if(VersionUtil.isOxygenVersionNewer(23, 0)){
+      Class<?> ditaAccess = Class.forName(RO_SYNC_ECSS_DITA_DITA_ACCESS);
+      Object graph = null;
+      if(!Equaler.verifyEquals(oldEditorUrl, editorLocation)) {
+        Method createReferencesGraph = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
+        createReferencesGraph.setAccessible(true);
+        graph = createReferencesGraph.invoke(null);
+      }
+      Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
+      searchReferences.setAccessible(true);
+      listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
 
-      } else if(VersionUtil.isOxygenVersionNewer(22, 0)) {
-        Class<?> ditaAccess = Class.forName(RO_SYNC_ECSS_DITA_DITA_ACCESS);
-        Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class);
-        searchReferences.setAccessible(true);
-        listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation);
-      }
-      DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
-      DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root);
-      DefaultMutableTreeNode ref ;
-      for (DocumentPositionedInfo documentPositionedInfo : listOfOngoingReferences) {
-        ref = new DefaultMutableTreeNode(documentPositionedInfo);
-        root.add(ref);
-      }
-      referenceTree.setCellRenderer(new OnGoingReferencesTreeCellRenderer());
-      referenceTree.setModel(referencesTreeModel);
-      oldEditorUrl = editorLocation;
+    } else if(VersionUtil.isOxygenVersionNewer(22, 0)) {
+      Class<?> ditaAccess = Class.forName(RO_SYNC_ECSS_DITA_DITA_ACCESS);
+      Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class);
+      searchReferences.setAccessible(true);
+      listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation);
     }
+    oldEditorUrl = editorLocation;
+    return listOfOngoingReferences;
   }
   
   /**
