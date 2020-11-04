@@ -5,7 +5,7 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 /**
  * Type of the references
  * @author mircea_badoi
@@ -14,10 +14,10 @@ public enum ReferenceType {
   /**
    * The outgoing references
    */
-  OUTCOMING{
+  OUTGOING{
     @Override
     public String toString() {
-      return "Outcoming";
+      return "Outgoing";
     }
   },
   /**

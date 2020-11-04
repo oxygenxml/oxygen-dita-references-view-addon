@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
@@ -122,7 +122,7 @@ public class OpenReferenceInTextPageTest extends TestCase {
 		}
 	};
 
-	ReferencesTree tree = new ReferencesTree(pluginWorkspaceAccess, new KeysProvider() {
+	OutgoingReferencesTree tree = new OutgoingReferencesTree(pluginWorkspaceAccess, new KeysProvider() {
 		@Override
 		public LinkedHashMap<String, KeyInfo> getKeys(URL editorLocation) {
 			LinkedHashMap<String, KeyInfo> keyMap = null;

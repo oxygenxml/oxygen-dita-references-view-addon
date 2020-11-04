@@ -5,16 +5,22 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.Component;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.apache.log4j.Logger;
+
 import ro.sync.document.DocumentPositionedInfo;
+import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 import ro.sync.util.URLUtil;
 
@@ -24,6 +30,20 @@ import ro.sync.util.URLUtil;
  *
  */
 public class OnGoingReferencesTreeCellRenderer extends TreeCellRenderer{
+  
+  /**
+   * Image utilities used to get icon for node
+   */
+  private ImageUtilities imageUtilities;
+  
+  /**
+   * Logger for logging.
+   */
+  private static final Logger logger = Logger.getLogger(OutgoingReferencesPanel.class.getName());
+
+  public OnGoingReferencesTreeCellRenderer(ImageUtilities imageUtilities) {
+    this.imageUtilities = imageUtilities;
+  }
   
   /**
    * Generated UID
@@ -41,6 +61,14 @@ public class OnGoingReferencesTreeCellRenderer extends TreeCellRenderer{
         DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) ((DefaultMutableTreeNode) value).getUserObject();
         label.setText(referenceInfo.getMessage().split(" ")[0]);
         label.setToolTipText(URLUtil.getDescription(referenceInfo.getSystemID()));
+        try {
+          Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemID()));
+          if(iconDecoration != null) {
+            label.setIcon(iconDecoration);
+          }
+        } catch (MalformedURLException e) {
+          logger.error(e, e);
+        }
       }
     }
     return label;

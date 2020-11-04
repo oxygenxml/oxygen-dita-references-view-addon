@@ -9,9 +9,9 @@ import javax.swing.Timer;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
-import com.oxygenxml.ditareferences.sideView.SideViewComponent;
-import com.oxygenxml.ditareferences.treeReferences.OnGoingReferencesTree;
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.sideview.SideViewComponent;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesPanel;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageListener;
 import com.oxygenxml.ditareferences.workspace.textpage.TextPageListener;
 
@@ -43,10 +43,10 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
 
 	/* The tree with the outgoing references. */
-	private ReferencesTree refTreeOut;
+	private OutgoingReferencesTree refTreeOut;
 	
 	/* The tree with the ongoing references. */
-	private OnGoingReferencesTree refTreeIn;
+	private OutgoingReferencesPanel refTreeIn;
 
 	/* The timer for editor changes. */
 	private static final int TIMER_DELAY = 500;
@@ -68,8 +68,8 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.refTreeOut = new ReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
-		this.refTreeIn = new OnGoingReferencesTree(pluginWorkspaceAccess);
+		this.refTreeOut = new OutgoingReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
+		this.refTreeIn = new OutgoingReferencesPanel(pluginWorkspaceAccess);
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 						

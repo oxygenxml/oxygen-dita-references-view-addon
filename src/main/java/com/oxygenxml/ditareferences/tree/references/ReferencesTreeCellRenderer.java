@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.Component;
 import java.awt.Container;

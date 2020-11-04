@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -26,8 +26,8 @@ public class RefNodeTransferHandler extends TransferHandler {
 	@Override
 	public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
 		if (action == TransferHandler.COPY) {
-			if (comp instanceof ReferencesTree) {
-				ReferencesTree refTree = (ReferencesTree) comp;
+			if (comp instanceof OutgoingReferencesTree) {
+				OutgoingReferencesTree refTree = (OutgoingReferencesTree) comp;
 				TreePath selectedPath = refTree.getSelectionPath();
 				int selectedRow = refTree.getRowForPath(selectedPath);
 				DefaultMutableTreeNode refNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();

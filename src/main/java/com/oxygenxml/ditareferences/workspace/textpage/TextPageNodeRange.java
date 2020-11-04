@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.oxygenxml.ditareferences.treeReferences.NodeRange;
+import com.oxygenxml.ditareferences.tree.references.NodeRange;
 
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;

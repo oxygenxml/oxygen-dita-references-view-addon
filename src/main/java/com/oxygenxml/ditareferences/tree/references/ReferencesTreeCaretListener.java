@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +15,7 @@ import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implements CaretSelectionInhibitor {
 
 	protected Supplier<T> editorPage;
-	private ReferencesTree refTree;
+	private OutgoingReferencesTree refTree;
 
 	private TreeSelectionInhibitor treeSelectionInhibitor;
 
@@ -33,7 +33,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * @param refTree            The references Tree
 	 * @param selectionInhibitor The boolean for the selection
 	 */
-	public ReferencesTreeCaretListener(Supplier<T> editorPage, ReferencesTree refTree,
+	public ReferencesTreeCaretListener(Supplier<T> editorPage, OutgoingReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
 		this.updateCaretTimer.setRepeats(false);
 

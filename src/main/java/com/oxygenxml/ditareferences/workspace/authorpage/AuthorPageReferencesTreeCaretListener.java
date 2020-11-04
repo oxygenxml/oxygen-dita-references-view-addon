@@ -2,9 +2,9 @@ package com.oxygenxml.ditareferences.workspace.authorpage;
 
 import java.util.function.Supplier;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTreeCaretListener;
-import com.oxygenxml.ditareferences.treeReferences.TreeSelectionInhibitor;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.ReferencesTreeCaretListener;
+import com.oxygenxml.ditareferences.tree.references.TreeSelectionInhibitor;
 
 import ro.sync.ecss.extensions.api.AuthorCaretEvent;
 import ro.sync.ecss.extensions.api.AuthorCaretListener;
@@ -19,7 +19,7 @@ public class AuthorPageReferencesTreeCaretListener extends ReferencesTreeCaretLi
 	 * @param refTree            The References Tree
 	 * @param selectionInhibitor The selectionInhibitor
 	 */
-	public AuthorPageReferencesTreeCaretListener(Supplier<WSAuthorEditorPage> authorPage, ReferencesTree refTree,
+	public AuthorPageReferencesTreeCaretListener(Supplier<WSAuthorEditorPage> authorPage, OutgoingReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
 		super(authorPage, refTree, selectionInhibitor);
 	}

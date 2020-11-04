@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +18,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class ReferencesMouseAdapter extends MouseAdapter {
 
-	private ReferencesTree refTree;
+	private OutgoingReferencesTree refTree;
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private WSEditor editorAccess;
 
@@ -39,7 +39,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	 * @param keysProvider          The keysProvider
 	 * @param editorAccess          The editorAccess
 	 */
-	public ReferencesMouseAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
+	public ReferencesMouseAdapter(OutgoingReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
 			KeysProvider keysProvider, Translator translator) {
 		super();
 		this.refTree = refTree;

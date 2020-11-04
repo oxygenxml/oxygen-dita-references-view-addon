@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -26,7 +26,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  */
 public class ReferencesKeyAdapter extends KeyAdapter {
 
-	private ReferencesTree refTree;
+	private OutgoingReferencesTree refTree;
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 	private WSEditor editorAccess;
 
@@ -50,7 +50,7 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	 * @param keysProvider          The KeysProvider
 	 * @param editorAccess          The EditorAccess
 	 */
-	public ReferencesKeyAdapter(ReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
+	public ReferencesKeyAdapter(OutgoingReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
 			KeysProvider keysProvider, Translator translator) {
 		super();
 		this.refTree = refTree;

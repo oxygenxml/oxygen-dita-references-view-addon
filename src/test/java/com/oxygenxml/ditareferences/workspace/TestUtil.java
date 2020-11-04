@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.author.AuthorDocumentControllerForTests;
 import com.oxygenxml.ditareferences.workspace.author.AuthorElementAdapter;
 import com.oxygenxml.ditareferences.workspace.author.WSAuthorEditorPageForTests;
@@ -182,7 +182,7 @@ public class TestUtil {
 	 *
 	 * @param tree The tree to dump info for.
 	 */
-	public static String dumpTree(ReferencesTree tree) {
+	public static String dumpTree(OutgoingReferencesTree tree) {
 		StringBuilder dump = new StringBuilder();
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
@@ -210,7 +210,7 @@ public class TestUtil {
 	 * 
 	 * @param tree The ReferencesTree
 	 */
-	public static String logTreeNodes(ReferencesTree tree) {
+	public static String logTreeNodes(OutgoingReferencesTree tree) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < tree.getRowCount(); i++) {
 			TreePath path = tree.getPathForRow(i);

@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinksAccessor;
 import com.oxygenxml.ditareferences.workspace.text.WSXMLTextEditorPageForTests;
 
@@ -125,7 +125,7 @@ public class RelLinksTest extends TestCase{
 		}
 	};
 
-	ReferencesTree tree = new ReferencesTree(pluginWorkspaceAccess, null, new DITAReferencesTranslatorForTests());
+	OutgoingReferencesTree tree = new OutgoingReferencesTree(pluginWorkspaceAccess, null, new DITAReferencesTranslatorForTests());
 
 	@Test
 	public void test_RenderingRelLink() {

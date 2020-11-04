@@ -10,8 +10,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.treeReferences.NodeRange;
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.NodeRange;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
@@ -40,7 +40,7 @@ public class CaretForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testCaretListener() {
-		ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
+		OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
 				null, new DITAReferencesTranslatorForTests());
 		tree.setShowing(true);
 

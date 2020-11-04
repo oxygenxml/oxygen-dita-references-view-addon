@@ -2,7 +2,7 @@ package com.oxygenxml.ditareferences.workspace.rellinks;
 
 import java.net.URL;
 
-import com.oxygenxml.ditareferences.treeReferences.NodeRange;
+import com.oxygenxml.ditareferences.tree.references.NodeRange;
 
 public abstract class RelLinkNodeRange extends NodeRange {
 	

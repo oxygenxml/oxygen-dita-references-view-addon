@@ -6,9 +6,9 @@ import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTreeCaretListener;
-import com.oxygenxml.ditareferences.treeReferences.TreeSelectionInhibitor;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.ReferencesTreeCaretListener;
+import com.oxygenxml.ditareferences.tree.references.TreeSelectionInhibitor;
 
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 
@@ -21,7 +21,7 @@ public class TextPageReferencesTreeCaretListener extends ReferencesTreeCaretList
 	 * @param refTree            The referencesTree
 	 * @param selectionInhibitor The selectionInhibitor
 	 */
-	public TextPageReferencesTreeCaretListener(Supplier<WSXMLTextEditorPage> textPage, ReferencesTree refTree,
+	public TextPageReferencesTreeCaretListener(Supplier<WSXMLTextEditorPage> textPage, OutgoingReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
 		super(textPage, refTree, selectionInhibitor);
 	}

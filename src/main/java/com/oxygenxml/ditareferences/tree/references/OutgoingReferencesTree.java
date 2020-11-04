@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -28,12 +28,12 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 @SuppressWarnings("serial")
-public class ReferencesTree extends Tree {
+public class OutgoingReferencesTree extends Tree {
 
 	/**
 	 * The ReferencesTree Logger.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(ReferencesTree.class);
+	private static final Logger LOGGER = Logger.getLogger(OutgoingReferencesTree.class);
 
 	/**
 	 * The pluginWorkspaceAccess.
@@ -81,7 +81,7 @@ public class ReferencesTree extends Tree {
 	 * @param keysProvider          The Map with the current DITA Map keys
 	 * @param translator            The translator
 	 */
-	public ReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
+	public OutgoingReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
 			Translator translator) {
 
 		this.setRootVisible(false);
@@ -147,8 +147,8 @@ public class ReferencesTree extends Tree {
 			@Override
 			public void hierarchyChanged(HierarchyEvent e) {
 				if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
-					boolean oldShowing = ReferencesTree.this.isShowing;
-					ReferencesTree.this.isShowing = isShowing();
+					boolean oldShowing = OutgoingReferencesTree.this.isShowing;
+					OutgoingReferencesTree.this.isShowing = isShowing();
 					if (isShowing && !oldShowing) {
 						refreshReferenceTreeInternal(editorAccess);
 					} else if (!isShowing) {

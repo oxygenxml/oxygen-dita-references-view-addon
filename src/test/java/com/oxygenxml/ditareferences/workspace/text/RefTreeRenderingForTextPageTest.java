@@ -10,7 +10,7 @@ import javax.swing.tree.TreePath;
 
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
@@ -29,7 +29,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  */
 public class RefTreeRenderingForTextPageTest extends TestCase {
 
-	final ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
+	final OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
 			new DITAReferencesTranslatorForTests());
 
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"

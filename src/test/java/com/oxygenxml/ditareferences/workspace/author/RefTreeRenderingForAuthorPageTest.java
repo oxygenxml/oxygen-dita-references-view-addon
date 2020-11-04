@@ -7,7 +7,7 @@ import javax.swing.tree.TreePath;
 
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
-	ReferencesTree tree = new ReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
+	OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
 			new DITAReferencesTranslatorForTests());
 
 	/**

@@ -5,7 +5,7 @@
  * Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-package com.oxygenxml.ditareferences.sideView;
+package com.oxygenxml.ditareferences.sideview;
 
 import java.awt.Color;
 import java.awt.Font;

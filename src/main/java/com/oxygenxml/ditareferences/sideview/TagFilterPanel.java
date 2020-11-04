@@ -5,7 +5,7 @@
  * Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-package com.oxygenxml.ditareferences.sideView;
+package com.oxygenxml.ditareferences.sideview;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.swing.Action;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.oxygenxml.ditareferences.treeReferences.ReferenceType;
+import com.oxygenxml.ditareferences.tree.references.ReferenceType;
 
 /**
  * Tags filter panel with exclusive actions. Every time a filter is pressed it is hidden and the others are unselected.
@@ -83,7 +83,7 @@ public abstract class TagFilterPanel extends JPanel {
           }
         }
       });
-      if(reference.contentEquals(ReferenceType.OUTCOMING.toString())) {
+      if(reference.contentEquals(ReferenceType.OUTGOING.toString())) {
         tagButton.doClick();
       }
       tagButton.setOpaque(false);

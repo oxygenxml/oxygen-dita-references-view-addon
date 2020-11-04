@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeSelectionListener.class);
 
 	/* The referencesTree. */
-	private ReferencesTree refTree;
+	private OutgoingReferencesTree refTree;
 
 	/* Set the inhibiter on false, by default. */
 	private boolean inhibitTreeSelectionListener = false;
@@ -38,7 +38,7 @@ public class ReferencesTreeSelectionListener implements TreeSelectionListener, T
 	 * 
 	 * @param refTree The ReferencesTree
 	 */
-	public ReferencesTreeSelectionListener(ReferencesTree refTree) {
+	public ReferencesTreeSelectionListener(OutgoingReferencesTree refTree) {
 		this.updateTreeTimer.setRepeats(false);
 		this.refTree = refTree;
 	}

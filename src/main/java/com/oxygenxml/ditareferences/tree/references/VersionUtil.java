@@ -5,7 +5,7 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.treeReferences;
+package com.oxygenxml.ditareferences.tree.references;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
