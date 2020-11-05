@@ -7,6 +7,7 @@
 
 package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,11 +16,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
@@ -27,12 +32,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
-import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReferencesTreeCellRenderer;
 
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspace;
@@ -48,6 +53,7 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
  *
  */
 public class IncomingReferencesPanel extends JPanel {
+  
   /**
    * Constant used for java reflexion
    */
@@ -94,6 +100,7 @@ public class IncomingReferencesPanel extends JPanel {
 
     //add tree
     referenceTree = new Tree();
+    referenceTree.setToggleClickCount(0);
     referenceTree.setRootVisible(false);
     referenceTree.setShowsRootHandles(true);
     referenceTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -109,7 +116,7 @@ public class IncomingReferencesPanel extends JPanel {
    * Refreshes the references in the given editor
    * @param workspaceAccess The WSEditor
    */
-  public void refresh(WSEditor workspaceAccess) {
+  public synchronized void refresh(WSEditor workspaceAccess) {
     if(workspaceAccess != null) {
 
       URL editorLocation = workspaceAccess.getEditorLocation();
@@ -121,7 +128,7 @@ public class IncomingReferencesPanel extends JPanel {
   * Refreshes the references in the given editor
   * @param editorLocation The location of the editor to be refreshed
   */
-  public void refresh(URL editorLocation) {
+  public synchronized void refresh(URL editorLocation) {
     if(isDisplayable()) {
       List<DocumentPositionedInfo> temp;
       try {
@@ -129,6 +136,7 @@ public class IncomingReferencesPanel extends JPanel {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
         @SuppressWarnings("serial")
         DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
+          
           public boolean isLeaf(Object node) {return false;};
         };
         DefaultMutableTreeNode ref ;
@@ -169,6 +177,15 @@ public class IncomingReferencesPanel extends JPanel {
       Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
       searchReferences.setAccessible(true);
       listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
+      listOfOngoingReferences.sort(new Comparator<DocumentPositionedInfo>() {
+
+        @Override
+        public int compare(DocumentPositionedInfo o1, DocumentPositionedInfo o2) {
+          String string1 = o1.getMessage().split(" ")[0];
+          String string2 = o2.getMessage().split(" ")[0];
+          return string1.compareTo(string2);
+        }
+      });
     } 
     return listOfOngoingReferences;
   }
@@ -180,21 +197,21 @@ public class IncomingReferencesPanel extends JPanel {
    * @param dpi  The document position info
    */
   private void selectRange(WSEditorPage page, DocumentPositionedInfo dpi) {
-    if(page instanceof WSTextBasedEditorPage) {
-      WSTextBasedEditorPage authorPage = (WSTextBasedEditorPage)page;
-      try {
-        int[] startEndOffsets = authorPage.getStartEndOffsets(dpi);
-        authorPage.select(startEndOffsets[0], startEndOffsets[1]);
-      } catch (BadLocationException e) {
-        logger.error(e, e);
-      }
-    }
+        if(page instanceof WSTextBasedEditorPage) {
+          WSTextBasedEditorPage authorPage = (WSTextBasedEditorPage)page;
+          try {
+            int[] startEndOffsets = authorPage.getStartEndOffsets(dpi);
+            authorPage.select(startEndOffsets[0], startEndOffsets[1]);
+          } catch (BadLocationException e) {
+            logger.error(e, e);
+          }
+        }
   }
   
   /**
    * Refreshes the refrences graph
    */
-  public void refreshRefrenceGraph() {
+  public synchronized void refreshRefrenceGraph() {
     graph = null;
   }
   
@@ -209,22 +226,19 @@ public class IncomingReferencesPanel extends JPanel {
       if(userObject instanceof DocumentPositionedInfo) {
         DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) userObject;
         try {
-          StringBuilder urlToOpen = new StringBuilder();
-          urlToOpen.append(referenceInfo.getSystemID());
-          urlToOpen.append("#line=");
-          urlToOpen.append(referenceInfo.getLine());
-          urlToOpen.append(";column=");
-          urlToOpen.append(referenceInfo.getColumn());
-          URL url = new URL(urlToOpen.toString());
+          URL url = new URL(referenceInfo.getSystemID());
           if(workspaceAccess.open(url)) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-              @Override
-              public void run() {
-                WSEditorPage currentPage = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA).getCurrentPage();
-                selectRange(currentPage, referenceInfo);
-              }
-            });
+            WSEditor editorAccess = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA);
+            if(editorAccess != null) {
+              WSEditorPage currentPage = editorAccess.getCurrentPage();
+              new Timer().schedule(new TimerTask() {
+                
+                @Override
+                public void run() {
+                  selectRange(currentPage, referenceInfo);
+                }
+              }, 50);
+            }
           }
         } catch (MalformedURLException e1) {
           logger.error(e1, e1);
@@ -255,7 +269,7 @@ public class IncomingReferencesPanel extends JPanel {
               }
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException
                 | MalformedURLException e1) {
-              e1.printStackTrace();
+              logger.error(e1, e1);
             } 
           }
         }
@@ -280,13 +294,43 @@ public class IncomingReferencesPanel extends JPanel {
     referenceTree.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        e.consume();
         if (e.getClickCount() == 2) {
-          e.consume();
           openFileAndSelectReference(workspaceAccess);
         }
       }
-    });
+      
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        e.consume();
+        mousePressed(e);
+      }
+      
+      @SuppressWarnings("serial")
+      @Override
+      public void mousePressed(MouseEvent e1) {
+        e1.consume();
+        if(e1.isPopupTrigger()) {
+          JPopupMenu menu = new JPopupMenu();
+          menu.add(new AbstractAction("Open reference") {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              //select the corresponding item from tree
+              int selRow = referenceTree.getRowForLocation(e1.getX(), e1.getY());
+              TreePath selPath = referenceTree.getPathForLocation(e1.getX(), e1.getY());
+              referenceTree.setSelectionPath(selPath); 
+              if (selRow>-1){
+                referenceTree.setSelectionRow(selRow); 
+              }
+              openFileAndSelectReference(workspaceAccess);
+            }
+          });
+          menu.show(e1.getComponent(), e1.getX(), e1.getY());
+        }
+      }
+    });
+    
     workspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
       @Override
       public void editorSelected(URL editorLocation) {
