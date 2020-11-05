@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import com.oxygenxml.ditareferences.tree.references.NodeRange;
-import com.oxygenxml.ditareferences.tree.references.ReferencesCollector;
+import com.oxygenxml.ditareferences.tree.references.outgoing.NodeRange;
+import com.oxygenxml.ditareferences.tree.references.outgoing.ReferencesCollector;
 
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;

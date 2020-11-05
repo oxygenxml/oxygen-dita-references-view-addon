@@ -6,9 +6,9 @@ import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.tree.references.ReferencesTreeCaretListener;
-import com.oxygenxml.ditareferences.tree.references.TreeSelectionInhibitor;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.outgoing.ReferencesTreeCaretListener;
+import com.oxygenxml.ditareferences.tree.references.outgoing.TreeSelectionInhibitor;
 
 import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 

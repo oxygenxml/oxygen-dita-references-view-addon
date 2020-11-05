@@ -5,7 +5,7 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.tree.references;
+package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -31,6 +31,9 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.ditareferences.tree.references.VersionUtil;
+import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReferencesTreeCellRenderer;
+
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.editor.WSEditor;
@@ -44,7 +47,7 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
  * @author mircea_badoi
  *
  */
-public class OutgoingReferencesPanel extends JPanel {
+public class IncomingReferencesPanel extends JPanel {
   /**
    * Constant used for java reflexion
    */
@@ -58,7 +61,7 @@ public class OutgoingReferencesPanel extends JPanel {
   /**
    * Logger for logging.
    */
-  private static final Logger logger = Logger.getLogger(OutgoingReferencesPanel.class.getName());
+  private static final Logger logger = Logger.getLogger(IncomingReferencesPanel.class.getName());
   
   /**
    * List with all ongoing references
@@ -85,7 +88,7 @@ public class OutgoingReferencesPanel extends JPanel {
    * Constructor
    * @param workspaceAccess The pluginworkspace
    */
-  public OutgoingReferencesPanel(PluginWorkspace workspaceAccess) {
+  public IncomingReferencesPanel(PluginWorkspace workspaceAccess) {
     this.workspaceAccess = workspaceAccess;
     this.setLayout(new BorderLayout());
 
@@ -94,7 +97,7 @@ public class OutgoingReferencesPanel extends JPanel {
     referenceTree.setRootVisible(false);
     referenceTree.setShowsRootHandles(true);
     referenceTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    referenceTree.setCellRenderer(new OnGoingReferencesTreeCellRenderer(workspaceAccess.getImageUtilities()));
+    referenceTree.setCellRenderer(new IncomingReferencesTreeCellRenderer(workspaceAccess.getImageUtilities()));
     ToolTipManager.sharedInstance().registerComponent(referenceTree);
     this.add(referenceTree, BorderLayout.CENTER);
     

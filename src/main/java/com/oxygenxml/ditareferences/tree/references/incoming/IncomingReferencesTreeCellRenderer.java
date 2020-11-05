@@ -5,7 +5,7 @@
 * Unauthorized copying of this file, via any medium, is strictly prohibited.
 */
 
-package com.oxygenxml.ditareferences.tree.references;
+package com.oxygenxml.ditareferences.tree.references.incoming;
 
 import java.awt.Component;
 import java.net.MalformedURLException;
@@ -29,7 +29,7 @@ import ro.sync.util.URLUtil;
  * @author mircea_badoi
  *
  */
-public class OnGoingReferencesTreeCellRenderer extends TreeCellRenderer{
+public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
   
   /**
    * Image utilities used to get icon for node
@@ -39,9 +39,9 @@ public class OnGoingReferencesTreeCellRenderer extends TreeCellRenderer{
   /**
    * Logger for logging.
    */
-  private static final Logger logger = Logger.getLogger(OutgoingReferencesPanel.class.getName());
+  private static final Logger logger = Logger.getLogger(IncomingReferencesPanel.class.getName());
 
-  public OnGoingReferencesTreeCellRenderer(ImageUtilities imageUtilities) {
+  public IncomingReferencesTreeCellRenderer(ImageUtilities imageUtilities) {
     this.imageUtilities = imageUtilities;
   }
   

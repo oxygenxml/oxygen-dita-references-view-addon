@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.tree.references;
+package com.oxygenxml.ditareferences.tree.references.outgoing;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.ditareferences.tree.references.RefUtilities;
 import com.oxygenxml.ditareferences.workspace.DITAConstants;
 
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;

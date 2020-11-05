@@ -26,10 +26,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesPanel;
 import com.oxygenxml.ditareferences.tree.references.ReferenceType;
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
+import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReferencesPanel;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -50,7 +50,7 @@ public class SideViewComponent extends JPanel {
    * @param outGoingRef The references of the dita document
    * @param onGoingRef 
    */
-  public SideViewComponent(OutgoingReferencesTree outGoingRef, OutgoingReferencesPanel onGoingRef) {
+  public SideViewComponent(OutgoingReferencesTree outGoingRef, IncomingReferencesPanel onGoingRef) {
     //set the layout for this JPanel
     setLayout(new BorderLayout());
     

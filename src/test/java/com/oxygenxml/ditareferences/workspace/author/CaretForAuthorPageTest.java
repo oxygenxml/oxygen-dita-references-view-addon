@@ -6,7 +6,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;

@@ -2,9 +2,9 @@ package com.oxygenxml.ditareferences.workspace.authorpage;
 
 import java.util.function.Supplier;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.tree.references.ReferencesTreeCaretListener;
-import com.oxygenxml.ditareferences.tree.references.TreeSelectionInhibitor;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.outgoing.ReferencesTreeCaretListener;
+import com.oxygenxml.ditareferences.tree.references.outgoing.TreeSelectionInhibitor;
 
 import ro.sync.ecss.extensions.api.AuthorCaretEvent;
 import ro.sync.ecss.extensions.api.AuthorCaretListener;

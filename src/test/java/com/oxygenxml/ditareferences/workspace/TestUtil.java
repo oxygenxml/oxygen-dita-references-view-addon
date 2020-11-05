@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.author.AuthorDocumentControllerForTests;
 import com.oxygenxml.ditareferences.workspace.author.AuthorElementAdapter;
 import com.oxygenxml.ditareferences.workspace.author.WSAuthorEditorPageForTests;

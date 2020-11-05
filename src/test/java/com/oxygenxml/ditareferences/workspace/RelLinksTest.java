@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.oxygenxml.ditareferences.tree.references.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinksAccessor;
 import com.oxygenxml.ditareferences.workspace.text.WSXMLTextEditorPageForTests;
 
