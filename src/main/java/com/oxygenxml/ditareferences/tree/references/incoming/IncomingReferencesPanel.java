@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
@@ -78,7 +79,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * List with all ongoing references
    */
-  private List<DocumentPositionedInfo> listOfOngoingReferences;
+  private List<IncomigReference> listOfOngoingReferences = new ArrayList<IncomigReference>();
   
   /**
    * JTree with ongoing references
@@ -167,7 +168,7 @@ public class IncomingReferencesPanel extends JPanel {
   */
   public synchronized void refresh(URL editorLocation) {
     if(isDisplayable()) {
-      List<DocumentPositionedInfo> temp;
+      List<IncomigReference> temp;
       try {
         temp = searchOngoingRef(editorLocation);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
@@ -178,7 +179,7 @@ public class IncomingReferencesPanel extends JPanel {
         };
         DefaultMutableTreeNode ref ;
         if(temp != null) {
-          for (DocumentPositionedInfo documentPositionedInfo : temp) {
+          for (IncomigReference documentPositionedInfo : temp) {
             ref = new DefaultMutableTreeNode(documentPositionedInfo);
             root.add(ref);
           }
@@ -201,7 +202,7 @@ public class IncomingReferencesPanel extends JPanel {
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  private List<DocumentPositionedInfo> searchOngoingRef(URL editorLocation)
+  private List<IncomigReference> searchOngoingRef(URL editorLocation)
       throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
     if(VersionUtil.isOxygenVersionNewer(23, 0)){
@@ -213,16 +214,34 @@ public class IncomingReferencesPanel extends JPanel {
       }
       Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
       searchReferences.setAccessible(true);
-      listOfOngoingReferences = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
-      listOfOngoingReferences.sort(new Comparator<DocumentPositionedInfo>() {
+      listOfOngoingReferences.clear();
+      List<DocumentPositionedInfo> result;
+      result = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
+      for (int i = 0; i < result.size(); i++) {
+        if(i>0) {
+          DocumentPositionedInfo documentPositionedInfo = result.get(i);
+          DocumentPositionedInfo documentPositionedInfo2 = result.get(i-1);
+          if(documentPositionedInfo2.getSystemID().equals(documentPositionedInfo.getSystemID())) {
+            StringBuilder build = new StringBuilder();
+            build.append(documentPositionedInfo.getSystemID());
+            build.append("(");
+            build.append(documentPositionedInfo.getLine());
+            build.append(",");
+            build.append(documentPositionedInfo.getColumn());
+            build.append(")");
+            listOfOngoingReferences.add(new IncomigReference(documentPositionedInfo, build.toString()));
+          } else {
+            listOfOngoingReferences.add(new IncomigReference(documentPositionedInfo, documentPositionedInfo.getSystemID()));
+          }
+        } else {
+          listOfOngoingReferences.add(new IncomigReference(result.get(i), result.get(i).getSystemID()));
+        }
+      }
+      listOfOngoingReferences.sort(new Comparator<IncomigReference>() {
 
         @Override
-        public int compare(DocumentPositionedInfo o1, DocumentPositionedInfo o2) {
-          String[] split = o1.getSystemID().split("/");
-          String string1 = split[split.length - 1];
-          String[] split2 = o2.getMessage().split("/");
-          String string2 = split2[split2.length - 1];
-          return string1.compareTo(string2);
+        public int compare(IncomigReference o1, IncomigReference o2) {
+          return o1.getLabelText().compareTo(o2.getLabelText());
         }
       });
     } 
@@ -235,11 +254,11 @@ public class IncomingReferencesPanel extends JPanel {
    * @param page Text / Author Page
    * @param dpi  The document position info
    */
-  private void selectRange(WSEditorPage page, DocumentPositionedInfo dpi) {
+  private void selectRange(WSEditorPage page, IncomigReference dpi) {
         if(page instanceof WSTextBasedEditorPage) {
           WSTextBasedEditorPage authorPage = (WSTextBasedEditorPage)page;
           try {
-            int[] startEndOffsets = authorPage.getStartEndOffsets(dpi);
+            int[] startEndOffsets = authorPage.getStartEndOffsets(dpi.getDPI());
             authorPage.select(startEndOffsets[0], startEndOffsets[1]);
           } catch (BadLocationException e) {
             logger.error(e, e);
@@ -262,10 +281,10 @@ public class IncomingReferencesPanel extends JPanel {
     DefaultMutableTreeNode node = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
     if (node != null) {
       Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
-      if(userObject instanceof DocumentPositionedInfo) {
-        DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) userObject;
+      if(userObject instanceof IncomigReference) {
+        IncomigReference referenceInfo = (IncomigReference) userObject;
         try {
-          URL url = new URL(referenceInfo.getSystemID());
+          URL url = new URL(referenceInfo.getDPI().getSystemID());
           if(workspaceAccess.open(url)) {
             WSEditor editorAccess = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA);
             if(editorAccess != null) {
@@ -305,9 +324,9 @@ public class IncomingReferencesPanel extends JPanel {
         if(source != null) {
           if(source.getChildCount() == 0) {
             try {
-              DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo)(source.getUserObject());
-              List<DocumentPositionedInfo> temp;
-              URL editorLocation = new URL(referenceInfo.getSystemID());
+              IncomigReference referenceInfo = (IncomigReference)(source.getUserObject());
+              List<IncomigReference> temp;
+              URL editorLocation = new URL(referenceInfo.getDPI().getSystemID());
               temp = searchOngoingRef(editorLocation);
               for (int i = 0; i < temp.size() ; i++) {
                 source.add(new DefaultMutableTreeNode(temp.get(i)));

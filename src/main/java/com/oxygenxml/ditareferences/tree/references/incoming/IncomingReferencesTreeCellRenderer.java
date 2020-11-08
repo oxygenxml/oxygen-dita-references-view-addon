@@ -19,7 +19,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.Logger;
 
-import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 import ro.sync.util.URLUtil;
@@ -57,13 +56,13 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     label.setIcon(null);
     label.setBorder(new EmptyBorder(10, 10, 10 ,10));
     if (value instanceof DefaultMutableTreeNode) {
-      if (((DefaultMutableTreeNode) value).getUserObject() instanceof DocumentPositionedInfo) {
-        DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) ((DefaultMutableTreeNode) value).getUserObject();
-        String[] split = referenceInfo.getSystemID().split("/");
+      if (((DefaultMutableTreeNode) value).getUserObject() instanceof IncomigReference) {
+        IncomigReference referenceInfo = (IncomigReference) ((DefaultMutableTreeNode) value).getUserObject();
+        String[] split = referenceInfo.getLabelText().split("/");
         label.setText(split[split.length - 1]);
-        label.setToolTipText(URLUtil.getDescription(referenceInfo.getSystemID()));
+        label.setToolTipText(URLUtil.getDescription(referenceInfo.getDPI().getSystemID()));
         try {
-          Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemID()));
+          Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getDPI().getSystemID()));
           if(iconDecoration != null) {
             label.setIcon(iconDecoration);
           }
