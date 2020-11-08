@@ -15,22 +15,16 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
-import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.tree.references.ReferenceType;
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
@@ -39,7 +33,6 @@ import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesT
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 import ro.sync.ui.Icons;
 
@@ -47,41 +40,19 @@ import ro.sync.ui.Icons;
 public class SideViewComponent extends JPanel {
   
   /**
-   * Logger for logging.
-   */
-  private static final Logger logger = Logger.getLogger(SideViewComponent.class.getName());
-  
-  /**
    * The buttons to filter the references
    */
   private TagFilterPanel filterButtons;
   
   /**
-   * Timer for loading panel
+   * the main panel with the filters buttons and refresh
    */
-  private static Timer timer = new Timer(false) ;
-  
-  /**
-   * TimerTask for loading panel
-   */
-  private TimerTask task;
-  
-  /**
-   * The ID of the pending panel.
-   */
-  public static final String LOADING_ID = "loading_panel";
+  private JPanel mainPanel;
   
   /**
    * The card layout used by the display panel.
    */
   private final CardLayout cards;
-  
-  /**
-   * The label that displays the pending loading icon with the message.
-   */
-  private JLabel loadingLabel;
-  
-  private JPanel mainPanel;
   
   /**
    * Constructor
@@ -119,8 +90,11 @@ public class SideViewComponent extends JPanel {
     
     //create and add the incoming references panel
     if(VersionUtil.isOxygenVersionNewer(23, 0)) {
-      JScrollPane incomingReferences = new JScrollPane(incomingRef);
-      mainPanel.add(incomingReferences, ReferenceType.INCOMING.toString());
+      JScrollPane incomingReferencesScrollPane = new JScrollPane(incomingRef);
+      //increment speed of the vertical and horizontal scroll
+      incomingReferencesScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+      incomingReferencesScrollPane.getHorizontalScrollBar().setUnitIncrement(10);
+      mainPanel.add(incomingReferencesScrollPane, ReferenceType.INCOMING.toString());
       JPanel optionPanel = new JPanel(new GridBagLayout());
       GridBagConstraints constr = new GridBagConstraints();
       //create refresh button
@@ -139,15 +113,7 @@ public class SideViewComponent extends JPanel {
             
             @Override
             public void run() {
-              try {
-                load(true, 300);
-                PluginWorkspace pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
-                WSEditor currentEditorAccess = pluginWorkspace.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
-                incomingRef.refreshRefrenceGraph();
-                incomingRef.refresh(currentEditorAccess);
-              } finally {
-                load(false, 0);
-              }
+              incomingRef.getRefereshAction();
             }
           } ).start();;
         }
@@ -173,7 +139,7 @@ public class SideViewComponent extends JPanel {
             cards.show(outgoingReferences.getParent(), outcoming);
           } else if(type.equals(incoming)){
             refreshButton.setVisible(true);
-            cards.show(incomingReferences.getParent(), incoming);
+            cards.show(incomingReferencesScrollPane.getParent(), incoming);
           } 
         }
       };
@@ -183,54 +149,7 @@ public class SideViewComponent extends JPanel {
       add(optionPanel, BorderLayout.NORTH);
     }
     
-    //creating loading panel
-    JPanel loadingPanel = new JPanel(new BorderLayout());
-    loadingLabel = new JLabel(Icons.getIconAnimated(Icons.PROGRESS_IMAGE), SwingConstants.LEFT);
-    loadingPanel.add(loadingLabel, BorderLayout.NORTH);
-    mainPanel.add(loadingPanel, LOADING_ID);
-    
     //add the panel with the cards to the component panel
     add(mainPanel, BorderLayout.CENTER);
   }
-  
-  /**
-   * If the list is in the loading process, a pending panel is displayed
-   * 
-   * @param inProgress <code>true</code> if the project is starting to load,
-   *                   <code>false</code> if the project was loaded.
-   * @param delay after which the function to be executed
-   */
-  public void load(final boolean inProgress, int delay) {
-    if(task != null) {
-      task.cancel();
-      task = null;
-    }
-    task = new TimerTask() {
-
-      @Override
-      public void run() {
-        try {
-          SwingUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-
-              if (inProgress) {
-                loadingLabel.setText("Loading...");
-                // Display pending panel.
-                cards.show(mainPanel, LOADING_ID);
-              } else {
-                // Display the result
-                cards.show(mainPanel, ReferenceType.INCOMING.toString());
-              }
-
-            }
-          });  
-        } catch(Exception e) {
-          logger.error(e, e);
-        }
-      }};
-      timer.schedule(task, delay);
-  }
-  
 }

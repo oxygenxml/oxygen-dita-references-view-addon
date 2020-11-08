@@ -59,7 +59,8 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     if (value instanceof DefaultMutableTreeNode) {
       if (((DefaultMutableTreeNode) value).getUserObject() instanceof DocumentPositionedInfo) {
         DocumentPositionedInfo referenceInfo = (DocumentPositionedInfo) ((DefaultMutableTreeNode) value).getUserObject();
-        label.setText(referenceInfo.getMessage().split(" ")[0]);
+        String[] split = referenceInfo.getSystemID().split("/");
+        label.setText(split[split.length - 1]);
         label.setToolTipText(URLUtil.getDescription(referenceInfo.getSystemID()));
         try {
           Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemID()));

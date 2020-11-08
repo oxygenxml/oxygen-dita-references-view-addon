@@ -7,6 +7,7 @@
 
 package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -22,9 +23,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
@@ -37,6 +41,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.ditareferences.tree.references.ReferenceType;
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 
 import ro.sync.document.DocumentPositionedInfo;
@@ -46,6 +51,7 @@ import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.WSTextBasedEditorPage;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
+import ro.sync.ui.Icons;
 
 /**
  * Present ongoing references in a JTree
@@ -87,8 +93,32 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * The plugin workspace
    */
-  @SuppressWarnings("unused")
   private PluginWorkspace workspaceAccess;
+  
+  /**
+   * Timer for loading panel
+   */
+  private static Timer timer = new Timer(false) ;
+  
+  /**
+   * TimerTask for loading panel
+   */
+  private TimerTask task;
+  
+  /**
+   * The ID of the pending panel.
+   */
+  public static final String LOADING_ID = "loading_panel";
+  
+  /**
+   * The card layout used by the display panel.
+   */
+  private final CardLayout cards;
+  
+  /**
+   * The label that displays the pending loading icon with the message.
+   */
+  private JLabel loadingLabel;
 
   /**
    * Constructor
@@ -96,7 +126,8 @@ public class IncomingReferencesPanel extends JPanel {
    */
   public IncomingReferencesPanel(PluginWorkspace workspaceAccess) {
     this.workspaceAccess = workspaceAccess;
-    this.setLayout(new BorderLayout());
+    cards = new CardLayout();
+    this.setLayout(cards);
 
     //add tree
     referenceTree = new Tree();
@@ -106,7 +137,13 @@ public class IncomingReferencesPanel extends JPanel {
     referenceTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     referenceTree.setCellRenderer(new IncomingReferencesTreeCellRenderer(workspaceAccess.getImageUtilities()));
     ToolTipManager.sharedInstance().registerComponent(referenceTree);
-    this.add(referenceTree, BorderLayout.CENTER);
+    this.add(referenceTree, ReferenceType.INCOMING.toString());
+    
+    //creating loading panel
+    JPanel loadingPanel = new JPanel(new BorderLayout());
+    loadingLabel = new JLabel(Icons.getIconAnimated(Icons.PROGRESS_IMAGE), SwingConstants.LEFT);
+    loadingPanel.add(loadingLabel, BorderLayout.NORTH);
+    this.add(loadingPanel, LOADING_ID);
     
     //install listener
     installListeners(workspaceAccess);
@@ -181,8 +218,10 @@ public class IncomingReferencesPanel extends JPanel {
 
         @Override
         public int compare(DocumentPositionedInfo o1, DocumentPositionedInfo o2) {
-          String string1 = o1.getMessage().split(" ")[0];
-          String string2 = o2.getMessage().split(" ")[0];
+          String[] split = o1.getSystemID().split("/");
+          String string1 = split[split.length - 1];
+          String[] split2 = o2.getMessage().split("/");
+          String string2 = split2[split2.length - 1];
           return string1.compareTo(string2);
         }
       });
@@ -235,7 +274,13 @@ public class IncomingReferencesPanel extends JPanel {
                 
                 @Override
                 public void run() {
-                  selectRange(currentPage, referenceInfo);
+                  SwingUtilities.invokeLater(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                      selectRange(currentPage, referenceInfo);
+                    }
+                  });
                 }
               }, 50);
             }
@@ -311,18 +356,18 @@ public class IncomingReferencesPanel extends JPanel {
       public void mousePressed(MouseEvent e1) {
         e1.consume();
         if(e1.isPopupTrigger()) {
+          //select the corresponding item from tree
+          int selRow = referenceTree.getRowForLocation(e1.getX(), e1.getY());
+          TreePath selPath = referenceTree.getPathForLocation(e1.getX(), e1.getY());
+          referenceTree.setSelectionPath(selPath); 
+          if (selRow>-1){
+            referenceTree.setSelectionRow(selRow); 
+          }
           JPopupMenu menu = new JPopupMenu();
           menu.add(new AbstractAction("Open reference") {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-              //select the corresponding item from tree
-              int selRow = referenceTree.getRowForLocation(e1.getX(), e1.getY());
-              TreePath selPath = referenceTree.getPathForLocation(e1.getX(), e1.getY());
-              referenceTree.setSelectionPath(selPath); 
-              if (selRow>-1){
-                referenceTree.setSelectionRow(selRow); 
-              }
               openFileAndSelectReference(workspaceAccess);
             }
           });
@@ -338,5 +383,58 @@ public class IncomingReferencesPanel extends JPanel {
         refresh(editorLocation);
       }
     }, PluginWorkspace.DITA_MAPS_EDITING_AREA);
+  }
+  
+  /**
+   * If the list is in the loading process, a pending panel is displayed
+   * 
+   * @param inProgress <code>true</code> if the project is starting to load,
+   *                   <code>false</code> if the project was loaded.
+   * @param delay after which the function to be executed
+   */
+  public void load(final boolean inProgress, int delay) {
+    if(task != null) {
+      task.cancel();
+      task = null;
+    }
+    task = new TimerTask() {
+
+      @Override
+      public void run() {
+        try {
+          SwingUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+
+              if (inProgress) {
+                loadingLabel.setText("Loading...");
+                // Display pending panel.
+                cards.show(IncomingReferencesPanel.this, LOADING_ID);
+              } else {
+                // Display the result
+                cards.show(IncomingReferencesPanel.this, ReferenceType.INCOMING.toString());
+              }
+
+            }
+          });  
+        } catch(Exception e) {
+          logger.error(e, e);
+        }
+      }};
+      timer.schedule(task, delay);
+  }
+  
+  /**
+   * Get the action for the refrsh button
+   */
+  public void getRefereshAction() {
+    try {
+      load(true, 300);
+      this.refreshRefrenceGraph();
+      this.refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
+    } finally {
+      load(false, 0);
+    }
   }
 }
