@@ -21,10 +21,9 @@ import org.apache.log4j.Logger;
 
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
-import ro.sync.util.URLUtil;
 
 /**
- * Ongoing tree cell renderer
+ * Incoming tree cell renderer
  * @author mircea_badoi
  *
  */
@@ -39,7 +38,11 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
    * Logger for logging.
    */
   private static final Logger logger = Logger.getLogger(IncomingReferencesPanel.class.getName());
-
+  
+  /**
+   * Parametrized constructor
+   * @param imageUtilities The image utilities(eg: from PluginWorkspace)
+   */
   public IncomingReferencesTreeCellRenderer(ImageUtilities imageUtilities) {
     this.imageUtilities = imageUtilities;
   }
@@ -48,7 +51,10 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
    * Generated UID
    */
   private static final long serialVersionUID = 1063823422174158329L;
-
+  
+  /**
+   * Overrided cell renderer component as a JLabel
+   */
   @Override
   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf,
       int row, boolean hasFocus) {
@@ -56,11 +62,10 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     label.setIcon(null);
     label.setBorder(new EmptyBorder(10, 10, 10 ,10));
     if (value instanceof DefaultMutableTreeNode) {
-      if (((DefaultMutableTreeNode) value).getUserObject() instanceof IncomigReference) {
-        IncomigReference referenceInfo = (IncomigReference) ((DefaultMutableTreeNode) value).getUserObject();
-        String[] split = referenceInfo.getLabelText().split("/");
-        label.setText(split[split.length - 1]);
-        label.setToolTipText(URLUtil.getDescription(referenceInfo.getDPI().getSystemID()));
+      if (((DefaultMutableTreeNode) value).getUserObject() instanceof IncomingReference) {
+        IncomingReference referenceInfo = (IncomingReference) ((DefaultMutableTreeNode) value).getUserObject();
+        label.setText(referenceInfo.getText());
+        label.setToolTipText(referenceInfo.getTooltipText());
         try {
           Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getDPI().getSystemID()));
           if(iconDecoration != null) {

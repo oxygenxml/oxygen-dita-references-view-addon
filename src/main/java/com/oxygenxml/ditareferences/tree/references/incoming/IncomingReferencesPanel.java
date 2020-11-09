@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +42,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
+import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.tree.references.ReferenceType;
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 
@@ -55,16 +57,20 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 import ro.sync.ui.Icons;
 
 /**
- * Present ongoing references in a JTree
+ * Present incoming references in a JTree
  * @author mircea_badoi
  *
  */
 public class IncomingReferencesPanel extends JPanel {
+  /**
+   * For translation
+   */
+  DITAReferencesTranslator translator = new DITAReferencesTranslator();
   
   /**
    * Constant used for java reflexion
    */
-  private static final String RO_SYNC_ECSS_DITA_DITA_ACCESS = "ro.sync.ecss.dita.DITAAccess";
+  private static final String DITA_ACCESS_CLASS_NAME = "ro.sync.ecss.dita.DITAAccess";
 
   /**
    * Generated UID
@@ -79,7 +85,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * List with all ongoing references
    */
-  private List<IncomigReference> listOfOngoingReferences = new ArrayList<IncomigReference>();
+  private List<IncomingReference> listOfIncomingReferences = new ArrayList<IncomingReference>();
   
   /**
    * JTree with ongoing references
@@ -167,33 +173,46 @@ public class IncomingReferencesPanel extends JPanel {
   * @param editorLocation The location of the editor to be refreshed
   */
   public synchronized void refresh(URL editorLocation) {
-    if(isDisplayable()) {
-      List<IncomigReference> temp;
-      try {
-        temp = searchOngoingRef(editorLocation);
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
-        @SuppressWarnings("serial")
-        DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
-          
-          public boolean isLeaf(Object node) {return false;};
-        };
-        DefaultMutableTreeNode ref ;
-        if(temp != null) {
-          for (IncomigReference documentPositionedInfo : temp) {
-            ref = new DefaultMutableTreeNode(documentPositionedInfo);
-            root.add(ref);
-          }
-          referenceTree.setModel(referencesTreeModel);
+    timer.schedule(new TimerTask() {
+      
+      @Override
+      public void run() {
+        if(isDisplayable()) {
+          List<IncomingReference> temp;
+          try {
+            temp = searchIncomingRef(editorLocation);
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
+            @SuppressWarnings("serial")
+            DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
+              
+              public boolean isLeaf(Object node) {return false;};
+            };
+            DefaultMutableTreeNode ref ;
+            if(temp != null) {
+              for (IncomingReference incomingReference : temp) {
+                ref = new DefaultMutableTreeNode(incomingReference);
+                root.add(ref);
+              }
+              SwingUtilities.invokeLater(new Runnable() {
+                
+                @Override
+                public void run() {
+                  referenceTree.setModel(referencesTreeModel);
+                }
+              });
+            }
+          } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            logger.error(e, e);
+          } 
         }
-      } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-        logger.error(e, e);
       }
-    }
+    }, 10);
+   
   }
   
   
   /**
-   * Search for ongoing references and creates a tree with them
+   * Search for ongoing references and compute the label for them
    * @param editorLocation The editor to search location
    * @return The list of found ongoing references
    * @throws ClassNotFoundException
@@ -202,11 +221,11 @@ public class IncomingReferencesPanel extends JPanel {
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  private List<IncomigReference> searchOngoingRef(URL editorLocation)
+  private List<IncomingReference> searchIncomingRef(URL editorLocation)
       throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
     if(VersionUtil.isOxygenVersionNewer(23, 0)){
-      Class<?> ditaAccess = Class.forName(RO_SYNC_ECSS_DITA_DITA_ACCESS);
+      Class<?> ditaAccess = Class.forName(DITA_ACCESS_CLASS_NAME);
       if(graph == null) {
         Method createReferencesGraph = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
         createReferencesGraph.setAccessible(true);
@@ -214,38 +233,33 @@ public class IncomingReferencesPanel extends JPanel {
       }
       Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
       searchReferences.setAccessible(true);
-      listOfOngoingReferences.clear();
+      listOfIncomingReferences.clear();
       List<DocumentPositionedInfo> result;
       result = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
-      for (int i = 0; i < result.size(); i++) {
+      for (DocumentPositionedInfo documentPositionedInfo : result) {
+        listOfIncomingReferences.add(new IncomingReference(documentPositionedInfo));
+      }
+      Collections.sort(listOfIncomingReferences);
+      for (int i = 0; i < listOfIncomingReferences.size(); i++) {
         if(i>0) {
-          DocumentPositionedInfo documentPositionedInfo = result.get(i);
-          DocumentPositionedInfo documentPositionedInfo2 = result.get(i-1);
-          if(documentPositionedInfo2.getSystemID().equals(documentPositionedInfo.getSystemID())) {
-            StringBuilder build = new StringBuilder();
-            build.append(documentPositionedInfo.getSystemID());
-            build.append("(");
-            build.append(documentPositionedInfo.getLine());
-            build.append(",");
-            build.append(documentPositionedInfo.getColumn());
-            build.append(")");
-            listOfOngoingReferences.add(new IncomigReference(documentPositionedInfo, build.toString()));
+          IncomingReference ref1 = listOfIncomingReferences.get(i - 1);
+          IncomingReference ref2 = listOfIncomingReferences.get(i);
+          if(ref1.getSystemId().equals(ref2.getSystemId())) {
+            ref1.buildLabel();
+            ref2.buildLabel();
           } else {
-            listOfOngoingReferences.add(new IncomigReference(documentPositionedInfo, documentPositionedInfo.getSystemID()));
+            ref2.setLabelText(ref2.getSystemId());
           }
-        } else {
-          listOfOngoingReferences.add(new IncomigReference(result.get(i), result.get(i).getSystemID()));
+        } 
+      }
+      if(listOfIncomingReferences.size() > 0) {
+        IncomingReference incomingReference = listOfIncomingReferences.get(0);
+        if(incomingReference.getLabelText() == null) {
+          incomingReference.setLabelText(incomingReference.getDPI().getSystemID());
         }
       }
-      listOfOngoingReferences.sort(new Comparator<IncomigReference>() {
-
-        @Override
-        public int compare(IncomigReference o1, IncomigReference o2) {
-          return o1.getLabelText().compareTo(o2.getLabelText());
-        }
-      });
     } 
-    return listOfOngoingReferences;
+    return listOfIncomingReferences;
   }
   
   /**
@@ -254,7 +268,7 @@ public class IncomingReferencesPanel extends JPanel {
    * @param page Text / Author Page
    * @param dpi  The document position info
    */
-  private void selectRange(WSEditorPage page, IncomigReference dpi) {
+  private void selectRange(WSEditorPage page, IncomingReference dpi) {
         if(page instanceof WSTextBasedEditorPage) {
           WSTextBasedEditorPage authorPage = (WSTextBasedEditorPage)page;
           try {
@@ -267,13 +281,6 @@ public class IncomingReferencesPanel extends JPanel {
   }
   
   /**
-   * Refreshes the refrences graph
-   */
-  public synchronized void refreshRefrenceGraph() {
-    graph = null;
-  }
-  
-  /**
    * Opens the selected Dita file and selects within it the location of the reference
    * @param workspaceAccess The plugin workspace
    */
@@ -281,15 +288,15 @@ public class IncomingReferencesPanel extends JPanel {
     DefaultMutableTreeNode node = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
     if (node != null) {
       Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
-      if(userObject instanceof IncomigReference) {
-        IncomigReference referenceInfo = (IncomigReference) userObject;
+      if(userObject instanceof IncomingReference) {
+        IncomingReference referenceInfo = (IncomingReference) userObject;
         try {
           URL url = new URL(referenceInfo.getDPI().getSystemID());
           if(workspaceAccess.open(url)) {
             WSEditor editorAccess = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA);
             if(editorAccess != null) {
               WSEditorPage currentPage = editorAccess.getCurrentPage();
-              new Timer().schedule(new TimerTask() {
+              timer.schedule(new TimerTask() {
                 
                 @Override
                 public void run() {
@@ -324,10 +331,10 @@ public class IncomingReferencesPanel extends JPanel {
         if(source != null) {
           if(source.getChildCount() == 0) {
             try {
-              IncomigReference referenceInfo = (IncomigReference)(source.getUserObject());
-              List<IncomigReference> temp;
+              IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
+              List<IncomingReference> temp;
               URL editorLocation = new URL(referenceInfo.getDPI().getSystemID());
-              temp = searchOngoingRef(editorLocation);
+              temp = searchIncomingRef(editorLocation);
               for (int i = 0; i < temp.size() ; i++) {
                 source.add(new DefaultMutableTreeNode(temp.get(i)));
               }
@@ -378,12 +385,14 @@ public class IncomingReferencesPanel extends JPanel {
           //select the corresponding item from tree
           int selRow = referenceTree.getRowForLocation(e1.getX(), e1.getY());
           TreePath selPath = referenceTree.getPathForLocation(e1.getX(), e1.getY());
-          referenceTree.setSelectionPath(selPath); 
-          if (selRow>-1){
-            referenceTree.setSelectionRow(selRow); 
+          if(selPath != null) {
+            referenceTree.setSelectionPath(selPath); 
+            if (selRow>-1){
+              referenceTree.setSelectionRow(selRow); 
+            }
           }
           JPopupMenu menu = new JPopupMenu();
-          menu.add(new AbstractAction("Open reference") {
+          menu.add(new AbstractAction(translator.getTranslation(Tags.OPEN_REFERENCE)) {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -450,7 +459,7 @@ public class IncomingReferencesPanel extends JPanel {
   public void getRefereshAction() {
     try {
       load(true, 300);
-      this.refreshRefrenceGraph();
+      graph = null;
       this.refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
     } finally {
       load(false, 0);

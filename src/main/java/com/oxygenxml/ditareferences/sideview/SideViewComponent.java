@@ -83,7 +83,6 @@ public class SideViewComponent extends JPanel {
           outgoingRef.expandAllRows();
           outgoingRef.setSelectionPath(selectionPath);
         });
-
       }
     });
     mainPanel.add(outgoingReferences, ReferenceType.OUTGOING.toString());
