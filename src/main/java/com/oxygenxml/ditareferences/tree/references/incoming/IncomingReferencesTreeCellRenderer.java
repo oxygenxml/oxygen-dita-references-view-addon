@@ -64,10 +64,10 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     if (value instanceof DefaultMutableTreeNode) {
       if (((DefaultMutableTreeNode) value).getUserObject() instanceof IncomingReference) {
         IncomingReference referenceInfo = (IncomingReference) ((DefaultMutableTreeNode) value).getUserObject();
-        label.setText(referenceInfo.getText());
+        label.setText(referenceInfo.getRenderText());
         label.setToolTipText(referenceInfo.getTooltipText());
         try {
-          Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getDPI().getSystemID()));
+          Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemId()));
           if(iconDecoration != null) {
             label.setIcon(iconDecoration);
           }

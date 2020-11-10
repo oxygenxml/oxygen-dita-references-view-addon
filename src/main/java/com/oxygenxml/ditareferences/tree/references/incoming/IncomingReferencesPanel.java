@@ -245,18 +245,10 @@ public class IncomingReferencesPanel extends JPanel {
           IncomingReference ref1 = listOfIncomingReferences.get(i - 1);
           IncomingReference ref2 = listOfIncomingReferences.get(i);
           if(ref1.getSystemId().equals(ref2.getSystemId())) {
-            ref1.buildLabel();
-            ref2.buildLabel();
-          } else {
-            ref2.setLabelText(ref2.getSystemId());
-          }
+            ref1.setShowExtraLineNumberInformation();
+            ref2.setShowExtraLineNumberInformation();
+          } 
         } 
-      }
-      if(listOfIncomingReferences.size() > 0) {
-        IncomingReference incomingReference = listOfIncomingReferences.get(0);
-        if(incomingReference.getLabelText() == null) {
-          incomingReference.setLabelText(incomingReference.getDPI().getSystemID());
-        }
       }
     } 
     return listOfIncomingReferences;
@@ -291,7 +283,7 @@ public class IncomingReferencesPanel extends JPanel {
       if(userObject instanceof IncomingReference) {
         IncomingReference referenceInfo = (IncomingReference) userObject;
         try {
-          URL url = new URL(referenceInfo.getDPI().getSystemID());
+          URL url = new URL(referenceInfo.getSystemId());
           if(workspaceAccess.open(url)) {
             WSEditor editorAccess = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA);
             if(editorAccess != null) {
@@ -333,7 +325,7 @@ public class IncomingReferencesPanel extends JPanel {
             try {
               IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
               List<IncomingReference> temp;
-              URL editorLocation = new URL(referenceInfo.getDPI().getSystemID());
+              URL editorLocation = new URL(referenceInfo.getSystemId());
               temp = searchIncomingRef(editorLocation);
               for (int i = 0; i < temp.size() ; i++) {
                 source.add(new DefaultMutableTreeNode(temp.get(i)));

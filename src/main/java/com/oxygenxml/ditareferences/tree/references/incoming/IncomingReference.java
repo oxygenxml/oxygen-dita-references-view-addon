@@ -23,9 +23,14 @@ public class IncomingReference implements Comparable<IncomingReference> {
   private DocumentPositionedInfo dpi;
   
   /**
-   * The label text for the refrence
+   * The file name of the reference
    */
-  private String labelText;
+  private String fileName;
+  
+  /**
+   * Additional line number information
+   */
+  private String additionalInformation;
   
   /**
    * Parametrized constructor
@@ -33,26 +38,27 @@ public class IncomingReference implements Comparable<IncomingReference> {
    */
   public IncomingReference(DocumentPositionedInfo dpi) {
     this.dpi = dpi;
-    this.labelText = dpi.getSystemID();
+    this.fileName = URLUtil.extractFileName(dpi.getSystemID());
+    if(fileName == null) {
+    	fileName = "";
+    }
   }
   
   /**
-   * Build label with colomn and line details
+   * Build label with column and line details
    * @param dpi The DocumentPositionedInfo
    */
-  public void buildLabel() {
+  public void setShowExtraLineNumberInformation() {
     StringBuilder build = new StringBuilder();
-    build.append(dpi.getSystemID());
     build.append("[");
     build.append(dpi.getLine());
     build.append(":");
     build.append(dpi.getColumn());
     build.append("]");
-    this.labelText = build.toString();
+    this.additionalInformation = build.toString();
   }
   
   /**
-   * 
    * @return The DocumentPositionedInfo
    */
   public DocumentPositionedInfo getDPI() {
@@ -60,38 +66,15 @@ public class IncomingReference implements Comparable<IncomingReference> {
   }
   
   /**
-   * Sets the DocumentPositionedInfo
-   * @param info DocumentPositionedInfo
-   */
-  public void setDPI(DocumentPositionedInfo info) {
-    this.dpi = info;
-  }
-  
-  /**
-   * @return The text used for the label not formated
-   */
-  public String getLabelText() {
-    return labelText;
-  }
-  
-  /**
-   * Sets the text used for the label of the reference
-   * @param labelText
-   */
-  public void setLabelText(String labelText) {
-    this.labelText = labelText;
-  }
-  
-  /**
    * 
    * @return The formatted text for the label 
    */
-  public String getText() {
-    if(labelText != null) {
-      String[] split = labelText.split("/");
-      return split[split.length - 1];
-    }
-    return null;
+  public String getRenderText() {
+	  if(additionalInformation == null) {
+		  return fileName;
+	  } else {
+		  return fileName + " " + additionalInformation;
+	  }
   }
   
   /**
@@ -112,6 +95,6 @@ public class IncomingReference implements Comparable<IncomingReference> {
 
   @Override
   public int compareTo(IncomingReference o) {
-    return this.getText().compareTo(o.getText());
+    return this.fileName.compareTo(o.fileName);
   }
 }
