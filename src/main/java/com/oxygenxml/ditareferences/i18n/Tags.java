@@ -65,4 +65,19 @@ public class Tags {
 	 */
 	public static final String SHOW_DEFINITION_LOCATION = "Show_definition_location";
 	
+	/**
+   * Loading...
+   */
+  public static final String LOADING = "Loading";
+  
+  /**
+   * "Incoming References"
+   */
+  public static final String INCOMING_REFERENCES = "Incoming_References";
+  
+  /**
+   * Refresh incoming references
+   */
+  public static final String REFRESH_INCOMING_REFERENCES = "Refresh_Incoming_References";
+	
 }

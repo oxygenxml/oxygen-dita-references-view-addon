@@ -24,6 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -105,12 +106,17 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * Timer for loading panel
    */
-  private static Timer timer = new Timer(false) ;
+  private static Timer loadingInProgressTimer = new Timer(false) ;
+  
+  /**
+   * Timer for loading panel
+   */
+  private static Timer refreshTimer = new Timer(false) ;
   
   /**
    * TimerTask for loading panel
    */
-  private TimerTask task;
+  private TimerTask loadingInProgressTask;
   
   /**
    * The ID of the pending panel.
@@ -126,11 +132,17 @@ public class IncomingReferencesPanel extends JPanel {
    * The label that displays the pending loading icon with the message.
    */
   private JLabel loadingLabel;
+  
+  /**
+   * Refresh action
+   */
+  private AbstractAction refreshAction;
 
   /**
    * Constructor
    * @param workspaceAccess The pluginworkspace
    */
+  @SuppressWarnings("serial")
   public IncomingReferencesPanel(PluginWorkspace workspaceAccess) {
     this.workspaceAccess = workspaceAccess;
     cards = new CardLayout();
@@ -154,6 +166,27 @@ public class IncomingReferencesPanel extends JPanel {
     
     //install listener
     installListeners(workspaceAccess);
+    
+    //create refresh action
+    Icon icon = (Icon) workspaceAccess.getImageUtilities().loadIcon(ro.sync.exml.Oxygen.class.getResource(Icons.REFRESH));
+    refreshAction = new AbstractAction(translator.getTranslation(Tags.REFRESH_INCOMING_REFERENCES),icon) {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        graph = null;
+        refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
+      }
+    };
+  }
+  
+  /**
+   * Notify about the selected tab
+   * @param selected true if incoming tab is selected, false otherwise
+   */
+  public void setTabSelected(boolean selected) {
+    if(selected) {
+      refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
+    }
   }
   
   /**
@@ -172,16 +205,17 @@ public class IncomingReferencesPanel extends JPanel {
   * Refreshes the references in the given editor
   * @param editorLocation The location of the editor to be refreshed
   */
-  public synchronized void refresh(URL editorLocation) {
-    timer.schedule(new TimerTask() {
+  private synchronized void refresh(URL editorLocation) {
+    refreshTimer.schedule(new TimerTask() {
       
       @Override
       public void run() {
-        if(isDisplayable()) {
+        if(isShowing()) {
           List<IncomingReference> temp;
           try {
+            updateInProgressStatus(true, 50);
             temp = searchIncomingRef(editorLocation);
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode("Ongoing References");
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES));
             @SuppressWarnings("serial")
             DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
               
@@ -203,7 +237,9 @@ public class IncomingReferencesPanel extends JPanel {
             }
           } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e, e);
-          } 
+          } finally {
+            updateInProgressStatus(false, 0);
+          }
         }
       }
     }, 10);
@@ -288,7 +324,7 @@ public class IncomingReferencesPanel extends JPanel {
             WSEditor editorAccess = workspaceAccess.getEditorAccess(url, PluginWorkspace.MAIN_EDITING_AREA);
             if(editorAccess != null) {
               WSEditorPage currentPage = editorAccess.getCurrentPage();
-              timer.schedule(new TimerTask() {
+              refreshTimer.schedule(new TimerTask() {
                 
                 @Override
                 public void run() {
@@ -412,13 +448,12 @@ public class IncomingReferencesPanel extends JPanel {
    *                   <code>false</code> if the project was loaded.
    * @param delay after which the function to be executed
    */
-  public void load(final boolean inProgress, int delay) {
-    if(task != null) {
-      task.cancel();
-      task = null;
+  private void updateInProgressStatus(final boolean inProgress, int delay) {
+    if(loadingInProgressTask != null) {
+      loadingInProgressTask.cancel();
+      loadingInProgressTask = null;
     }
-    task = new TimerTask() {
-
+    loadingInProgressTask = new TimerTask() {
       @Override
       public void run() {
         try {
@@ -428,7 +463,7 @@ public class IncomingReferencesPanel extends JPanel {
             public void run() {
 
               if (inProgress) {
-                loadingLabel.setText("Loading...");
+                loadingLabel.setText(translator.getTranslation(Tags.LOADING));
                 // Display pending panel.
                 cards.show(IncomingReferencesPanel.this, LOADING_ID);
               } else {
@@ -439,22 +474,17 @@ public class IncomingReferencesPanel extends JPanel {
             }
           });  
         } catch(Exception e) {
+          e.printStackTrace();
           logger.error(e, e);
         }
       }};
-      timer.schedule(task, delay);
+      loadingInProgressTimer.schedule(loadingInProgressTask, delay);
   }
   
   /**
-   * Get the action for the refrsh button
+   * Get the action for the refresh button
    */
-  public void getRefereshAction() {
-    try {
-      load(true, 300);
-      graph = null;
-      this.refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
-    } finally {
-      load(false, 0);
-    }
+  public AbstractAction getRefereshAction() {
+      return refreshAction;
   }
 }

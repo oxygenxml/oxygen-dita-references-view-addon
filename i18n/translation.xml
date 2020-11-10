@@ -87,5 +87,30 @@
         <val lang="ja_JP">Show definition location</val>
         <val lang="nl_NL">Show definition location</val>        
     </key>
-
+    
+    <key value="Loading">
+        <comment>loading label</comment>
+        <val lang="en_US">Loading</val>
+        <val lang="de_DE">Loading</val>
+        <val lang="fr_FR">Loading</val>
+        <val lang="ja_JP">Loading</val>
+        <val lang="nl_NL">Loading</val>        
+    </key>
+    
+    <key value="Refresh_Incoming_References">
+        <val lang="en_US">Refresh incoming references</val>
+        <val lang="de_DE">Refresh incoming references</val>
+        <val lang="fr_FR">Refresh incoming references</val>
+        <val lang="ja_JP">Refresh incoming references</val>
+        <val lang="nl_NL">Refresh incoming references</val>        
+    </key>
+    
+    <key value="Incoming_References">
+        <val lang="en_US">Incoming references</val>
+        <val lang="de_DE">Incoming references</val>
+        <val lang="fr_FR">Incoming references</val>
+        <val lang="ja_JP">Incoming references</val>
+        <val lang="nl_NL">Incoming references</val>        
+    </key>
+    
 </translation>

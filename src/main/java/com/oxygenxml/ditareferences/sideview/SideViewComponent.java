@@ -12,12 +12,10 @@ import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,10 +29,7 @@ import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReferencesPanel;
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
 
-import ro.sync.exml.workspace.api.PluginWorkspace;
-import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
-import ro.sync.ui.Icons;
 
 @SuppressWarnings("serial")
 public class SideViewComponent extends JPanel {
@@ -102,24 +97,9 @@ public class SideViewComponent extends JPanel {
       constr.anchor = GridBagConstraints.NORTHEAST;
       constr.fill = GridBagConstraints.NONE;
       constr.gridx++;
-      PluginWorkspace pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
-      Icon icon = (Icon) pluginWorkspace.getImageUtilities().loadIcon(ro.sync.exml.Oxygen.class.getResource(Icons.REFRESH));
-      JButton refreshButton = new ToolbarButton(new AbstractAction() {
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          new Thread(new Runnable() {
-            
-            @Override
-            public void run() {
-              incomingRef.getRefereshAction();
-            }
-          } ).start();;
-        }
-      }, false);
-      refreshButton.setIcon(icon);
+      AbstractAction refreshAction = incomingRef.getRefereshAction();
+      JButton refreshButton = new ToolbarButton(refreshAction, false);
       refreshButton.setVisible(false);
-      refreshButton.setToolTipText("Refresh incoming references");
       optionPanel.add(refreshButton, constr);
       
       //create filter buttons
@@ -131,14 +111,16 @@ public class SideViewComponent extends JPanel {
       filterButtons = new TagFilterPanel("References") {
         @Override
         void showPanel(String type) {
-          String outcoming = ReferenceType.OUTGOING.toString();
+          String outgoing = ReferenceType.OUTGOING.toString();
           String incoming = ReferenceType.INCOMING.toString();
-          if(type.equals(outcoming)) {
+          if(type.equals(outgoing)) {
             refreshButton.setVisible(false);
-            cards.show(outgoingReferences.getParent(), outcoming);
+            cards.show(outgoingReferences.getParent(), outgoing);
+            incomingRef.setTabSelected(false);
           } else if(type.equals(incoming)){
             refreshButton.setVisible(true);
             cards.show(incomingReferencesScrollPane.getParent(), incoming);
+            incomingRef.setTabSelected(true);
           } 
         }
       };
