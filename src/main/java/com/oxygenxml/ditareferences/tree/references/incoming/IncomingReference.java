@@ -86,10 +86,13 @@ public class IncomingReference implements Comparable<IncomingReference> {
     tooltip.append("<html><p>");
     tooltip.append(URLUtil.getDescription(dpi.getSystemID()));
     tooltip.append("</p>");
-    tooltip.append("<p>Referred at line: ");
+    tooltip.append(dpi.getMessage());
+    tooltip.append("[");
+    tooltip.append("line: ");
     tooltip.append(dpi.getLine());
-    tooltip.append(" and column: ");
+    tooltip.append(", column: ");
     tooltip.append(dpi.getColumn());
+    tooltip.append("]");
     tooltip.append("</p></html>");
     
     return tooltip.toString();

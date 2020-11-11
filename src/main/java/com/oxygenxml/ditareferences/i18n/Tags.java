@@ -79,5 +79,15 @@ public class Tags {
    * Refresh incoming references
    */
   public static final String REFRESH_INCOMING_REFERENCES = "Refresh_Incoming_References";
+  
+  /**
+   * line
+   */
+  public static final String LINE = "Line";
+  
+  /**
+   * column
+   */
+  public static final String COLUMN = "Column";
 	
 }

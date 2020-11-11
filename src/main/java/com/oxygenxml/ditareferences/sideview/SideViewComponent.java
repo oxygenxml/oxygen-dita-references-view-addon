@@ -92,7 +92,7 @@ public class SideViewComponent extends JPanel {
       JPanel optionPanel = new JPanel(new GridBagLayout());
       GridBagConstraints constr = new GridBagConstraints();
       //create refresh button
-      constr.insets = new Insets(10, 0, 0, 0);
+      constr.insets = new Insets(0, 0, 0, 0);
       constr.weightx = 1;
       constr.anchor = GridBagConstraints.NORTHEAST;
       constr.fill = GridBagConstraints.NONE;
@@ -103,7 +103,6 @@ public class SideViewComponent extends JPanel {
       optionPanel.add(refreshButton, constr);
       
       //create filter buttons
-      constr.insets = new Insets(0, 0, 0, 0);
       constr.gridx = 0;
       constr.gridy = 0;
       constr.fill = GridBagConstraints.HORIZONTAL;

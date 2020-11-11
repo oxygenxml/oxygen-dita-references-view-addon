@@ -44,7 +44,7 @@ public abstract class TagFilterPanel extends JPanel {
    * @param textLabel The text that describes what buttons do
    */
   public TagFilterPanel(String textLabel) {
-    super(new WrapLayout(WrapLayout.LEFT, 1, 7));
+    super(new WrapLayout(WrapLayout.LEFT, 1, 0));
     if (textLabel != null) {
       label = new JLabel(textLabel + ": ");
     }

@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
+import ro.sync.util.URLUtil;
 
 /**
  * Incoming tree cell renderer
@@ -67,8 +68,8 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
         label.setToolTipText(referenceInfo.getTooltipText());
         try {
           Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemId()));
-          String systemId = referenceInfo.getSystemId();
-          if(systemId.endsWith(".dita")) {
+          String fileName = URLUtil.extractFileName(referenceInfo.getSystemId());
+          if(fileName.endsWith(".dita") || fileName.endsWith(".xml")) {
             URL resource = getClass().getResource("/images/DitaTopicRef16.png");
             iconDecoration = (Icon) imageUtilities.loadIcon(resource);
           } 

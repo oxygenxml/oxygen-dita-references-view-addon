@@ -53,7 +53,7 @@
         <val lang="de_DE">Inhaltsreferenzen</val>
         <val lang="fr_FR">Références de contenu</val>
         <val lang="ja_JP">コンテンツ参照</val>
-        <val lang="nl_NL">Content references</val>        
+        <val lang="nl_NL">Inhoudelijke verwijzingen</val>        
     </key> 
     <key value="Cross_references">
         <comment>Cross references = internal links.</comment>
@@ -111,6 +111,22 @@
         <val lang="fr_FR">Références entrantes</val>
         <val lang="ja_JP">着信参照</val>
         <val lang="nl_NL">Inkomende referenties</val>        
+    </key>
+    
+    <key value="Line">
+        <val lang="en_US">line</val>
+        <val lang="de_DE">linie</val>
+        <val lang="fr_FR">ligne</val>
+        <val lang="ja_JP">ライン</val>
+        <val lang="nl_NL">lijn</val>        
+    </key>
+    
+    <key value="Column">
+        <val lang="en_US">column</val>
+        <val lang="de_DE">säule</val>
+        <val lang="fr_FR">colonne</val>
+        <val lang="ja_JP">ライン</val>
+        <val lang="nl_NL">kolom</val>        
     </key>
     
 </translation>
