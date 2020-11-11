@@ -14,7 +14,6 @@ import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
-import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.Logger;
@@ -60,7 +59,6 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
       int row, boolean hasFocus) {
     JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     label.setIcon(null);
-    label.setBorder(new EmptyBorder(10, 10, 10 ,10));
     if (value instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
       if (node.getUserObject() instanceof IncomingReference) {
@@ -69,6 +67,11 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
         label.setToolTipText(referenceInfo.getTooltipText());
         try {
           Icon iconDecoration = (Icon) imageUtilities.getIconDecoration(new URL(referenceInfo.getSystemId()));
+          String systemId = referenceInfo.getSystemId();
+          if(systemId.endsWith(".dita")) {
+            URL resource = getClass().getResource("/images/DitaTopicRef16.png");
+            iconDecoration = (Icon) imageUtilities.loadIcon(resource);
+          } 
           if(iconDecoration != null) {
             label.setIcon(iconDecoration);
           }
@@ -79,4 +82,5 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     }
     return label;
   }
+  
 }
