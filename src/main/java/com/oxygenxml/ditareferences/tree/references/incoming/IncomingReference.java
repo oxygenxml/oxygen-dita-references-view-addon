@@ -82,7 +82,17 @@ public class IncomingReference implements Comparable<IncomingReference> {
    * @return The text for the tooltip
    */
   public String getTooltipText() {
-    return URLUtil.getDescription(dpi.getSystemID());
+    StringBuilder tooltip = new StringBuilder();
+    tooltip.append("<html><p>");
+    tooltip.append(URLUtil.getDescription(dpi.getSystemID()));
+    tooltip.append("</p>");
+    tooltip.append("<p>Referred at line: ");
+    tooltip.append(dpi.getLine());
+    tooltip.append(" and column: ");
+    tooltip.append(dpi.getColumn());
+    tooltip.append("</p></html>");
+    
+    return tooltip.toString();
   }
   
   /**

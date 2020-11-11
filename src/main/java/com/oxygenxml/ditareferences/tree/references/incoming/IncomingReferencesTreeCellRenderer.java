@@ -62,8 +62,9 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
     label.setIcon(null);
     label.setBorder(new EmptyBorder(10, 10, 10 ,10));
     if (value instanceof DefaultMutableTreeNode) {
-      if (((DefaultMutableTreeNode) value).getUserObject() instanceof IncomingReference) {
-        IncomingReference referenceInfo = (IncomingReference) ((DefaultMutableTreeNode) value).getUserObject();
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+      if (node.getUserObject() instanceof IncomingReference) {
+        IncomingReference referenceInfo = (IncomingReference) (node.getUserObject());
         label.setText(referenceInfo.getRenderText());
         label.setToolTipText(referenceInfo.getTooltipText());
         try {
