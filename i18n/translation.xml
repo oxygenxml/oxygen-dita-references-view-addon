@@ -11,106 +11,106 @@
         <comment>The DITA outgoing references side-view.</comment>
         <val lang="en_US">DITA References</val>
         <val lang="de_DE">DITA Referenzen</val>
-        <val lang="fr_FR">DITA References</val>
-        <val lang="ja_JP">DITA References</val>
-        <val lang="nl_NL">DITA References</val>
+        <val lang="fr_FR">Références DITA</val>
+        <val lang="ja_JP">DITAリファレンス</val>
+        <val lang="nl_NL">DITA-referenties</val>
     </key>  
     <key value="Outgoing_references_not_available">
         <comment>There are no references available for that type of file.</comment>
         <val lang="en_US">Outgoing references not available.</val>
         <val lang="de_DE">Ausgehende Verknüpfungen nicht verfügbar.</val>
-        <val lang="fr_FR">Outgoing references not available.</val>
-        <val lang="ja_JP">Outgoing references not available.</val>
-        <val lang="nl_NL">Outgoing references not available.</val>        
+        <val lang="fr_FR">Références sortantes non disponibles.</val>
+        <val lang="ja_JP">発信参照は利用できません。</val>
+        <val lang="nl_NL">Uitgaande referenties niet beschikbaar.</val>        
     </key>  
     <key value="No_outgoing_references_found">
         <comment>The File/New action. Creates a new document.</comment>
         <val lang="en_US">No outgoing references found.</val>
         <val lang="de_DE">Keine ausgehende Verknüpfungen gefunden.</val>
-        <val lang="fr_FR">No outgoing references found.</val>
-        <val lang="ja_JP">No outgoing references found.</val>
-        <val lang="nl_NL">No outgoing references found.</val>        
+        <val lang="fr_FR">Aucune référence sortante trouvée.</val>
+        <val lang="ja_JP">Aucune référence sortante trouvée.</val>
+        <val lang="nl_NL">Geen uitgaande referenties gevonden.</val>        
     </key>
     <key value="Root_references">
         <comment>The File/New action. Creates a new document.</comment>
         <val lang="en_US">Root</val>
         <val lang="de_DE">Wurzel</val>
-        <val lang="fr_FR">Root</val>
-        <val lang="ja_JP">Root</val>
-        <val lang="nl_NL">Root</val>        
+        <val lang="fr_FR">Racine</val>
+        <val lang="ja_JP">ルート</val>
+        <val lang="nl_NL">Wortel</val>        
     </key> 
     <key value="Media_references">
         <comment>Media references (direct or indirect).</comment>
         <val lang="en_US">Media</val>
         <val lang="de_DE">Medien</val> 
-        <val lang="fr_FR">Media</val>
-        <val lang="ja_JP">Media</val>
+        <val lang="fr_FR">Médias</val>
+        <val lang="ja_JP">メディア</val>
         <val lang="nl_NL">Media</val>
     </key> 
     <key value="Content_references">
         <comment>The content references.</comment>
         <val lang="en_US">Content references</val>
         <val lang="de_DE">Inhaltsreferenzen</val>
-        <val lang="fr_FR">Content references</val>
-        <val lang="ja_JP">Content references</val>
+        <val lang="fr_FR">Références de contenu</val>
+        <val lang="ja_JP">コンテンツ参照</val>
         <val lang="nl_NL">Content references</val>        
     </key> 
     <key value="Cross_references">
         <comment>Cross references = internal links.</comment>
         <val lang="en_US">Cross references</val>
         <val lang="de_DE">Kreuzreferenzen</val>
-        <val lang="fr_FR">Cross references</val>
-        <val lang="ja_JP">Cross references</val>
-        <val lang="nl_NL">Cross references</val>        
+        <val lang="fr_FR">Références croisées</val>
+        <val lang="ja_JP">クロスリファレンス</val>
+        <val lang="nl_NL">Kruisverwijzing</val>        
     </key> 
     <key value="Related_links">
         <comment>Related links to the context.</comment>
         <val lang="en_US">Related links</val>
         <val lang="de_DE">Ähnliche Verknüpfungen</val>
-        <val lang="fr_FR">Related links</val>
-        <val lang="ja_JP">Related links</val>
-        <val lang="nl_NL">Related links</val>        
+        <val lang="fr_FR">Liens connexes</val>
+        <val lang="ja_JP">関連リンク</val>
+        <val lang="nl_NL">Gerelateerde Links</val>        
     </key> 
     <key value="Open_reference">
         <comment>Open the reference in an application.</comment>
         <val lang="en_US">Open reference</val>
         <val lang="de_DE">Referenz öffnen</val>
-        <val lang="fr_FR">Open reference</val>
-        <val lang="ja_JP">Open reference</val>
-        <val lang="nl_NL">Open reference</val>        
+        <val lang="fr_FR">Référence ouverte</val>
+        <val lang="ja_JP">オープンリファレンス</val>
+        <val lang="nl_NL">Open referentie</val>        
     </key>
 	<key value="Show_definition_location">
         <comment>Show the definition location in an application.</comment>
         <val lang="en_US">Show definition location</val>
         <val lang="de_DE">Definitionsort anzeigen</val>
-        <val lang="fr_FR">Show definition location</val>
-        <val lang="ja_JP">Show definition location</val>
-        <val lang="nl_NL">Show definition location</val>        
+        <val lang="fr_FR">Afficher l'emplacement de la définition</val>
+        <val lang="ja_JP">定義場所を表示</val>
+        <val lang="nl_NL">Toon definitie locatie</val>        
     </key>
     
     <key value="Loading">
         <comment>loading label</comment>
-        <val lang="en_US">Loading</val>
-        <val lang="de_DE">Loading</val>
-        <val lang="fr_FR">Loading</val>
-        <val lang="ja_JP">Loading</val>
-        <val lang="nl_NL">Loading</val>        
+        <val lang="en_US">Loading...</val>
+        <val lang="de_DE">Wird geladen...</val>
+        <val lang="fr_FR">Chargement...</val>
+        <val lang="ja_JP">読み込み中...</val>
+        <val lang="nl_NL">Bezig met laden...</val>        
     </key>
     
     <key value="Refresh_Incoming_References">
         <val lang="en_US">Refresh incoming references</val>
-        <val lang="de_DE">Refresh incoming references</val>
-        <val lang="fr_FR">Refresh incoming references</val>
-        <val lang="ja_JP">Refresh incoming references</val>
-        <val lang="nl_NL">Refresh incoming references</val>        
+        <val lang="de_DE">Aktualisieren Sie eingehende Referenzen</val>
+        <val lang="fr_FR">Actualiser les références entrantes</val>
+        <val lang="ja_JP">着信参照を更新する</val>
+        <val lang="nl_NL">Vernieuw inkomende referenties</val>        
     </key>
     
     <key value="Incoming_References">
         <val lang="en_US">Incoming references</val>
-        <val lang="de_DE">Incoming references</val>
-        <val lang="fr_FR">Incoming references</val>
-        <val lang="ja_JP">Incoming references</val>
-        <val lang="nl_NL">Incoming references</val>        
+        <val lang="de_DE">Eingehende Referenzen</val>
+        <val lang="fr_FR">Références entrantes</val>
+        <val lang="ja_JP">着信参照</val>
+        <val lang="nl_NL">Inkomende referenties</val>        
     </key>
     
 </translation>
