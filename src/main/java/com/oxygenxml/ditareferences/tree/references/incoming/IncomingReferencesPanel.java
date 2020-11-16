@@ -66,7 +66,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * For translation
    */
-  DITAReferencesTranslator translator = new DITAReferencesTranslator();
+  private DITAReferencesTranslator translator = new DITAReferencesTranslator();
   
   /**
    * Constant used for java reflexion
