@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Format;
-
-import com.google.common.annotations.VisibleForTesting;
 
 public class RelLinksAccessor {
 	private static final Logger LOGGER = Logger.getLogger(RelLinksAccessor.class);
@@ -17,7 +14,6 @@ public class RelLinksAccessor {
 		// private constructor
 	}
 
-	@VisibleForTesting
 	public static boolean forTests = false;
 
 	/**

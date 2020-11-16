@@ -155,7 +155,6 @@ public class RelLinksTest extends TestCase{
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		RelLinksAccessor.forTests = true;
 		tree.refresh(editorAccess);
-
 		tree.setSelectionRow(2);
 		TestUtil.simulateDoubleClick(tree);
 		assertTrue("Should have worked " + String.valueOf(urlToExternal.get(0)),

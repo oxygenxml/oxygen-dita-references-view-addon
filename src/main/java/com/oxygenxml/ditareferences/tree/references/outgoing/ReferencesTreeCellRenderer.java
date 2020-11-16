@@ -33,10 +33,10 @@ import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 @SuppressWarnings("serial")
 public class ReferencesTreeCellRenderer extends TreeCellRenderer {	
 	/* The translator of the DITA reference categories. */
-	private Translator translator;
+	private transient Translator translator;
 
 	/* The keysProvider. */
-	private KeysProvider keysProvider;
+	private transient KeysProvider keysProvider;
 
 	/* Icons for leaf nodes. */
 	private ImageIcon imageIcon = null;
