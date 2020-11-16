@@ -14,7 +14,7 @@ public class RelLinksAccessor {
 		// private constructor
 	}
 
-	public static boolean forTests = false;
+	private static final boolean forTests = true;
 
 	/**
 	 * Get RelationshipTable Target URLs using reflection.

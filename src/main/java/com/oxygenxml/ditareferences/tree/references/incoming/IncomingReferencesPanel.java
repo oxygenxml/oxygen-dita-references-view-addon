@@ -474,7 +474,6 @@ public class IncomingReferencesPanel extends JPanel {
             }
           });  
         } catch(Exception e) {
-          e.printStackTrace();
           logger.error(e, e);
         }
       }};
