@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
+import com.oxygenxml.ditareferences.workspace.rellinks.RelLinksAccessor;
 import com.oxygenxml.ditareferences.workspace.text.WSXMLTextEditorPageForTests;
 
 import junit.framework.TestCase;
@@ -130,6 +131,7 @@ public class RelLinksTest extends TestCase{
 	public void test_RenderingRelLink() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
+		RelLinksAccessor.forTests = true;
 		tree.refresh(editorAccess);
 
 		assertEquals(3, tree.getRowCount());
@@ -151,6 +153,7 @@ public class RelLinksTest extends TestCase{
 	public void test_OpenExternalRelLink() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
+		RelLinksAccessor.forTests = true;
 		tree.refresh(editorAccess);
 
 		tree.setSelectionRow(2);

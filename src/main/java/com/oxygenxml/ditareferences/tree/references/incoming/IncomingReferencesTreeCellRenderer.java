@@ -32,12 +32,12 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
   /**
    * Image utilities used to get icon for node
    */
-  private ImageUtilities imageUtilities;
+  private transient ImageUtilities imageUtilities;
   
   /**
    * Logger for logging.
    */
-  private static final Logger logger = Logger.getLogger(IncomingReferencesPanel.class.getName());
+  private static final Logger logger = Logger.getLogger(IncomingReferencesTreeCellRenderer.class.getName());
   
   /**
    * Parametrized constructor

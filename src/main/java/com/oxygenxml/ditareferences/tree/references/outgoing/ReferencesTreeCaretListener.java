@@ -33,7 +33,7 @@ public abstract class ReferencesTreeCaretListener<T extends WSEditorPage> implem
 	 * @param refTree            The references Tree
 	 * @param selectionInhibitor The boolean for the selection
 	 */
-	public ReferencesTreeCaretListener(Supplier<T> editorPage, OutgoingReferencesTree refTree,
+	protected ReferencesTreeCaretListener(Supplier<T> editorPage, OutgoingReferencesTree refTree,
 			TreeSelectionInhibitor selectionInhibitor) {
 		this.updateCaretTimer.setRepeats(false);
 

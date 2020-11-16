@@ -7,6 +7,8 @@
 
 package com.oxygenxml.ditareferences.tree.references.incoming;
 
+import java.util.Objects;
+
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 
@@ -116,7 +118,20 @@ public class IncomingReference implements Comparable<IncomingReference> {
   public String getSystemId() {
     return dpi.getSystemID();
   }
-
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    IncomingReference other = (IncomingReference) obj;
+    return Objects.equals(additionalInformation, other.additionalInformation) && Objects.equals(dpi, other.dpi)
+        && Objects.equals(fileName, other.fileName) && Objects.equals(translator, other.translator);
+  }
+  
   @Override
   public int compareTo(IncomingReference o) {
     return this.fileName.compareTo(o.fileName);

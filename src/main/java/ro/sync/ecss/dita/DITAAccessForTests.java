@@ -20,13 +20,11 @@ public class DITAAccessForTests{
 	}
 	 /**
 	   * Get the list of related links from all the relationship tables defined in the DITA Maps.
-	   * @param originatorURL The topic for which we are searching for outgoing links.
-	   * 
 	   * @return The list of related links from all the relationship tables defined in the DITA Maps.
 	   * 
 	   * @since 22
 	   */
-	public static List<RelLink> getRelatedLinksFromReltable(URL originatorURL){
+	public static List<RelLink> getRelatedLinksFromReltable(){
 		List<RelLink> links = new ArrayList<>();
 		try {
 			links.add(new RelLinkImpl(

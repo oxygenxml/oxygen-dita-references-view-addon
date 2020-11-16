@@ -29,10 +29,10 @@ public class OpenReferenceAction extends AbstractAction {
   /* The OpenReferenceAction Logger. */
 	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
 
-	private NodeRange nodeRange;
-	private WSEditor editorAccess;
-	private StandalonePluginWorkspace pluginWorkspaceAccess;
-	private KeysProvider keysProvider;
+	private transient NodeRange nodeRange;
+	private transient WSEditor editorAccess;
+	private transient StandalonePluginWorkspace pluginWorkspaceAccess;
+	private transient KeysProvider keysProvider;
 
 	/**
 	 * Constructor for popUp menu triggered by right click.
@@ -88,56 +88,47 @@ public class OpenReferenceAction extends AbstractAction {
 		LinkedHashMap<String, KeyInfo> referencesKeys = keysProvider != null ? keysProvider.getKeys(editorLocation) : null;
 
 		try {
-			if (keyrefAttrValue != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = RefUtilities.getKeyInfoFromReference(keyrefAttrValue, referencesKeys);
-					if (value != null) {
-						URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, value.getHrefValue(), value.getHrefLocation());
-						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
-						openReferences(url, classAttrValue, formatAttrValue);
-					}
-				}
-			} else if (conkeyrefAttrValue != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = RefUtilities.getKeyInfoFromReference(conkeyrefAttrValue, referencesKeys);
-					if (value != null) {
-						URL url = value.getHrefLocation();
-						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
-						openReferences(url, classAttrValue, formatAttrValue);
-					}
-				}
-			} else if (datakeyrefAttrValue != null) {
-				if (referencesKeys != null) {
-					KeyInfo value = RefUtilities.getKeyInfoFromReference(datakeyrefAttrValue, referencesKeys);
-					if (value != null) {
-						URL url = value.getHrefLocation();
-						formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
-						openReferences(url, classAttrValue, formatAttrValue);
-					}
-				}
-			} else if (hrefAttrValue != null) {
-				// possible URL if the protocol name is already inserted in the href reference
-				// by user, otherwise it needs to be added
-				URL possibleURL = new URL(editorLocation, hrefAttrValue);
-				URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, hrefAttrValue, possibleURL);
-				openReferences(url, classAttrValue, formatAttrValue);
+		  if (keyrefAttrValue != null && referencesKeys != null) {
+		    KeyInfo value = RefUtilities.getKeyInfoFromReference(keyrefAttrValue, referencesKeys);
+		    if (value != null) {
+		      URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, value.getHrefValue(), value.getHrefLocation());
+		      formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
+		      openReferences(url, classAttrValue, formatAttrValue);
+		    }
+		  } else if (conkeyrefAttrValue != null && referencesKeys != null) {
+		    KeyInfo value = RefUtilities.getKeyInfoFromReference(conkeyrefAttrValue, referencesKeys);
+		    if (value != null) {
+		      URL url = value.getHrefLocation();
+		      formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
+		      openReferences(url, classAttrValue, formatAttrValue);
+		    }
+		  } else if (datakeyrefAttrValue != null && referencesKeys != null) {
+		    KeyInfo value = RefUtilities.getKeyInfoFromReference(datakeyrefAttrValue, referencesKeys);
+		    if (value != null) {
+		      URL url = value.getHrefLocation();
+		      formatAttrValue = value.getAttributes().get(DITAConstants.FORMAT);
+		      openReferences(url, classAttrValue, formatAttrValue);
+		    }
+		  } else if (hrefAttrValue != null) {
+		    // possible URL if the protocol name is already inserted in the href reference
+		    // by user, otherwise it needs to be added
+		    URL possibleURL = new URL(editorLocation, hrefAttrValue);
+		    URL url = RefUtilities.getURLForHTTPHost(formatAttrValue, hrefAttrValue, possibleURL);
+		    openReferences(url, classAttrValue, formatAttrValue);
 
-			} else if (conrefAttrValue != null) {
-				URL url = new URL(editorLocation, conrefAttrValue);
-				openReferences(url, classAttrValue, formatAttrValue);
+		  } else if (conrefAttrValue != null) {
+		    URL url = new URL(editorLocation, conrefAttrValue);
+		    openReferences(url, classAttrValue, formatAttrValue);
 
-			} else if (dataAttrValue != null) {
-				URL dataUrl = new URL(editorLocation, dataAttrValue);
-				openReferences(dataUrl, classAttrValue, formatAttrValue);
-			}
+		  } else if (dataAttrValue != null) {
+		    URL dataUrl = new URL(editorLocation, dataAttrValue);
+		    openReferences(dataUrl, classAttrValue, formatAttrValue);
+		  }
 
 		} catch (MalformedURLException e1) {
 			LOGGER.debug(e1, e1);
 		}
 	}
-
-
-
 
 	/**
 	 * Open references from attribute with either Oxygen or an associated

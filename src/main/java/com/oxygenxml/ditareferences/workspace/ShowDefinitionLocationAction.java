@@ -17,8 +17,8 @@ public class ShowDefinitionLocationAction extends AbstractAction {
 	 */
 	private static final String TEXT_XML = "text/xml";
 	
-	private RelLinkNodeRange relLinkNodeRange;
-	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	private transient RelLinkNodeRange relLinkNodeRange;
+	private transient StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/**
 	 * Construct the Action for showing the definition location.

@@ -86,7 +86,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * List with all ongoing references
    */
-  private List<IncomingReference> listOfIncomingReferences = new ArrayList<IncomingReference>();
+  private transient List<IncomingReference> listOfIncomingReferences = new ArrayList<>();
   
   /**
    * JTree with ongoing references
@@ -96,17 +96,17 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * References graph
    */
-  private Object graph;
+  private transient Object graph;
   
   /**
    * The plugin workspace
    */
-  private PluginWorkspace workspaceAccess;
+  private transient PluginWorkspace workspaceAccess;
   
   /**
    * Timer for loading panel
    */
-  private static Timer loadingInProgressTimer = new Timer(false) ;
+  private static transient Timer loadingInProgressTimer = new Timer(false) ;
   
   /**
    * Timer for loading panel
@@ -218,22 +218,16 @@ public class IncomingReferencesPanel extends JPanel {
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES));
             @SuppressWarnings("serial")
             DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
-              
+              @Override
               public boolean isLeaf(Object node) {return false;};
             };
-            DefaultMutableTreeNode ref ;
+            
             if(temp != null) {
               for (IncomingReference incomingReference : temp) {
-                ref = new DefaultMutableTreeNode(incomingReference);
+                DefaultMutableTreeNode ref = new DefaultMutableTreeNode(incomingReference);
                 root.add(ref);
               }
-              SwingUtilities.invokeLater(new Runnable() {
-                
-                @Override
-                public void run() {
-                  referenceTree.setModel(referencesTreeModel);
-                }
-              });
+              SwingUtilities.invokeLater(() -> referenceTree.setModel(referencesTreeModel));
             }
           } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e, e);
@@ -264,11 +258,9 @@ public class IncomingReferencesPanel extends JPanel {
       Class<?> ditaAccess = Class.forName(DITA_ACCESS_CLASS_NAME);
       if(graph == null) {
         Method createReferencesGraph = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
-        createReferencesGraph.setAccessible(true);
         graph = createReferencesGraph.invoke(null);
       }
       Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class, Object.class);
-      searchReferences.setAccessible(true);
       listOfIncomingReferences.clear();
       List<DocumentPositionedInfo> result;
       result = (List<DocumentPositionedInfo>) searchReferences.invoke(null,editorLocation, graph);
@@ -315,7 +307,7 @@ public class IncomingReferencesPanel extends JPanel {
   private void openFileAndSelectReference(PluginWorkspace workspaceAccess) {
     DefaultMutableTreeNode node = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
     if (node != null) {
-      Object userObject = ((DefaultMutableTreeNode) node).getUserObject();
+      Object userObject =  node.getUserObject();
       if(userObject instanceof IncomingReference) {
         IncomingReference referenceInfo = (IncomingReference) userObject;
         try {
@@ -328,13 +320,7 @@ public class IncomingReferencesPanel extends JPanel {
                 
                 @Override
                 public void run() {
-                  SwingUtilities.invokeLater(new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                      selectRange(currentPage, referenceInfo);
-                    }
-                  });
+                  SwingUtilities.invokeLater(() -> {selectRange(currentPage, referenceInfo);});
                 }
               }, 50);
             }
@@ -356,21 +342,19 @@ public class IncomingReferencesPanel extends JPanel {
       @Override
       public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
         DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
-        if(source != null) {
-          if(source.getChildCount() == 0) {
-            try {
-              IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
-              List<IncomingReference> temp;
-              URL editorLocation = new URL(referenceInfo.getSystemId());
-              temp = searchIncomingRef(editorLocation);
-              for (int i = 0; i < temp.size() ; i++) {
-                source.add(new DefaultMutableTreeNode(temp.get(i)));
-              }
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException
-                | MalformedURLException e1) {
-              logger.error(e1, e1);
-            } 
-          }
+        if(source != null && source.getChildCount() == 0) {
+          try {
+            IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
+            List<IncomingReference> temp;
+            URL editorLocation = new URL(referenceInfo.getSystemId());
+            temp = searchIncomingRef(editorLocation);
+            for (int i = 0; i < temp.size() ; i++) {
+              source.add(new DefaultMutableTreeNode(temp.get(i)));
+            }
+          } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException
+              | MalformedURLException e1) {
+            logger.error(e1, e1);
+          } 
         }
       }
 
@@ -457,21 +441,17 @@ public class IncomingReferencesPanel extends JPanel {
       @Override
       public void run() {
         try {
-          SwingUtilities.invokeAndWait(new Runnable() {
+          SwingUtilities.invokeAndWait(() -> {
 
-            @Override
-            public void run() {
-
-              if (inProgress) {
-                loadingLabel.setText(translator.getTranslation(Tags.LOADING));
-                // Display pending panel.
-                cards.show(IncomingReferencesPanel.this, LOADING_ID);
-              } else {
-                // Display the result
-                cards.show(IncomingReferencesPanel.this, ReferenceType.INCOMING.toString());
-              }
-
+            if (inProgress) {
+              loadingLabel.setText(translator.getTranslation(Tags.LOADING));
+              // Display pending panel.
+              cards.show(IncomingReferencesPanel.this, LOADING_ID);
+            } else {
+              // Display the result
+              cards.show(IncomingReferencesPanel.this, ReferenceType.INCOMING.toString());
             }
+
           });  
         } catch(Exception e) {
           logger.error(e, e);

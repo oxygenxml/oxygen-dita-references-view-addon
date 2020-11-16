@@ -7,6 +7,7 @@
 
 package com.oxygenxml.ditareferences.sideview;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +44,8 @@ public abstract class TagFilterPanel extends JPanel {
    * Constructor
    * @param textLabel The text that describes what buttons do
    */
-  public TagFilterPanel(String textLabel) {
-    super(new WrapLayout(WrapLayout.LEFT, 1, 0));
+  protected TagFilterPanel(String textLabel) {
+    super(new WrapLayout(FlowLayout.LEFT, 1, 0));
     if (textLabel != null) {
       label = new JLabel(textLabel + ": ");
     }

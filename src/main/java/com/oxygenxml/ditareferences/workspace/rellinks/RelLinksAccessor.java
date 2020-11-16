@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Format;
+
+import com.google.common.annotations.VisibleForTesting;
 
 public class RelLinksAccessor {
 	private static final Logger LOGGER = Logger.getLogger(RelLinksAccessor.class);
@@ -14,7 +17,8 @@ public class RelLinksAccessor {
 		// private constructor
 	}
 
-	private static final boolean forTests = true;
+	@VisibleForTesting
+	public static boolean forTests = false;
 
 	/**
 	 * Get RelationshipTable Target URLs using reflection.
@@ -26,15 +30,15 @@ public class RelLinksAccessor {
 		List<RelLink> links = new ArrayList<>();
 
 		try {
-			Class ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
+			Class<?> ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
 			Method getRelLinks = ditaAccessClass.getDeclaredMethod("getRelatedLinksFromReltable", URL.class);
-			List allLinks = (List) getRelLinks.invoke(null, topicURL);
+			List<?> allLinks = (List<?>) getRelLinks.invoke(null, topicURL);
 
 			if (allLinks != null) {
 				int size = allLinks.size();
 				for (int i = 0; i < size; i++) {
 					Object relLink = allLinks.get(i);
-					Class relLinkClass = relLink.getClass();
+					Class<? extends Object> relLinkClass = relLink.getClass();
 					Method getSource = relLinkClass.getMethod("getSourceURL");
 					URL sourceURL = (URL) getSource.invoke(relLink);
 					

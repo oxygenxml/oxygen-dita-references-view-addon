@@ -19,11 +19,11 @@ public class WorkspaceAccessPlugin extends Plugin {
    */
   public WorkspaceAccessPlugin(PluginDescriptor descriptor) {
     super(descriptor);
-
-    if (instance != null) {
+    if(instance == null) {
+      instance = this;
+    } else {
       throw new IllegalStateException("Already instantiated!");
     }
-    instance = this;
   }
   
   /**

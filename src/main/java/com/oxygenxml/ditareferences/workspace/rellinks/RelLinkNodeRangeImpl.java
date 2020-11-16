@@ -40,7 +40,7 @@ public class RelLinkNodeRangeImpl extends RelLinkNodeRange {
 	}
 
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
-		return null;
+		return new int[0];
 	}
 
 	public String getNodeName() {

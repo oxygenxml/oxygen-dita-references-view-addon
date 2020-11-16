@@ -4,6 +4,11 @@ package com.oxygenxml.ditareferences.workspace;
  * Constants class for icons.
  */
 public class Icons {
+  
+  //Private constructor
+  private Icons() {
+    //avoid instantiation
+  }
 
 	/**
 	 * Used as view icon.

@@ -1,5 +1,7 @@
 package com.oxygenxml.ditareferences.i18n;
 
+import java.io.Serializable;
+
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
@@ -9,9 +11,14 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  * @author Alexandra_Dinisor
  *
  */
-public class DITAReferencesTranslator implements Translator {
+public class DITAReferencesTranslator implements Translator, Serializable {
 
-	public DITAReferencesTranslator() {
+	/**
+   * Generated UID
+   */
+  private static final long serialVersionUID = -5909408625888871637L;
+
+  public DITAReferencesTranslator() {
 		// empty constructor
 	}
 	

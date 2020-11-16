@@ -40,7 +40,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/* Provider of keys for the current DITA Map. */
-	private KeysProvider keysProvider = editorLocation -> DITAAccess.getKeys(editorLocation);
+	private KeysProvider keysProvider = DITAAccess::getKeys;
 
 	/* The tree with the outgoing references. */
 	private OutgoingReferencesTree refTreeOut;

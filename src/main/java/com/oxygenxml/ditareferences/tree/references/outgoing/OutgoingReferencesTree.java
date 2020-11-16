@@ -1,7 +1,6 @@
 package com.oxygenxml.ditareferences.tree.references.outgoing;
 
 import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,27 +37,18 @@ public class OutgoingReferencesTree extends Tree {
 	/**
 	 * The pluginWorkspaceAccess.
 	 */
-	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	private transient StandalonePluginWorkspace pluginWorkspaceAccess;
 
 	/**
 	 * The editorAccess.
 	 */
-	private WSEditor editorAccess;
+	private transient WSEditor editorAccess;
 
-	/**
-	 * Get the editorAccess.
-	 * 
-	 * @return The editorAccess
-	 */
-	public WSEditor getEditorAccess() {
-		return editorAccess;
-	}
-
-	private ReferencesMouseAdapter refMouseAdapter;
-	private ReferencesKeyAdapter enterKeyAdapter;
-	private ReferencesTreeSelectionListener refTreeSelectionListener;
-	private TextPageReferencesTreeCaretListener textPageCaretListener;
-	private AuthorPageReferencesTreeCaretListener authorPageCaretListener;
+	private transient ReferencesMouseAdapter refMouseAdapter;
+	private transient ReferencesKeyAdapter enterKeyAdapter;
+	private transient ReferencesTreeSelectionListener refTreeSelectionListener;
+	private transient TextPageReferencesTreeCaretListener textPageCaretListener;
+	private transient AuthorPageReferencesTreeCaretListener authorPageCaretListener;
 
 	/**
 	 * True if the tree is showing.
@@ -142,21 +132,17 @@ public class OutgoingReferencesTree extends Tree {
 		this.addKeyListener(this.enterKeyAdapter);
 		
 		// add Hierarchy Listener when side-view is not hidden
-		this.addHierarchyListener(new HierarchyListener() {
-
-			@Override
-			public void hierarchyChanged(HierarchyEvent e) {
-				if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
-					boolean oldShowing = OutgoingReferencesTree.this.isShowing;
-					OutgoingReferencesTree.this.isShowing = isShowing();
-					if (isShowing && !oldShowing) {
-						refreshReferenceTreeInternal(editorAccess);
-					} else if (!isShowing) {
-						refreshReferenceTreeInternal(null);
-					}
-				}
-			}
-		});
+		this.addHierarchyListener(e -> {
+    	if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+    		boolean oldShowing = OutgoingReferencesTree.this.isShowing;
+    		OutgoingReferencesTree.this.isShowing = isShowing();
+    		if (isShowing && !oldShowing) {
+    			refreshReferenceTreeInternal(editorAccess);
+    		} else if (!isShowing) {
+    			refreshReferenceTreeInternal(null);
+    		}
+    	}
+    });
 	}
 
 	/**
@@ -294,5 +280,14 @@ public class OutgoingReferencesTree extends Tree {
 			this.expandRow(i);
 		}
 	}
+	
+	/**
+   * Get the editorAccess.
+   * 
+   * @return The editorAccess
+   */
+  public WSEditor getEditorAccess() {
+    return editorAccess;
+  }
 	
 }

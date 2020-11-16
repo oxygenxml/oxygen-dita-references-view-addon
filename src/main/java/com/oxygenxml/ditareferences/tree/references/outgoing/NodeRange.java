@@ -58,36 +58,15 @@ public abstract class NodeRange {
 	 *         found.
 	 */
 	String getDisplayText() {
-		String keyrefAttr = this.getAttributeValue(DITAConstants.KEYREF);
-		if (keyrefAttr != null) {
-			return keyrefAttr;
-		} else {
-			String datakeyrefAttr = this.getAttributeValue(DITAConstants.DATAKEYREF);
-			if (datakeyrefAttr != null) {
-				return datakeyrefAttr;
-			} else {
-				String conkeyrefAttr = this.getAttributeValue(DITAConstants.CONKEYREF);
-				if (conkeyrefAttr != null) {
-					return conkeyrefAttr;
-				} else {
-					String hrefAttr = this.getAttributeValue(DITAConstants.HREF);
-					if (hrefAttr != null) {
-						return hrefAttr;
-					} else {
-						String conrefAttr = this.getAttributeValue(DITAConstants.CONREF);
-						if (conrefAttr != null) {
-							return conrefAttr;
-						} else {
-							String dataAttr = this.getAttributeValue(DITAConstants.DATA);
-							if (dataAttr != null) {
-								return dataAttr;
-							}
-						}
-					}
-				}
-			}
-		}
-		return null;
+	  String[] ditaConstants = {DITAConstants.KEYREF, DITAConstants.DATAKEYREF,
+	      DITAConstants.CONKEYREF, DITAConstants.HREF, DITAConstants.CONREF, DITAConstants.DATA};
+	  for (int i = 0; i < ditaConstants.length; i++) {
+	    String attributeValue = this.getAttributeValue(ditaConstants[i]);
+	    if(attributeValue != null) {
+	      return attributeValue;
+	    }
+	  }
+	  return null;
 	}
 
 	/**
@@ -98,55 +77,42 @@ public abstract class NodeRange {
 	 *         found.
 	 */
 	String getTooltipText(LinkedHashMap<String, KeyInfo> referencesKeys) {
-		String keyrefAttr = this.getAttributeValue(DITAConstants.KEYREF);
-		String formatAttr = this.getAttributeValue(DITAConstants.FORMAT);
+	  String formatAttr = this.getAttributeValue(DITAConstants.FORMAT);
+	  String attribute = this.getAttributeValue(DITAConstants.KEYREF);
+	  String toReturn = null;
 
-		if (keyrefAttr != null) {
-			KeyInfo value = RefUtilities.getKeyInfoFromReference(keyrefAttr, referencesKeys);
-			if (value != null) {
-				try {
-					return RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
-				} catch (MalformedURLException e) {
-					LOGGER.debug(e, e);
-				}
-			}
-		} else {
-			String datakeyrefAttr = this.getAttributeValue(DITAConstants.DATAKEYREF);
-			if (datakeyrefAttr != null) {
-				KeyInfo value = RefUtilities.getKeyInfoFromReference(datakeyrefAttr, referencesKeys);
-				if (value != null) {
-					try {
-						return RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
-					} catch (MalformedURLException e) {
-						LOGGER.debug(e, e);
-					}
-				}
-			} else {
-				String conkeyrefAttr = this.getAttributeValue(DITAConstants.CONKEYREF);
-				if (conkeyrefAttr != null) {
-					KeyInfo value = RefUtilities.getKeyInfoFromReference(conkeyrefAttr, referencesKeys);
-					if (value != null) {
-						return value.getHrefLocation().toString();
-					}
-				} else {
-					String hrefAttr = this.getAttributeValue(DITAConstants.HREF);
-					if (hrefAttr != null) {
-						return hrefAttr;
-					} else {
-						String conrefAttr = this.getAttributeValue(DITAConstants.CONREF);
-						if (conrefAttr != null) {
-							return conrefAttr;
-						} else {
-							String dataAttr = this.getAttributeValue(DITAConstants.DATA);
-							if (dataAttr != null) {
-								return dataAttr;
-							}
-						}
-					}
-				}
-			}
-		}
-		return null;
+	  if (attribute != null) {
+	    KeyInfo value = RefUtilities.getKeyInfoFromReference(attribute, referencesKeys);
+	    if (value != null) {
+	      try {
+	        toReturn = RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
+	      } catch (MalformedURLException e) {
+	        LOGGER.debug(e, e);
+	      }
+	    }
+	  } else if((attribute = this.getAttributeValue(DITAConstants.DATAKEYREF)) != null) {
+	    KeyInfo value = RefUtilities.getKeyInfoFromReference(attribute, referencesKeys);
+	    if (value != null) {
+	      try {
+	        toReturn =  RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
+	      } catch (MalformedURLException e) {
+	        LOGGER.debug(e, e);
+	      }
+	    }
+	  } else if((attribute = this.getAttributeValue(DITAConstants.CONKEYREF)) != null) {
+	    KeyInfo value = RefUtilities.getKeyInfoFromReference(attribute, referencesKeys);
+	    if (value != null) {
+	      toReturn =  value.getHrefLocation().toString();
+	    }
+	  } else if((attribute = this.getAttributeValue(DITAConstants.HREF)) != null) {
+	    toReturn =  attribute;
+	  } else if((attribute = this.getAttributeValue(DITAConstants.CONREF)) != null) {
+	    toReturn =  attribute;
+	  } else if((attribute = this.getAttributeValue(DITAConstants.DATA)) != null){
+	    toReturn =  attribute;
+	  }
+
+	  return toReturn;
 	}
 
 	/**

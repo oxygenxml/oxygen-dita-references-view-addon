@@ -26,12 +26,10 @@ public class StringUtilities {
 		String toDisplayString = referenceAttributeValue;
 
 		char[] charArray = referenceAttributeValue.toCharArray();
-		if (fontMetrics.charsWidth(charArray, 0, charArray.length) <= width) {
-			toDisplayString = referenceAttributeValue;
-		} else {
-			// search through delimiters for possible string
-			toDisplayString = searchThroughDelimiters(fontMetrics, referenceAttributeValue, width, toDisplayString);
-		}
+		if (fontMetrics.charsWidth(charArray, 0, charArray.length) >= width) {
+		// search through delimiters for possible string
+      toDisplayString = searchThroughDelimiters(fontMetrics, referenceAttributeValue, width, toDisplayString);
+		} 
 		return toDisplayString;
 	}
 

@@ -2,7 +2,7 @@ package com.oxygenxml.ditareferences.tree.references;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.oxygenxml.ditareferences.workspace.DITAConstants;
@@ -10,6 +10,13 @@ import com.oxygenxml.ditareferences.workspace.DITAConstants;
 import ro.sync.ecss.dita.reference.keyref.KeyInfo;
 
 public class RefUtilities {
+  
+  /**
+   * Private constructor
+   */
+  private RefUtilities() {
+    //do not instantiate
+  }
 
 	/**
 	 * Get the specific KeyInfo of the given key after removing the "/" if any. in
@@ -18,7 +25,7 @@ public class RefUtilities {
 	 * @param keyAttrValue The key reference attribute value
 	 * @param keys         The LinkedHashMap with all the keys
 	 */
-	public static KeyInfo getKeyInfoFromReference(String keyAttrValue, LinkedHashMap<String, KeyInfo> keys) {
+	public static KeyInfo getKeyInfoFromReference(String keyAttrValue, Map<String, KeyInfo> keys) {
 		if(keys != null) {
 			StringTokenizer st = new StringTokenizer(keyAttrValue, "/");
 			String keyName = null;

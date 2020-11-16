@@ -33,19 +33,6 @@ public final class  VersionUtil {
     //private to avoid instantiation
   }
 
-  //helper class
-  private static class Helper{
-    private static final VersionUtil uniqueInstance = new VersionUtil();
-  }
-
-  /**
-   * 
-   * @return the instance of VersionUtil class
-   */
-  public static VersionUtil getInstance() {
-    return Helper.uniqueInstance;
-  }
-
  /**
   * Compare versions of Oxygen
   * eg: 22.1
@@ -92,7 +79,7 @@ public final class  VersionUtil {
       String version = pluginWorkspace.getVersion();
       if (version != null) {
         String[] split = version.split("[.]");
-        int versionArray[] = new int[split.length];
+        int [] versionArray = new int[split.length];
         for (int i = 0; i < split.length; i++) {
           try {
             versionArray[i] = Integer.parseInt(split[i]);
@@ -104,7 +91,7 @@ public final class  VersionUtil {
         return versionArray;
       }
     }
-    return null;
+    return new int [0];
   }
 }
 
