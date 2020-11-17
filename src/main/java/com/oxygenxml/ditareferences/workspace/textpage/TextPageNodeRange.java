@@ -53,19 +53,21 @@ public class TextPageNodeRange extends NodeRange {
 	public int[] getNodeOffsets(WSEditorPage editorPage) {
 		WSXMLTextEditorPage xmlTextPage = (WSXMLTextEditorPage) editorPage;
 		int[] finalOffsets = new int[2];
-		try {
-			int startLine = range.getStartLine();
-			int startColumn = range.getStartColumn();
-			int endLine = range.getEndLine();
-			int endColumn = range.getEndColumn();
-			// the startOffset
-			finalOffsets[0] = xmlTextPage.getOffsetOfLineStart(startLine) + startColumn - 1;
-			// the endOffset
-			finalOffsets[1] = xmlTextPage.getOffsetOfLineStart(endLine) + endColumn - 1;
-			return finalOffsets;
+		if(range != null) {
+		  try {
+		    int startLine = range.getStartLine();
+		    int startColumn = range.getStartColumn();
+		    int endLine = range.getEndLine();
+		    int endColumn = range.getEndColumn();
+		    // the startOffset
+		    finalOffsets[0] = xmlTextPage.getOffsetOfLineStart(startLine) + startColumn - 1;
+		    // the endOffset
+		    finalOffsets[1] = xmlTextPage.getOffsetOfLineStart(endLine) + endColumn - 1;
+		    return finalOffsets;
 
-		} catch (BadLocationException e) {
-			LOGGER.debug(e, e);
+		  } catch (BadLocationException e) {
+		    LOGGER.debug(e, e);
+		  }
 		}
 		return finalOffsets;
 	}

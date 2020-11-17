@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import ro.sync.ecss.dita.DITAAccessForTests;
+
 public class RelLinksAccessor {
 	private static final Logger LOGGER = Logger.getLogger(RelLinksAccessor.class);
 
@@ -14,7 +16,7 @@ public class RelLinksAccessor {
 		// private constructor
 	}
 
-	public static boolean forTests = false;
+	private static boolean forTests = false;
 
 	/**
 	 * Get RelationshipTable Target URLs using reflection.
@@ -24,50 +26,66 @@ public class RelLinksAccessor {
 	 */
 	public static List<RelLink> getRelationshipTableTargetURLs(URL topicURL) {
 		List<RelLink> links = new ArrayList<>();
-
-		try {
-			Class<?> ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
-			Method getRelLinks = ditaAccessClass.getDeclaredMethod("getRelatedLinksFromReltable", URL.class);
-			List<?> allLinks = (List<?>) getRelLinks.invoke(null, topicURL);
-
-			if (allLinks != null) {
-				int size = allLinks.size();
-				for (int i = 0; i < size; i++) {
-					Object relLink = allLinks.get(i);
-					Class<? extends Object> relLinkClass = relLink.getClass();
-					Method getSource = relLinkClass.getMethod("getSourceURL");
-					URL sourceURL = (URL) getSource.invoke(relLink);
-					
-					String trimmedTopicURL = getURLWithoutAnchor(topicURL.toString());
-					String trimmedSourceURL = getURLWithoutAnchor(sourceURL.toString());
-															
-					if (trimmedTopicURL.equals(trimmedSourceURL)) {
-						Method getTarget = relLinkClass.getMethod("getTargetURL");
-						URL targetURL = (URL) getTarget.invoke(relLink);
-
-						Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
-						String targetFormat = (String) getTargetFormat.invoke(relLink);
-
-						Method getTargetScope = relLinkClass.getMethod("getTargetScope");
-						String targetScope = (String) getTargetScope.invoke(relLink);
-
-						Method getTargetDefinitionLocation = relLinkClass.getMethod("getTargetDefinitionLocation");
-						URL targetDefLocationURL = (URL) getTargetDefinitionLocation.invoke(relLink);
-
-						RelLinkImpl relLinkImpl = new RelLinkImpl(sourceURL, targetURL, targetFormat, targetScope,
-								targetDefLocationURL);
-						links.add(relLinkImpl);
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.debug(e, e);
+		List<?> allLinks = null;
+		if(forTests) {
+		  allLinks = DITAAccessForTests.getRelatedLinksFromReltable();
+		} else {
+		  try {
+		    Class<?> ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
+		    Method getRelLinks = ditaAccessClass.getDeclaredMethod("getRelatedLinksFromReltable", URL.class);
+		    allLinks = (List<?>) getRelLinks.invoke(null, topicURL);
+		  } catch (Exception e) {
+		    LOGGER.debug(e, e);
+		  }
 		}
+		try {
+		  if (allLinks != null) {
+		    int size = allLinks.size();
+		    for (int i = 0; i < size; i++) {
+		      Object relLink = allLinks.get(i);
+		      Class<? extends Object> relLinkClass = relLink.getClass();
+		      Method getSource = relLinkClass.getMethod("getSourceURL");
+		      URL sourceURL = (URL) getSource.invoke(relLink);
+
+		      String trimmedTopicURL = getURLWithoutAnchor(topicURL.toString());
+		      String trimmedSourceURL = getURLWithoutAnchor(sourceURL.toString());
+
+		      if (trimmedTopicURL.equals(trimmedSourceURL)) {
+		        Method getTarget = relLinkClass.getMethod("getTargetURL");
+		        URL targetURL = (URL) getTarget.invoke(relLink);
+
+		        Method getTargetFormat = relLinkClass.getMethod("getTargetFormat");
+		        String targetFormat = (String) getTargetFormat.invoke(relLink);
+
+		        Method getTargetScope = relLinkClass.getMethod("getTargetScope");
+		        String targetScope = (String) getTargetScope.invoke(relLink);
+
+		        Method getTargetDefinitionLocation = relLinkClass.getMethod("getTargetDefinitionLocation");
+		        URL targetDefLocationURL = (URL) getTargetDefinitionLocation.invoke(relLink);
+
+		        RelLinkImpl relLinkImpl = new RelLinkImpl(sourceURL, targetURL, targetFormat, targetScope,
+		            targetDefLocationURL);
+		        links.add(relLinkImpl);
+		      }
+		    }
+		  }
+		} catch (Exception e) {
+	      LOGGER.debug(e, e);
+	    }
+		
 
 		return links;
 	}
 
 	/**
+	 * Set the DitaAccess for test
+	 * @param forTests true if for tests
+	 */
+  public static void setForTests(boolean forTests) {
+    RelLinksAccessor.forTests = forTests;
+  }
+
+  /**
 	 * Get the Topic URL String without its anchor if any or the whole URL if no
 	 * anchor found.
 	 * 

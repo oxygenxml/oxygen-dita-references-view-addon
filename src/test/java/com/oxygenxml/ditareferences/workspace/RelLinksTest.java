@@ -131,7 +131,7 @@ public class RelLinksTest extends TestCase{
 	public void test_RenderingRelLink() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		RelLinksAccessor.forTests = true;
+		RelLinksAccessor.setForTests(true);
 		tree.refresh(editorAccess);
 
 		assertEquals(3, tree.getRowCount());
@@ -153,7 +153,7 @@ public class RelLinksTest extends TestCase{
 	public void test_OpenExternalRelLink() {
 		tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		RelLinksAccessor.forTests = true;
+		RelLinksAccessor.setForTests(true);
 		tree.refresh(editorAccess);
 		tree.setSelectionRow(2);
 		TestUtil.simulateDoubleClick(tree);
