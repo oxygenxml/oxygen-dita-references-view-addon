@@ -120,6 +120,11 @@ public class IncomingReference implements Comparable<IncomingReference> {
   }
   
   @Override
+  public int hashCode() {
+    return Objects.hash(additionalInformation, dpi, fileName);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
@@ -129,7 +134,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
       return false;
     IncomingReference other = (IncomingReference) obj;
     return Objects.equals(additionalInformation, other.additionalInformation) && Objects.equals(dpi, other.dpi)
-        && Objects.equals(fileName, other.fileName) && Objects.equals(translator, other.translator);
+        && Objects.equals(fileName, other.fileName);
   }
   
   @Override
