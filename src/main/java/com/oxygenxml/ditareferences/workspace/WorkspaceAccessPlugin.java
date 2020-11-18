@@ -20,7 +20,7 @@ public class WorkspaceAccessPlugin extends Plugin {
   public WorkspaceAccessPlugin(PluginDescriptor descriptor) {
     super(descriptor);
     if(WorkspaceAccessPlugin.instance == null) {
-      WorkspaceAccessPlugin.instance = this;
+      WorkspaceAccessPlugin.instance = this; //NOSONAR
     } else {
       throw new IllegalStateException("Already instantiated!");
     }

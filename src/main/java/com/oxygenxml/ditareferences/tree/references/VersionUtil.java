@@ -64,7 +64,7 @@ public final class  VersionUtil {
   private static int getMinorVersion() {
     int minorVersion = -1;
     int[] oxygenVersion = getOxygenVersion();
-    if (oxygenVersion != null && oxygenVersion.length > 1) {
+    if (oxygenVersion.length > 1) {
       minorVersion = oxygenVersion[1];
     }
     return minorVersion;

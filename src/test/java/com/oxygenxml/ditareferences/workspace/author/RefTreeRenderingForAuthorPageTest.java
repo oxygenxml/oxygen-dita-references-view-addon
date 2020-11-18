@@ -31,14 +31,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingImageReference() {
-		tree.setShowing(true);
-		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
-
-		TreePath path = tree.getPathForRow(1);
-		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 1, false);
-		assertEquals("image2.jpg", label.getText());
+	  testBase("image2.jpg", 1);
 	}
 
 	/**
@@ -46,14 +39,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingCrossReference() {
-		tree.setShowing(true);
-		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
-
-		TreePath path = tree.getPathForRow(4);
-		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 4, false);
-		assertEquals("google", label.getText());
+	  testBase("google", 4);
 	}
 
 	/**
@@ -61,14 +47,7 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingContentReference() {
-		tree.setShowing(true);
-		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
-		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
-
-		TreePath path = tree.getPathForRow(6);
-		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 6, false);
-		assertEquals("sample2.dita#sample2/i1", label.getText());
+	  testBase("sample2.dita#sample2/i1", 6);
 	}
 
 	/**
@@ -76,14 +55,18 @@ public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	 */
 	@Test
 	public void test_RenderingLinkReference() {
-		tree.setShowing(true);
+		testBase("myPDF", 9);
+	}
+
+  private void testBase(String result, int number) {
+    tree.setShowing(true);
 		tree.setBounds(new Rectangle(0, 0, 1000, 1000));
 		tree.refresh(TestUtil.createWSEditorAdapterForAuthorPage(elemArray));
 
-		TreePath path = tree.getPathForRow(9);
+		TreePath path = tree.getPathForRow(number);
 		JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(),
-				false, true, true, 9, false);
-		assertEquals("myPDF", label.getText());
-	}
+				false, true, true, number, false);
+		assertEquals(result, label.getText());
+  }
 
 }

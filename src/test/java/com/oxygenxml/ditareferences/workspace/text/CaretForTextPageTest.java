@@ -142,7 +142,7 @@ public class CaretForTextPageTest extends TestCase {
 		textPage.setCaretPosition(textArea.getText().indexOf("<xref") + 5);
 		System.out.println(TestUtil.logTreeNodes(tree));
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1000); //NOSONAR
 			assertEquals(1, tree.getSelectionModel().getSelectionCount());
 
 			NodeRange selectedNodeRange = (NodeRange) ((DefaultMutableTreeNode) tree.getSelectionPath()
