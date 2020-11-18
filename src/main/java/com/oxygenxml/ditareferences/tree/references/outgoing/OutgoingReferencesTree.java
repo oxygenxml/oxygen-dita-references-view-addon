@@ -96,10 +96,8 @@ public class OutgoingReferencesTree extends Tree {
 		// install caret listener for textPage and check if current page corresponds
 		this.textPageCaretListener = new TextPageReferencesTreeCaretListener(
 				() -> {
-					if(editorAccess != null) {
-						if (editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage) {
+					if(editorAccess != null && editorAccess.getCurrentPage() instanceof WSXMLTextEditorPage) {
 							return (WSXMLTextEditorPage) editorAccess.getCurrentPage();
-						}
 					}
 
 					return null;
@@ -111,10 +109,8 @@ public class OutgoingReferencesTree extends Tree {
 		// install caret listener for authorPage and check if current page corresponds
 		this.authorPageCaretListener = new AuthorPageReferencesTreeCaretListener(
 				() -> {
-					if(editorAccess != null) {
-						if (editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {
+					if(editorAccess != null && editorAccess.getCurrentPage() instanceof WSAuthorEditorPage) {
 							return (WSAuthorEditorPage) editorAccess.getCurrentPage();
-						}
 					}
 
 					return null;

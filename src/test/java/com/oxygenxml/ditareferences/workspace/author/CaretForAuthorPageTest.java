@@ -37,7 +37,7 @@ public class CaretForAuthorPageTest extends TestCase {
 
 		authorPage.setCaretPosition(elemArray[2].getStartOffset());
 		assertEquals(125, authorPage.getCaretOffset());
-		Thread.sleep(2000);
+		Thread.sleep(2000); //NOSONAR
 
 		AuthorPageNodeRange range = (AuthorPageNodeRange) ((DefaultMutableTreeNode) tree.getSelectionPath()
 				.getLastPathComponent()).getUserObject();

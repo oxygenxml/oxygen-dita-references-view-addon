@@ -14,6 +14,10 @@ package com.oxygenxml.ditareferences.workspace;
  *
  */
 public class DITAConstants {
+  
+  private DITAConstants() {
+    //avoid instantiation
+  }
 
   /**
    * The class attribute.

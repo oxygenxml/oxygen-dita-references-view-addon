@@ -19,8 +19,8 @@ public class WorkspaceAccessPlugin extends Plugin {
    */
   public WorkspaceAccessPlugin(PluginDescriptor descriptor) {
     super(descriptor);
-    if(instance == null) {
-      instance = this;
+    if(WorkspaceAccessPlugin.instance == null) {
+      WorkspaceAccessPlugin.instance = this;
     } else {
       throw new IllegalStateException("Already instantiated!");
     }
@@ -32,7 +32,7 @@ public class WorkspaceAccessPlugin extends Plugin {
    * @return the shared plugin instance.
    */
   public static WorkspaceAccessPlugin getInstance() {
-    return instance;
+    return WorkspaceAccessPlugin.instance;
   }
   
 }

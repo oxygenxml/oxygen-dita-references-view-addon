@@ -87,7 +87,7 @@ public class SelectLeafNodeForTextPageTest extends TestCase {
 
 		tree.setSelectionPath(path);
 		tree.setSelectionRow(1);
-		Thread.sleep(700);
+		Thread.sleep(700);//NOSONAR
 
 		assertEquals("[4, 4]", selectionOffsets.toString());
 

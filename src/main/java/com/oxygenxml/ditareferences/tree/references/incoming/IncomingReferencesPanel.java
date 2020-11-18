@@ -116,7 +116,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * TimerTask for loading panel
    */
-  private TimerTask loadingInProgressTask;
+  private transient TimerTask loadingInProgressTask;
   
   /**
    * The ID of the pending panel.
@@ -320,7 +320,7 @@ public class IncomingReferencesPanel extends JPanel {
                 
                 @Override
                 public void run() {
-                  SwingUtilities.invokeLater(() -> {selectRange(currentPage, referenceInfo);});
+                  SwingUtilities.invokeLater(() -> selectRange(currentPage, referenceInfo));
                 }
               }, 50);
             }

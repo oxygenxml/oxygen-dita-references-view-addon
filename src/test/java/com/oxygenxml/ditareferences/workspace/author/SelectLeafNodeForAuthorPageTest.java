@@ -39,7 +39,7 @@ public class SelectLeafNodeForAuthorPageTest extends TestCase {
 		TreePath path = tree.getPathForRow(1);
 		tree.setSelectionPath(path);
 		tree.setSelectionRow(1);
-		Thread.sleep(2000);
+		Thread.sleep(2000); //NOSONAR
 
 		assertEquals(49, authorPage.getSelectionStart());
 		assertEquals(50, authorPage.getSelectionEnd());
