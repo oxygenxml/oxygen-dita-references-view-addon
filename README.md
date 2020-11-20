@@ -1,5 +1,5 @@
 # Oxygen DITA Outgoing References View
-Side view in Oxygen XML Editor which shows all outgoing references and incoming references(Oxygen 23 or newer) for the current opened DITA topic. Available in the Editor and DITA perspectives.
+Side view in Oxygen XML Editor which shows all outgoing references and incoming references (only for Oxygen 23 or newer) for the current opened DITA topic. Available in the Editor and DITA perspectives.
 
 The following outgoing references are presented in the side view for an opened DITA topic:
 
@@ -11,13 +11,13 @@ The following outgoing references are presented in the side view for an opened D
 * Related links (link with href or keyref)
 * Related links defined in relationship tables (Oxygen 22 or newer)
 
-The incoming references is presented for the current opened DITA topic. If a reference is expanded, the references of that topic will be displayed.
+The incoming references are presented for the current opened DITA topic. If a reference is expanded, the references to that topic will be displayed.
 
 Features of the side view:
 
 * Side view user interface is translated in English, German, French, Japanese and Dutch.
 * Works both in the Author and the Text editing modes.
-* Selection in the side view is synchronized with the caret location in the editor area for outgoing references.
+* Selection in the outgoing references side view is synchronized with the caret location in the editor area for outgoing references.
 * Double click or ENTER on a reference to open the target location.
 
 
