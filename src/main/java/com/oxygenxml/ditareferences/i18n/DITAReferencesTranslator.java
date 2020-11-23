@@ -1,7 +1,5 @@
 package com.oxygenxml.ditareferences.i18n;
 
-import java.io.Serializable;
-
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
