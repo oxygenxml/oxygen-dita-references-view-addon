@@ -25,7 +25,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
   /**
    * For translation
    */
-  DITAReferencesTranslator translator = new DITAReferencesTranslator();
+  private static final DITAReferencesTranslator translator = new DITAReferencesTranslator();
   
   /**
    * The document position info
@@ -126,12 +126,15 @@ public class IncomingReference implements Comparable<IncomingReference> {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     IncomingReference other = (IncomingReference) obj;
     return Objects.equals(additionalInformation, other.additionalInformation) && Objects.equals(dpi, other.dpi)
         && Objects.equals(fileName, other.fileName);

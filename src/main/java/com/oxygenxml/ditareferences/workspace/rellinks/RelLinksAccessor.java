@@ -31,7 +31,7 @@ public class RelLinksAccessor {
 		  allLinks = DITAAccessForTests.getRelatedLinksFromReltable();
 		} else {
 		  try {
-		    Class<?> ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess" + (forTests ? "ForTests" : ""));
+		    Class<?> ditaAccessClass = Class.forName("ro.sync.ecss.dita.DITAAccess");
 		    Method getRelLinks = ditaAccessClass.getDeclaredMethod("getRelatedLinksFromReltable", URL.class);
 		    allLinks = (List<?>) getRelLinks.invoke(null, topicURL);
 		  } catch (Exception e) {

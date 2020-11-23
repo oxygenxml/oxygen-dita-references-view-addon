@@ -11,12 +11,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  * @author Alexandra_Dinisor
  *
  */
-public class DITAReferencesTranslator implements Translator, Serializable {
-
-	/**
-   * Generated UID
-   */
-  private static final long serialVersionUID = -5909408625888871637L;
+public class DITAReferencesTranslator implements Translator {
 
   public DITAReferencesTranslator() {
 		// empty constructor
