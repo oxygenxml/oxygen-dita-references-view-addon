@@ -107,7 +107,7 @@ public class SideViewComponent extends JPanel {
       constr.gridy = 0;
       constr.fill = GridBagConstraints.HORIZONTAL;
       constr.anchor = GridBagConstraints.NORTHWEST;
-      filterButtons = new TagFilterPanel("References") {
+      filterButtons = new TagFilterPanel("References") { //NOSONAR parent
         @Override
         void showPanel(String type) {
           String outgoing = ReferenceType.OUTGOING.toString();

@@ -22,7 +22,7 @@ import com.jidesoft.swing.JideToggleButton;
  * Buttons used for tag filters
  *   
  */
-public class TagButton extends JideToggleButton {
+public class TagButton extends JideToggleButton { //NOSONAR parent
   
   /**
    * The serial UID.

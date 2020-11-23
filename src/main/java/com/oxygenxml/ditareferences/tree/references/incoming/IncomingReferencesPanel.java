@@ -219,7 +219,7 @@ public class IncomingReferencesPanel extends JPanel {
             @SuppressWarnings("serial")
             DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
               @Override
-              public boolean isLeaf(Object node) {return false;};
+              public boolean isLeaf(Object node) {return false;}; //NOSONAR
             };
             
             if(temp != null) {

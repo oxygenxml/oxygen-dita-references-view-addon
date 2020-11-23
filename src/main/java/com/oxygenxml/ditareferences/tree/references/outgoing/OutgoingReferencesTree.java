@@ -27,7 +27,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
 @SuppressWarnings("serial")
-public class OutgoingReferencesTree extends Tree {
+public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 
 	/**
 	 * The ReferencesTree Logger.
