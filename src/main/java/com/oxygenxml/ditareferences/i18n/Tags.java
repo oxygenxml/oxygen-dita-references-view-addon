@@ -21,12 +21,17 @@ public class Tags {
 	public static final String DITA_REFERENCES = "DITA_references";
 
 	/**
-	 * Text if the references are not available.
+	 * Text if the outgoing references are not available.
 	 */
 	public static final String OUTGOING_REFERENCES_NOT_AVAILABLE = "Outgoing_references_not_available";
+	
+	/**
+   * Text if the incoming references are not available.
+   */
+  public static final String INCOMING_REFERENCES_NOT_AVAILABLE = "Incoming_references_not_available";
 
 	/**
-	 * Text if the references are found.
+	 * Text if the references are not found.
 	 */
 	public static final String NO_OUTGOING_REFERENCES_FOUND = "No_outgoing_references_found";
 
@@ -89,5 +94,10 @@ public class Tags {
    * column
    */
   public static final String COLUMN = "Column";
+  
+  /**
+   * Text if the incoming references are not found.
+   */
+  public static final String NO_INCOMING_REFERENCES_FOUND = "No_incoming_references_found";
 	
 }

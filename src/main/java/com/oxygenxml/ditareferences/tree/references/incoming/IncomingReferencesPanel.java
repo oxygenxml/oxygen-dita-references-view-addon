@@ -198,6 +198,8 @@ public class IncomingReferencesPanel extends JPanel {
 
       URL editorLocation = workspaceAccess.getEditorLocation();
       refresh(editorLocation);
+    } else {
+      resetTree();
     }
   }
   
@@ -208,6 +210,7 @@ public class IncomingReferencesPanel extends JPanel {
   private synchronized void refresh(URL editorLocation) {
     refreshTimer.schedule(new TimerTask() {
       
+      @SuppressWarnings("serial")
       @Override
       public void run() {
         if(isShowing()) {
@@ -216,7 +219,6 @@ public class IncomingReferencesPanel extends JPanel {
             updateInProgressStatus(true, 50);
             temp = searchIncomingRef(editorLocation);
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES));
-            @SuppressWarnings("serial")
             DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
               @Override
               public boolean isLeaf(Object node) {return false;}; //NOSONAR
@@ -229,6 +231,12 @@ public class IncomingReferencesPanel extends JPanel {
               }
               SwingUtilities.invokeLater(() -> referenceTree.setModel(referencesTreeModel));
             }
+           if(root.getChildCount() == 0) {
+             DefaultTreeModel noRefModel = new DefaultTreeModel(root);
+             DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.NO_INCOMING_REFERENCES_FOUND));
+             root.add(noReferencesFound);
+             SwingUtilities.invokeLater(() -> referenceTree.setModel(noRefModel));
+           }
           } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e, e);
           } finally {
@@ -238,6 +246,17 @@ public class IncomingReferencesPanel extends JPanel {
       }
     }, 10);
    
+  }
+  
+  /**
+   * Resets the tree to empty model
+   */
+  public void resetTree() {
+    DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+    DefaultTreeModel noRefModel = new DefaultTreeModel(root);
+    DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES_NOT_AVAILABLE));
+    root.add(noReferencesFound);
+    SwingUtilities.invokeLater(() -> referenceTree.setModel(noRefModel));
   }
   
   

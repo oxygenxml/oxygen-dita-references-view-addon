@@ -23,14 +23,31 @@
         <val lang="ja_JP">発信参照は利用できません。</val>
         <val lang="nl_NL">Uitgaande referenties niet beschikbaar.</val>        
     </key>  
+    
+    <key value="Incoming_references_not_available">
+        <val lang="en_US">Incoming references not available.</val>
+        <val lang="de_DE">Eingehende Referenzen nicht verfügbar.</val>
+        <val lang="fr_FR">Références entrantes non disponibles.</val>
+        <val lang="ja_JP">着信参照は利用できません。</val>
+        <val lang="nl_NL">Inkomende referenties niet beschikbaar.</val>        
+    </key>  
+    
     <key value="No_outgoing_references_found">
-        <comment>The File/New action. Creates a new document.</comment>
         <val lang="en_US">No outgoing references found.</val>
         <val lang="de_DE">Keine ausgehende Verknüpfungen gefunden.</val>
         <val lang="fr_FR">Aucune référence sortante trouvée.</val>
-        <val lang="ja_JP">Aucune référence sortante trouvée.</val>
+        <val lang="ja_JP">発信参照が見つかりません。</val>
         <val lang="nl_NL">Geen uitgaande referenties gevonden.</val>        
     </key>
+    
+     <key value="No_incoming_references_found">
+        <val lang="en_US">No incoming references found.</val>
+        <val lang="de_DE">Keine eingehend Verknüpfungen gefunden.</val>
+        <val lang="fr_FR">Aucune référence entrante trouvée.</val>
+        <val lang="ja_JP">着信参照が見つかりません。</val>
+        <val lang="nl_NL">Geen inkomende referenties gevonden.</val>        
+    </key>
+    
     <key value="Root_references">
         <comment>The File/New action. Creates a new document.</comment>
         <val lang="en_US">Root</val>
