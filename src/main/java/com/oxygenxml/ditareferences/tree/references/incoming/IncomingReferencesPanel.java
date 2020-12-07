@@ -254,8 +254,8 @@ public class IncomingReferencesPanel extends JPanel {
   public void resetTree() {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     DefaultTreeModel noRefModel = new DefaultTreeModel(root);
-    DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES_NOT_AVAILABLE));
-    root.add(noReferencesFound);
+    DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES_NOT_AVAILABLE));
+    root.add(noReferencesAvailable);
     SwingUtilities.invokeLater(() -> referenceTree.setModel(noRefModel));
   }
   
