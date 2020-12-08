@@ -229,14 +229,19 @@ public class IncomingReferencesPanel extends JPanel {
                 DefaultMutableTreeNode ref = new DefaultMutableTreeNode(incomingReference);
                 root.add(ref);
               }
-              SwingUtilities.invokeLater(() -> referenceTree.setModel(referencesTreeModel));
-            }
-           if(root.getChildCount() == 0) {
-             DefaultTreeModel noRefModel = new DefaultTreeModel(root);
-             DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.NO_INCOMING_REFERENCES_FOUND));
-             root.add(noReferencesFound);
-             SwingUtilities.invokeLater(() -> referenceTree.setModel(noRefModel));
-           }
+            } 
+            
+            SwingUtilities.invokeLater(() -> {
+              if (root.getChildCount() == 0) {
+                DefaultTreeModel noRefModel = new DefaultTreeModel(root);
+                DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(translator.getTranslation(Tags.NO_INCOMING_REFERENCES_FOUND));
+                root.add(noReferencesFound);
+                referenceTree.setModel(noRefModel);
+              } else {
+                referenceTree.setModel(referencesTreeModel);
+              }
+            });
+            
           } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e, e);
           } finally {
@@ -251,7 +256,7 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * Resets the tree to empty model
    */
-  public void resetTree() {
+  private void resetTree() {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     DefaultTreeModel noRefModel = new DefaultTreeModel(root);
     DefaultMutableTreeNode noReferencesAvailable = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES_NOT_AVAILABLE));
@@ -356,6 +361,17 @@ public class IncomingReferencesPanel extends JPanel {
    * @param workspaceAccess The plugin workspace
    */
   private void installListeners(PluginWorkspace workspaceAccess) {
+    
+    installInternalListeners(workspaceAccess);
+    installExtrnalListeners(workspaceAccess);
+    
+  }
+  
+  /**
+   * Installs tree's internal listeners
+   * @param workspaceAccess The workspace access
+   */
+  private void installInternalListeners(PluginWorkspace workspaceAccess) {
     referenceTree.addTreeWillExpandListener(new TreeWillExpandListener() {
 
       @Override
@@ -383,6 +399,20 @@ public class IncomingReferencesPanel extends JPanel {
       }
     });
 
+    workspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
+      @Override
+      public void editorSelected(URL editorLocation) {
+        graph = null;
+        refresh(editorLocation);
+      }
+    }, PluginWorkspace.DITA_MAPS_EDITING_AREA);
+  }
+  
+  /**
+   * Installs tree external listeners
+   * @param workspaceAccess The workspace access
+   */
+  private void installExtrnalListeners(PluginWorkspace workspaceAccess) {
     referenceTree.addKeyListener(new KeyAdapter() {
       @Override
       public void keyReleased(KeyEvent e) {
@@ -392,7 +422,7 @@ public class IncomingReferencesPanel extends JPanel {
         }
       }
     });
-
+    
     referenceTree.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -434,14 +464,6 @@ public class IncomingReferencesPanel extends JPanel {
         }
       }
     });
-    
-    workspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
-      @Override
-      public void editorSelected(URL editorLocation) {
-        graph = null;
-        refresh(editorLocation);
-      }
-    }, PluginWorkspace.DITA_MAPS_EDITING_AREA);
   }
   
   /**
