@@ -21,9 +21,7 @@ before_script:
   - ./travis/checkForTag.sh
 script:
   - mvn clean install 
-  - export JAVA_HOME=/usr/local/lib/jvm/openjdk11
-  - export PATH=$JAVA_HOME/bin:$PATH
-  - mvn --version
+  - jdk_switcher use openjdk11
   - mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
 before_deploy:
   - ./travis/deploy.sh
