@@ -6,6 +6,7 @@ addons:
     token: "${SONAR_CLOUD_TOKEN}"
 
 jdk:
+ - openjdk11
  - oraclejdk8
 
 dist: trusty
@@ -21,7 +22,8 @@ before_script:
   - ./travis/checkForTag.sh
 script:
   - mvn clean install 
-  - openjdk11
+  - export JAVA_HOME=/usr/local/lib/jvm/openjdk11
+  - export PATH=$JAVA_HOME/bin:$PATH
   - mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
 before_deploy:
   - ./travis/deploy.sh
