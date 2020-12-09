@@ -22,7 +22,7 @@ before_script:
 script:
   - mvn clean install 
   - export JAVA_HOME=$HOME/openjdk11
-  - travis/install-jdk.sh -F 11
+  - chmod +x travis/install-jdk.sh -F 11
   - mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
 before_deploy:
   - ./travis/deploy.sh
