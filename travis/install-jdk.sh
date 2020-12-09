@@ -196,8 +196,7 @@ function perform_sanity_checks() {
 }
 
 function determine_url() {
-    local properties='install-jdk.properties'
-    url=$(${properties} | grep -i "${feature}-${os}=" | awk -F "=" '{print $2}')
+    url=$( echo install-jdk.properties | grep -i "${feature}-${os}=" | awk -F "=" '{print $2}')
 
     if [[ -z ${url} ]]; then
         script_exit "Couldn't determine a download url for ${feature}-${license} on ${os}" 1
