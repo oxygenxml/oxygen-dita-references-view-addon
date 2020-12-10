@@ -195,10 +195,10 @@ function perform_sanity_checks() {
     fi
 }
 
+	
+	
 function determine_url() {
-	pwd
-	ls .
-    url=$( cat ./install-jdk.properties | grep -i "${feature}-${os}=" | awk -F "=" '{print $2}')
+    url="https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz"
 
     if [[ -z ${url} ]]; then
         script_exit "Couldn't determine a download url for ${feature}-${license} on ${os}" 1
