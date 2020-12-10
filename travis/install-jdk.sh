@@ -196,6 +196,8 @@ function perform_sanity_checks() {
 }
 
 function determine_url() {
+	pwd
+	ls .
     url=$( cat ./install-jdk.properties | grep -i "${feature}-${os}=" | awk -F "=" '{print $2}')
 
     if [[ -z ${url} ]]; then
