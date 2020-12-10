@@ -21,9 +21,8 @@ before_script:
   - ./travis/checkForTag.sh
 script:
   - mvn clean install 
-  - export JAVA_HOME=$HOME/openjdk11
   - chmod +x travis/install-openjdk11.sh
-  - ./travis/install-openjdk11.sh
+  - ./travis/install-openjdk11.sh --emit-java-home --verbose
   - mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
 before_deploy:
   - ./travis/deploy.sh
