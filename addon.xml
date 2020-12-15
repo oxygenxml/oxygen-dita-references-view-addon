@@ -24,6 +24,14 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                         >https://github.com/oxygenxml/oxygen-dita-outgoing-references-view</a>
                     </p>
                 </div>
+				<div>
+					<h3>What's new in version 2.0.0</h3>
+					<ol>
+					  <li>Added a new tab where incoming references are presented for the current DITA topic.</li>
+					  <li>Added support for translating the view's user interface in English, German, French, Japanese, or Dutch.</li>
+					  <li>Fixed various small bugs.</li>
+					</ol>
+				</div>
             </body>
         </html>
         </xt:description>
