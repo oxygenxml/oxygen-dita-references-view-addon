@@ -6,8 +6,8 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.dita.references">
-        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/1.0.3/oxygen-dita-outgoing-references-view-1.0.3-plugin.jar"/>
-        <xt:version>1.0.3</xt:version>
+        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/2.0.0/oxygen-dita-outgoing-references-view-2.0.0-plugin.jar"/>
+        <xt:version>2.0.0</xt:version>
         <xt:oxy_version>19.1+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Syncro Soft</xt:author>
@@ -24,6 +24,14 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                         >https://github.com/oxygenxml/oxygen-dita-outgoing-references-view</a>
                     </p>
                 </div>
+				<div>
+					<h3>What's new in version 2.0.0</h3>
+					<ol>
+					  <li>Added a new tab where incoming references are presented for the current DITA topic.</li>
+					  <li>Added support for translating the view's user interface in English, German, French, Japanese, or Dutch.</li>
+					  <li>Fixed various small bugs.</li>
+					</ol>
+				</div>
             </body>
         </html>
         </xt:description>
