@@ -41,6 +41,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -89,12 +90,12 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * List with all ongoing references
    */
-  private transient List<IncomingReference> listOfIncomingReferences = new ArrayList<>();
+  private final transient List<IncomingReference> listOfIncomingReferences = new ArrayList<>();
   
   /**
    * JTree with ongoing references
    */
-  private JTree referenceTree;
+  private final JTree referenceTree;
   
   /**
    * References graph
@@ -104,17 +105,17 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * The plugin workspace
    */
-  private transient PluginWorkspace workspaceAccess;
+  private final transient PluginWorkspace workspaceAccess;
   
   /**
    * Timer for loading panel
    */
-  private static transient Timer loadingInProgressTimer = new Timer(false) ;
+  private static final transient Timer loadingInProgressTimer = new Timer(false) ;
   
   /**
    * Timer for loading panel
    */
-  private static Timer refreshTimer = new Timer(false) ;
+  private static final Timer refreshTimer = new Timer(false) ;
   
   /**
    * TimerTask for loading panel
@@ -134,12 +135,12 @@ public class IncomingReferencesPanel extends JPanel {
   /**
    * The label that displays the pending loading icon with the message.
    */
-  private JLabel loadingLabel;
+  private final JLabel loadingLabel;
   
   /**
    * Refresh action
    */
-  private AbstractAction refreshAction;
+  private final AbstractAction refreshAction;
 
   /**
    * Constructor
@@ -224,7 +225,7 @@ public class IncomingReferencesPanel extends JPanel {
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(translator.getTranslation(Tags.INCOMING_REFERENCES));
             DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
               @Override
-              public boolean isLeaf(Object node) {return false;}; //NOSONAR
+              public boolean isLeaf(Object node) { return false; } //NOSONAR
             };
             
             if(temp != null) {
@@ -395,24 +396,73 @@ public class IncomingReferencesPanel extends JPanel {
   private void installInternalListeners(PluginWorkspace workspaceAccess) {
     referenceTree.addTreeWillExpandListener(new TreeWillExpandListener() {
 
+
+      /**
+       * Add the children to current source node.
+       *
+       * @param source            The node source.
+       * @param pathToRoot        Path from root node to source node.
+       * @param referenceInfo     The current IncomingReference instance.
+       *
+       * @throws ClassNotFoundException
+       * @throws InvocationTargetException
+       * @throws NoSuchMethodException
+       * @throws IllegalAccessException
+       */
+      private void addChildred(DefaultMutableTreeNode source, TreeNode[] pathToRoot, IncomingReference referenceInfo)
+              throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, MalformedURLException {
+        List<IncomingReference> temp;
+        URL editorLocation = new URL(referenceInfo.getSystemId());
+        temp = searchIncomingRef(editorLocation);
+        for (IncomingReference currentChild : temp) {
+          boolean alreadyPresented = false;
+
+          for (int j = 0; j < pathToRoot.length - 1; j++) {
+            if (currentChild.toString().equals(pathToRoot[j].toString())) {
+              alreadyPresented = true;
+              break;
+            }
+          }
+
+          if (!alreadyPresented) {
+            source.add(new DefaultMutableTreeNode(currentChild));
+          }
+        }
+
+      }
+
+
       @Override
       public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
         DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+        
         if(source != null && source.getChildCount() == 0) {
           try {
             IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
-            List<IncomingReference> temp;
-            URL editorLocation = new URL(referenceInfo.getSystemId());
-            temp = searchIncomingRef(editorLocation);
-            for (int i = 0; i < temp.size() ; i++) {
-              source.add(new DefaultMutableTreeNode(temp.get(i)));
+            TreeNode[] pathToRoot = ((DefaultTreeModel)referenceTree.getModel()).getPathToRoot(source);
+            int occuresCounter = 0;
+
+            for (TreeNode treeNode : pathToRoot) {
+              if (referenceInfo.toString().equals(treeNode.toString())) {
+                occuresCounter++;
+              }
             }
-          } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException
-              | MalformedURLException e1) {
+            
+            if(occuresCounter < 2) {
+              addChildred(source, pathToRoot, referenceInfo);
+            }
+            
+          } catch (ClassNotFoundException
+                  | NoSuchMethodException
+                  | IllegalAccessException
+                  | InvocationTargetException
+                  | MalformedURLException e1) {
             logger.error(e1, e1);
           } 
         }
+        
       }
+
 
       @Override
       public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
