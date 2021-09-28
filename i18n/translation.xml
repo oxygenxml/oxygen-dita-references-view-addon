@@ -7,6 +7,14 @@
         <language description="Japanese" lang="ja_JP" localeDescription="Japanese"/>
         <language description="Dutch" lang="nl_NL" localeDescription="Dutch"/>
     </languageList>
+    <key value="Copy_Location">
+        <comment>The copy file location on clipboard action name.</comment>
+        <val lang="en_US">Copy location</val>
+        <val lang="de_DE">Copy location</val>
+        <val lang="fr_FR">Copy location</val>
+        <val lang="ja_JP">Copy location</val>
+        <val lang="nl_NL">Copy location</val>
+    </key>  
     <key value="DITA_references">
         <comment>The DITA outgoing references side-view.</comment>
         <val lang="en_US">DITA References</val>

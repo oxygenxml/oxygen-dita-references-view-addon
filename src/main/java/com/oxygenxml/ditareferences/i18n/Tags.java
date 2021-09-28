@@ -99,5 +99,10 @@ public class Tags {
    * Text if the incoming references are not found.
    */
   public static final String NO_INCOMING_REFERENCES_FOUND = "No_incoming_references_found";
+
+  /**
+   * Copy location action name.
+   */
+  public static final String COPY_LOCATION = "Copy_Location";
 	
 }

@@ -37,6 +37,9 @@ public class IncomingReference implements Comparable<IncomingReference> {
    */
   private String fileName;
   
+  /**
+   * The current file location/path.
+   */
   private String fileLocation;
   
   /**

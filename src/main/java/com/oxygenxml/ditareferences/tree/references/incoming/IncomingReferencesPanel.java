@@ -8,6 +8,9 @@
 package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -356,6 +359,24 @@ public class IncomingReferencesPanel extends JPanel {
     }
   }
   
+  
+  /**
+   * Copy the file location to clipboard.
+   */
+  private void copyFileLocationToClipboard() {
+    DefaultMutableTreeNode node = (DefaultMutableTreeNode) referenceTree.getLastSelectedPathComponent();
+    if (node != null) {
+      Object userObject =  node.getUserObject();
+      if(userObject instanceof IncomingReference) {
+        IncomingReference referenceInfo = (IncomingReference) userObject;
+        StringSelection selection = new StringSelection(referenceInfo.toString());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
+      }
+    }
+  }
+  
+  
   /**
    * Install listeners to the tree 
    * @param workspaceAccess The plugin workspace
@@ -460,6 +481,14 @@ public class IncomingReferencesPanel extends JPanel {
               openFileAndSelectReference(workspaceAccess);
             }
           });
+          menu.add(new AbstractAction(translator.getTranslation(Tags.COPY_LOCATION)) {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              copyFileLocationToClipboard();
+            }
+          });
+          
           menu.show(e1.getComponent(), e1.getX(), e1.getY());
         }
       }
