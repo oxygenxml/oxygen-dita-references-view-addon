@@ -38,11 +38,6 @@ public class IncomingReference implements Comparable<IncomingReference> {
   private String fileName;
   
   /**
-   * The current file location/path.
-   */
-  private String fileLocation;
-  
-  /**
    * Additional line number information
    */
   private String additionalInformation;
@@ -55,9 +50,8 @@ public class IncomingReference implements Comparable<IncomingReference> {
    */
   public IncomingReference(DocumentPositionedInfo dpi) {
     this.dpi = dpi;
-    String[] fileInfo = URLUtil.extractPathAndFileName(dpi.getSystemID());
-    this.fileLocation = fileInfo[0] != null ? fileInfo[0] : "";
-    this.fileName = fileInfo[1] != null ? fileInfo[1] : "";
+    this.fileName = URLUtil.extractFileName(dpi.getSystemID());
+    this.fileName = fileName != null ? fileName : "";
   }
   
   
@@ -152,7 +146,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
 
   @Override
   public String toString() {
-    return fileLocation + fileName;
+    return URLUtil.getDescription(dpi.getSystemID());
   }
   
   
