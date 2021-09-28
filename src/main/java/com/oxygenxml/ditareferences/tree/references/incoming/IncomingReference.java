@@ -33,7 +33,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
   private DocumentPositionedInfo dpi;
   
   /**
-   * he file name of the reference
+   * The file name of the reference
    */
   private String fileName;
   
@@ -47,8 +47,10 @@ public class IncomingReference implements Comparable<IncomingReference> {
    */
   private String additionalInformation;
   
+  
   /**
    * Parametrized constructor
+   * 
    * @param dpi The DocumentPositionedInfo
    */
   public IncomingReference(DocumentPositionedInfo dpi) {
@@ -58,8 +60,10 @@ public class IncomingReference implements Comparable<IncomingReference> {
     this.fileName = fileInfo[1] != null ? fileInfo[1] : "";
   }
   
+  
   /**
    * Build label with column and line details
+   * 
    * @param dpi The DocumentPositionedInfo
    */
   public void setShowExtraLineNumberInformation() {
@@ -72,6 +76,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
     this.additionalInformation = build.toString();
   }
   
+  
   /**
    * @return The DocumentPositionedInfo
    */
@@ -80,7 +85,6 @@ public class IncomingReference implements Comparable<IncomingReference> {
   }
   
   /**
-   * 
    * @return The formatted text for the label 
    */
   public String getRenderText() {
@@ -92,7 +96,6 @@ public class IncomingReference implements Comparable<IncomingReference> {
   }
   
   /**
-   * 
    * @return The text for the tooltip
    */
   public String getTooltipText() {
@@ -116,7 +119,6 @@ public class IncomingReference implements Comparable<IncomingReference> {
   }
   
   /**
-   * 
    * @return The system id of the DocumentPositionInfo
    */
   public String getSystemId() {
@@ -130,18 +132,17 @@ public class IncomingReference implements Comparable<IncomingReference> {
 
   @Override
   public boolean equals(Object obj) {
+    boolean toReturn;
     if (this == obj) {
-      return true;
+      toReturn = true;
+    } else if (obj == null || getClass() != obj.getClass()) {
+      toReturn = false;
+    } else {
+      IncomingReference other = (IncomingReference) obj;
+      toReturn = Objects.equals(additionalInformation, other.additionalInformation) && Objects.equals(dpi, other.dpi)
+          && Objects.equals(fileName, other.fileName);
     }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    IncomingReference other = (IncomingReference) obj;
-    return Objects.equals(additionalInformation, other.additionalInformation) && Objects.equals(dpi, other.dpi)
-        && Objects.equals(fileName, other.fileName);
+    return toReturn;
   }
   
   @Override
