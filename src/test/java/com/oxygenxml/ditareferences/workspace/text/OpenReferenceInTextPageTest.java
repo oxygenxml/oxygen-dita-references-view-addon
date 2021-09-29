@@ -282,6 +282,45 @@ public class OpenReferenceInTextPageTest extends TestCase {
 		TestUtil.simulateDoubleClick(tree);
 	}
 
+	
+	/**
+   * Tests tree node tooltips text.
+   * 
+   * @author Alex_Smarandache
+   */
+  @Test
+  public void testReferenceToolTipText() {
+    tree.setShowing(true);
+    tree.setBounds(new Rectangle(0, 0, 1000, 1000));
+    tree.refresh(editorAccess);
+    
+    String[] expectedToolTipText = {
+        "file:/C:/Users/test/Documents/test.pdf",
+        "image.png",
+        "image",
+        "http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3",
+        "http://www.nasa.gov/mp3/590318main_ringtone_135_launch.mp3",
+        "sample2.dita#sample2/i1",
+        "file:/C:/Users/test/Documents/sample2.dita",
+        "file:/C:/Users/test/Documents/sample2.dita",
+        "www.google.com",
+        "sample2.dita",
+        "test.pdf",
+        "test.pdf",
+        "file:/C:/Users/test/Documents/sample2.dita",
+        "file:/C:/Users/test/Documents/test.pdf"
+    };
+    
+    for(int i = 0; i < expectedToolTipText.length; i++) {
+      TreePath path = tree.getPathForRow(i);
+      JLabel label = (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, 
+          path.getLastPathComponent(), false, true, true, i, false);
+      assertEquals(expectedToolTipText[i], label.getToolTipText());
+    }
+     
+  }
+  
+  
 	/**
 	 * Open binary resource with @format attribute, not handled by Oxygen.
 	 */
