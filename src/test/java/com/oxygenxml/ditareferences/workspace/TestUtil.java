@@ -199,9 +199,9 @@ public class TestUtil {
 	private static void dumpRecursive(DefaultTreeModel model, DefaultMutableTreeNode node, StringBuilder dump) {
 		dump.append("\n").append(Arrays.toString(model.getPathToRoot(node)));
 		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> children = node.children();
+		Enumeration children = node.children();
 		while (children != null && children.hasMoreElements()) {
-			dumpRecursive(model, children.nextElement(), dump);
+			dumpRecursive(model, (DefaultMutableTreeNode) children.nextElement(), dump);
 		}
 	}
 

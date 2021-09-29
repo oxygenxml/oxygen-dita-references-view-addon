@@ -401,7 +401,6 @@ public class IncomingReferencesPanel extends JPanel {
        * Add the children to current source node.
        *
        * @param source            The node source.
-       * @param pathToRoot        Path from root node to source node.
        * @param referenceInfo     The current IncomingReference instance.
        *
        * @throws ClassNotFoundException
@@ -409,24 +408,13 @@ public class IncomingReferencesPanel extends JPanel {
        * @throws NoSuchMethodException
        * @throws IllegalAccessException
        */
-      private void addChildred(DefaultMutableTreeNode source, TreeNode[] pathToRoot, IncomingReference referenceInfo)
+      private void addChildren(DefaultMutableTreeNode source, IncomingReference referenceInfo)
               throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, MalformedURLException {
         List<IncomingReference> temp;
         URL editorLocation = new URL(referenceInfo.getSystemId());
         temp = searchIncomingRef(editorLocation);
         for (IncomingReference currentChild : temp) {
-          boolean alreadyPresented = false;
-
-          for (int j = 0; j < pathToRoot.length - 1; j++) {
-            if (currentChild.toString().equals(pathToRoot[j].toString())) {
-              alreadyPresented = true;
-              break;
-            }
-          }
-
-          if (!alreadyPresented) {
-            source.add(new DefaultMutableTreeNode(currentChild));
-          }
+          source.add(new DefaultMutableTreeNode(currentChild));
         }
 
       }
@@ -439,17 +427,12 @@ public class IncomingReferencesPanel extends JPanel {
         if(source != null && source.getChildCount() == 0) {
           try {
             IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
-            TreeNode[] pathToRoot = ((DefaultTreeModel)referenceTree.getModel()).getPathToRoot(source);
-            int occuresCounter = 0;
-
-            for (TreeNode treeNode : pathToRoot) {
-              if (referenceInfo.toString().equals(treeNode.toString())) {
-                occuresCounter++;
-              }
-            }
+            int occurencesCounter = getReferenceOccurences(source, referenceInfo);
             
-            if(occuresCounter < 2) {
-              addChildred(source, pathToRoot, referenceInfo);
+            if(occurencesCounter < 2) {
+              addChildren(source, referenceInfo);
+            } else {
+              //Avoid expanding the same system id on multiple levels in the same path
             }
             
           } catch (ClassNotFoundException
@@ -468,6 +451,34 @@ public class IncomingReferencesPanel extends JPanel {
       public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
         //not needed
       }
+      
+      
+      /**
+       * 
+       * @param source          The source node.
+       * @param referenceInfo   The current reference.
+       * 
+       * @return no of occurences for this reference.
+       */
+      private int getReferenceOccurences(DefaultMutableTreeNode source, IncomingReference referenceInfo) {
+        TreeNode[] pathToRoot = ((DefaultTreeModel)referenceTree.getModel()).getPathToRoot(source);
+        int occurencesCounter = 0;
+        String currentNodeSystemID = referenceInfo.getSystemId();
+       
+        for (TreeNode treeNode : pathToRoot) {
+          DefaultMutableTreeNode nodeInPath = (DefaultMutableTreeNode) treeNode;
+          if(nodeInPath.getUserObject() instanceof IncomingReference) {
+            IncomingReference referenceInPath = (IncomingReference) nodeInPath.getUserObject();
+            if (currentNodeSystemID != null && currentNodeSystemID.equals(referenceInPath.getSystemId())) {
+              occurencesCounter++;
+            }
+          }
+        }
+        
+        return occurencesCounter;
+
+      }
+      
     });
 
     workspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
