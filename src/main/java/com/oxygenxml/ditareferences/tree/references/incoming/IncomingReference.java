@@ -42,9 +42,14 @@ public class IncomingReference implements Comparable<IncomingReference> {
    */
   private String additionalInformation;
   
+  /**
+   * The reference category.
+   */
+  private ReferenceCategory referenceCategory = ReferenceCategory.CROSS;
+  
   
   /**
-   * Parametrized constructor
+   * Parametrized constructor.
    * 
    * @param dpi The DocumentPositionedInfo
    */
@@ -52,8 +57,12 @@ public class IncomingReference implements Comparable<IncomingReference> {
     this.dpi = dpi;
     this.fileName = URLUtil.extractFileName(dpi.getSystemID());
     this.fileName = fileName != null ? fileName : "";
+    if(dpi.getMessage().endsWith("[CONREF]") || dpi.getMessage().endsWith("[CONKEYREF]")) {
+      referenceCategory = ReferenceCategory.CONTENT;
+    } else if (dpi.getSystemID().endsWith(".ditamap")) {
+      referenceCategory = ReferenceCategory.MAP;
+    }
   }
-  
   
   /**
    * Build label with column and line details
