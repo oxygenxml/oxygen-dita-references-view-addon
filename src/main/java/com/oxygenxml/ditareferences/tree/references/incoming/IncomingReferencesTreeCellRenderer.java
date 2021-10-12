@@ -18,6 +18,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.ditareferences.i18n.Tags;
+import com.thaiopensource.datatype.xsd.regex.RegexSyntaxException;
+import com.thaiopensource.datatype.xsd.regex.java.Translator;
+
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 import ro.sync.util.URLUtil;
@@ -78,6 +82,21 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer{
           }
         } catch (MalformedURLException e) {
           logger.error(e, e);
+        }
+      } else if (node.getUserObject() instanceof ReferenceCategory) {
+        ReferenceCategory referenceCategory = (ReferenceCategory) node.getUserObject();
+        String referenceCategoryString = "";
+        if(referenceCategory == ReferenceCategory.CONTENT) {
+          referenceCategoryString = Tags.CONTENT_REFERENCES;
+        } else if (referenceCategory == ReferenceCategory.MAP) {
+          referenceCategoryString = Tags.DITA_REFERENCES;
+        } else {
+          referenceCategoryString = Tags.CROSS_REFERENCES;
+        }
+        try {
+          label.setText(Translator.translate(referenceCategoryString));
+        } catch (RegexSyntaxException e) {
+          e.printStackTrace();
         }
       }
     }

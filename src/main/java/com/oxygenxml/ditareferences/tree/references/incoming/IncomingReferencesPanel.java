@@ -22,7 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -141,6 +143,11 @@ public class IncomingReferencesPanel extends JPanel {
    * Refresh action
    */
   private final AbstractAction refreshAction;
+  
+  /**
+   * Contains initial references category and their children.
+   */
+  private final Map<ReferenceCategory, List<IncomingReference>> referencesCategory = new HashMap<>();
 
   /**
    * Constructor
@@ -218,6 +225,7 @@ public class IncomingReferencesPanel extends JPanel {
       @Override
       public void run() {
         if(isShowing()) {
+          referencesCategory.clear();
           List<IncomingReference> temp;
           try {
             updateInProgressStatus(true, 50);
@@ -230,11 +238,18 @@ public class IncomingReferencesPanel extends JPanel {
             
             if(temp != null) {
               for (IncomingReference incomingReference : temp) {
-                DefaultMutableTreeNode ref = new DefaultMutableTreeNode(incomingReference);
+                if(!referencesCategory.containsKey(getReferenceCategory(incomingReference.getDPI()))) {
+                  referencesCategory.put(getReferenceCategory(incomingReference.getDPI()), new ArrayList<>());
+                } 
+                referencesCategory.get(getReferenceCategory(incomingReference.getDPI())).add(incomingReference);
+              
+              }
+              for(ReferenceCategory referenceCategory : referencesCategory.keySet()) {
+                DefaultMutableTreeNode ref = new DefaultMutableTreeNode(referenceCategory);
                 root.add(ref);
               }
             } 
-            
+           
             SwingUtilities.invokeLater(() -> {
               if (root.getChildCount() == 0) {
                 DefaultTreeModel noRefModel = new DefaultTreeModel(root);
@@ -425,23 +440,28 @@ public class IncomingReferencesPanel extends JPanel {
         DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
         
         if(source != null && source.getChildCount() == 0) {
-          try {
-            IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
-            int occurencesCounter = getReferenceOccurences(source, referenceInfo);
-            
-            if(occurencesCounter < 2) {
-              addChildren(source, referenceInfo);
-            } else {
-              //Avoid expanding the same system id on multiple levels in the same path
-            }
-            
-          } catch (ClassNotFoundException
-                  | NoSuchMethodException
-                  | IllegalAccessException
-                  | InvocationTargetException
-                  | MalformedURLException e1) {
-            logger.error(e1, e1);
-          } 
+          if(source.getUserObject() instanceof IncomingReference) {
+            try {
+              IncomingReference referenceInfo = (IncomingReference)(source.getUserObject());
+              int occurencesCounter = getReferenceOccurences(source, referenceInfo);
+              
+              if(occurencesCounter < 2) {
+                addChildren(source, referenceInfo);
+              } else {
+                //Avoid expanding the same system id on multiple levels in the same path
+              }
+              
+            } catch (ClassNotFoundException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InvocationTargetException
+                    | MalformedURLException e1) {
+              logger.error(e1, e1);
+            } 
+          } else if (source.getUserObject() instanceof ReferenceCategory) {
+            ReferenceCategory referenceCategory = (ReferenceCategory) source.getUserObject();
+            referencesCategory.get(referenceCategory).forEach(e -> source.add(new DefaultMutableTreeNode(e)));     
+          }
         }
         
       }
@@ -596,5 +616,22 @@ public class IncomingReferencesPanel extends JPanel {
    */
   public AbstractAction getRefereshAction() {
       return refreshAction;
+  }
+  
+  
+  /**
+   * @param dpi for current incoming reference.
+   * 
+   * @return The reference category.
+   */
+  static ReferenceCategory getReferenceCategory(DocumentPositionedInfo dpi) {
+    ReferenceCategory referenceCategory = ReferenceCategory.CROSS;
+    if(dpi.getMessage().endsWith("[CONREF]") || dpi.getMessage().endsWith("[CONKEYREF]")) {
+      referenceCategory = ReferenceCategory.CONTENT;
+    } else if (dpi.getSystemID().endsWith(".ditamap")) {
+      referenceCategory = ReferenceCategory.MAP;
+    }
+    
+    return referenceCategory;
   }
 }
