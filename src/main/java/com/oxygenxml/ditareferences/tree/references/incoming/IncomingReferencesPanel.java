@@ -257,18 +257,26 @@ public class IncomingReferencesPanel extends JPanel {
 										.add(incomingReference);
 
 							}
-							for (ReferenceCategory referenceCategory : referencesMapCategory.keySet()) {
-								DefaultMutableTreeNode ref = new DefaultMutableTreeNode(referenceCategory);
-								root.add(ref);
+							List<ReferenceCategory> refCateg = new ArrayList<>(referencesMapCategory.keySet());
+							if (refCateg != null && refCateg.size() > 0) {
+								refCateg.sort((a, b) -> {
+									int aCoef = 0;
+									if (a != ReferenceCategory.MAP) {
+										aCoef = a == ReferenceCategory.CROSS ? 1 : 2;
+									}
+									int bCoef = 0;
+									if (b != ReferenceCategory.MAP) {
+										bCoef = b == ReferenceCategory.CROSS ? 1 : 2;
+									}
+									return Integer.compare(aCoef, bCoef);
+								});
+								refCateg.forEach(
+										referenceCategory -> root.add(new DefaultMutableTreeNode(referenceCategory)));
 							}
 
 							SwingUtilities.invokeLater(() -> {
 								if (root.getChildCount() == 0) {
 									DefaultTreeModel noRefModel = new DefaultTreeModel(root);
-									// ???
-									// DefaultMutableTreeNode noReferencesFound = new
-									// DefaultMutableTreeNode(translator.getTranslation(Tags.NO_INCOMING_REFERENCES_FOUND));
-									// root.add(noReferencesFound)
 									referenceTree.setModel(noRefModel);
 								} else {
 									referenceTree.setModel(referencesTreeModel);

@@ -24,11 +24,11 @@ public class Tags {
 	 * Text if the outgoing references are not available.
 	 */
 	public static final String OUTGOING_REFERENCES_NOT_AVAILABLE = "Outgoing_references_not_available";
-	
+
 	/**
-   * Text if the incoming references are not available.
-   */
-  public static final String INCOMING_REFERENCES_NOT_AVAILABLE = "Incoming_references_not_available";
+	 * Text if the incoming references are not available.
+	 */
+	public static final String INCOMING_REFERENCES_NOT_AVAILABLE = "Incoming_references_not_available";
 
 	/**
 	 * Text if the references are not found.
@@ -69,40 +69,45 @@ public class Tags {
 	 * Label for Showing Definition Location in PopUpMenu for relLinks.
 	 */
 	public static final String SHOW_DEFINITION_LOCATION = "Show_definition_location";
-	
-	/**
-   * Loading...
-   */
-  public static final String LOADING = "Loading";
-  
-  /**
-   * "Incoming References"
-   */
-  public static final String INCOMING_REFERENCES = "Incoming_References";
-  
-  /**
-   * Refresh incoming references
-   */
-  public static final String REFRESH_INCOMING_REFERENCES = "Refresh_Incoming_References";
-  
-  /**
-   * line
-   */
-  public static final String LINE = "Line";
-  
-  /**
-   * column
-   */
-  public static final String COLUMN = "Column";
-  
-  /**
-   * Text if the incoming references are not found.
-   */
-  public static final String NO_INCOMING_REFERENCES_FOUND = "No_incoming_references_found";
 
-  /**
-   * Copy location action name.
-   */
-  public static final String COPY_LOCATION = "Copy_Location";
-	
+	/**
+	 * Loading...
+	 */
+	public static final String LOADING = "Loading";
+
+	/**
+	 * "Incoming References"
+	 */
+	public static final String INCOMING_REFERENCES = "Incoming_References";
+
+	/**
+	 * Refresh incoming references
+	 */
+	public static final String REFRESH_INCOMING_REFERENCES = "Refresh_Incoming_References";
+
+	/**
+	 * line
+	 */
+	public static final String LINE = "Line";
+
+	/**
+	 * column
+	 */
+	public static final String COLUMN = "Column";
+
+	/**
+	 * Text if the incoming references are not found.
+	 */
+	public static final String NO_INCOMING_REFERENCES_FOUND = "No_incoming_references_found";
+
+	/**
+	 * Copy location action name.
+	 */
+	public static final String COPY_LOCATION = "Copy_Location";
+
+	/**
+	 * Map reference.
+	 */
+	public static final String MAP_REFERENCES = "Map_References";
+
 }

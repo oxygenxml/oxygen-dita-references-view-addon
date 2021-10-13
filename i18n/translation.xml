@@ -7,6 +7,14 @@
         <language description="Japanese" lang="ja_JP" localeDescription="Japanese"/>
         <language description="Dutch" lang="nl_NL" localeDescription="Dutch"/>
     </languageList>
+    <key value="Map_References">
+        <comment>The map references.</comment>
+        <val lang="en_US">Map references</val>
+        <val lang="de_DE">Map references</val>
+        <val lang="fr_FR">Map references</val>
+        <val lang="ja_JP">Map references</val>
+        <val lang="nl_NL">Map references</val>
+    </key>  
     <key value="Copy_Location">
         <comment>The copy file location on clipboard action name.</comment>
         <val lang="en_US">Copy location</val>
