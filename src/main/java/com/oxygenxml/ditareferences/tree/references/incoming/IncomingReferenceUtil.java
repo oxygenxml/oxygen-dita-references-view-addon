@@ -6,6 +6,7 @@ import java.awt.datatransfer.StringSelection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -37,6 +38,20 @@ public class IncomingReferenceUtil {
 	 * Logger.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(IncomingReferenceUtil.class.getName());
+	
+	/**
+	 * Contains the coefficient for each type of incoming reference. 
+	 * Depending on this coefficient, they will be sorted into trees.
+	 */
+	private static final Map<ReferenceCategory, Integer> CATEGORY_COEFFICIENT;
+	
+	static {
+	  CATEGORY_COEFFICIENT = new EnumMap<>(ReferenceCategory.class);
+	  CATEGORY_COEFFICIENT.put(ReferenceCategory.MAP, 0);
+	  CATEGORY_COEFFICIENT.put(ReferenceCategory.CROSS, 1);
+	  CATEGORY_COEFFICIENT.put(ReferenceCategory.CONTENT, 2);
+	}
+	
 	
 	
 	/**
@@ -71,17 +86,7 @@ public class IncomingReferenceUtil {
 		
 		List<ReferenceCategory> refCateg = new ArrayList<>(referenceCategories.keySet());
 		if (!refCateg.isEmpty()) {
-			refCateg.sort((a, b) -> {
-				int aCoef = 0;
-				if (a != ReferenceCategory.MAP) {
-					aCoef = a == ReferenceCategory.CROSS ? 1 : 2;
-				}
-				int bCoef = 0;
-				if (b != ReferenceCategory.MAP) {
-					bCoef = b == ReferenceCategory.CROSS ? 1 : 2;
-				}
-				return aCoef - bCoef;
-			});
+			refCateg.sort((a, b) -> Integer.compare(CATEGORY_COEFFICIENT.get(a), CATEGORY_COEFFICIENT.get(b)));
 			refCateg.forEach(
 					referenceCategory -> rootNode.add(new DefaultMutableTreeNode(referenceCategory)));
 		}

@@ -280,10 +280,11 @@ public class IncomingReferencesTree extends Tree {
 		});
 	}
 
+	
 	/**
-	 * Refreshes the references in the given editor
+	 * Refreshes the references in the given editor.
 	 * 
-	 * @param editorLocation The location of the editor to be refreshed
+	 * @param editorLocation The location of the editor to be refreshed.
 	 */
 	synchronized void refresh(URL editorLocation, ProgressStatusListener progressStatus, boolean clearCache) {
 		if(clearCache) {
@@ -315,6 +316,8 @@ public class IncomingReferencesTree extends Tree {
 							SwingUtilities.invokeLater(() -> {
 								if (root.getChildCount() == 0) {
 									DefaultTreeModel noRefModel = new DefaultTreeModel(root);
+									DefaultMutableTreeNode noReferencesFound = new DefaultMutableTreeNode(TRANSLATOR.getTranslation(Tags.NO_INCOMING_REFERENCES_FOUND));
+					                root.add(noReferencesFound);
 									setModel(noRefModel);
 								} else {
 									setModel(referencesTreeModel);
@@ -338,12 +341,12 @@ public class IncomingReferencesTree extends Tree {
 	}
 	
 	/**
-	 * Search for ongoing references and compute the label for them
+	 * Search for ongoing references and compute the label for them.
 	 * 
 	 * @param editorLocation The editor to search location.
 	 * @param graph          The graph to be created.
 	 * 
-	 * @return The list of found ongoing references
+	 * @return The list of found ongoing references.
 	 * 
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
