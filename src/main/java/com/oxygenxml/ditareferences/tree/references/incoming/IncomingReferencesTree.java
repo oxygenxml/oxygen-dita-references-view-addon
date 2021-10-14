@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -70,12 +69,6 @@ public class IncomingReferencesTree extends Tree {
 	 */
 	private static final Timer REFRESH_TIMER = new Timer(false);
 
-	/**
-	 * Contains initial references category and their children.
-	 */
-	private final transient EnumMap<ReferenceCategory, List<IncomingReference>> referencesMapCategory = new EnumMap<>(
-			ReferenceCategory.class);
-	
 	/**
 	 * Constructor.
 	 * 
@@ -170,8 +163,8 @@ public class IncomingReferencesTree extends Tree {
 							LOGGER.error(e1, e1);
 						}
 					} else if (source.getUserObject() instanceof ReferenceCategory) {
-						ReferenceCategory referenceCategory = (ReferenceCategory) source.getUserObject();
-						referencesMapCategory.get(referenceCategory)
+						ReferenceCategoryMutableTreeNode category = (ReferenceCategoryMutableTreeNode)source; 
+						category.getChildren()
 								.forEach(e -> source.add(new DefaultMutableTreeNode(e)));
 					}
 				}
@@ -296,7 +289,6 @@ public class IncomingReferencesTree extends Tree {
 			@Override
 			public void run() {
 				if (isShowing()) {
-					referencesMapCategory.clear();
 					List<IncomingReference> temp;
 					try {
 						progressStatus.updateInProgressStatus(true, 50);
@@ -311,7 +303,7 @@ public class IncomingReferencesTree extends Tree {
 						};
 
 						if (temp != null) {
-							IncomingReferenceUtil.addReferencesCategoriesToRoot(temp, referencesMapCategory, root);
+							IncomingReferenceUtil.addReferencesCategoriesToRoot(temp, root);
 							
 							SwingUtilities.invokeLater(() -> {
 								if (root.getChildCount() == 0) {

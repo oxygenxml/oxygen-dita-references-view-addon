@@ -69,9 +69,9 @@ public class IncomingReferenceUtil {
 	 * @param referenceCategories    The map which stores copies for each reference category.
 	 * @param rootNode                   The node where the reference categories are added.
 	 */
-	public static void addReferencesCategoriesToRoot(List<IncomingReference> incomingReferences, 
-			Map<ReferenceCategory, List<IncomingReference>> referenceCategories, 
-			DefaultMutableTreeNode rootNode) {
+	public static void addReferencesCategoriesToRoot(List<IncomingReference> incomingReferences, DefaultMutableTreeNode rootNode) {
+		
+		Map<ReferenceCategory, List<IncomingReference>> referenceCategories = new EnumMap<>(ReferenceCategory.class);
 		
 		for (IncomingReference incomingReference : incomingReferences) {
 			if (!referenceCategories
@@ -81,14 +81,17 @@ public class IncomingReferenceUtil {
 			}
 			referenceCategories.get(IncomingReferenceUtil.getReferenceCategory(incomingReference.getDPI()))
 					.add(incomingReference);
-
 		}
 		
 		List<ReferenceCategory> refCateg = new ArrayList<>(referenceCategories.keySet());
 		if (!refCateg.isEmpty()) {
 			refCateg.sort((a, b) -> Integer.compare(CATEGORY_COEFFICIENT.get(a), CATEGORY_COEFFICIENT.get(b)));
 			refCateg.forEach(
-					referenceCategory -> rootNode.add(new DefaultMutableTreeNode(referenceCategory)));
+					referenceCategory -> {
+						ReferenceCategoryMutableTreeNode referenceToAdd = new ReferenceCategoryMutableTreeNode(referenceCategory);
+						referenceToAdd.setChildren(referenceCategories.get(referenceCategory));
+						rootNode.add(referenceToAdd);
+					});
 		}
 	}
 	
