@@ -3,12 +3,9 @@ package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -21,8 +18,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
-
-import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspace;
@@ -43,12 +38,6 @@ public class IncomingReferenceUtil {
 	 */
 	private static final Logger LOGGER = Logger.getLogger(IncomingReferenceUtil.class.getName());
 	
-	/**
-	 * Constant used for java reflexion
-	 */
-	private static final String DITA_ACCESS_CLASS_NAME = "ro.sync.ecss.dita.DITAAccess";
-	
-	
 	
 	/**
 	 * The hidden constructor.
@@ -63,11 +52,11 @@ public class IncomingReferenceUtil {
 	 * 
 	 * @param incomingReferences     The incoming references.
 	 * @param referenceCategories    The map which stores copies for each reference category.
-	 * @param node                   The node where the reference categories are added.
+	 * @param rootNode                   The node where the reference categories are added.
 	 */
-	public static void addReferencesCategoriesToNode(List<IncomingReference> incomingReferences, 
+	public static void addReferencesCategoriesToRoot(List<IncomingReference> incomingReferences, 
 			Map<ReferenceCategory, List<IncomingReference>> referenceCategories, 
-			DefaultMutableTreeNode node) {
+			DefaultMutableTreeNode rootNode) {
 		
 		for (IncomingReference incomingReference : incomingReferences) {
 			if (!referenceCategories
@@ -91,10 +80,10 @@ public class IncomingReferenceUtil {
 				if (b != ReferenceCategory.MAP) {
 					bCoef = b == ReferenceCategory.CROSS ? 1 : 2;
 				}
-				return Integer.compare(aCoef, bCoef);
+				return aCoef - bCoef;
 			});
 			refCateg.forEach(
-					referenceCategory -> node.add(new DefaultMutableTreeNode(referenceCategory)));
+					referenceCategory -> rootNode.add(new DefaultMutableTreeNode(referenceCategory)));
 		}
 	}
 	
@@ -124,11 +113,12 @@ public class IncomingReferenceUtil {
 	 */
 	public static void expandFirstLevelOfTree(DefaultMutableTreeNode root, JTree tree) {
 		DefaultMutableTreeNode currentNode = root.getNextNode();
-		do {
-			if (currentNode.getLevel() == 1)
+		while (currentNode != null) {
+			if (currentNode.getLevel() == 1) {
 				tree.expandPath(new TreePath(currentNode.getPath()));
+			}	
 			currentNode = currentNode.getNextNode();
-		} while (currentNode != null);
+		}
 	}
 	
 	
@@ -183,55 +173,6 @@ public class IncomingReferenceUtil {
 				}
 			}
 		}
-	}
-	
-	
-	/**
-	 * Search for ongoing references and compute the label for them
-	 * 
-	 * @param editorLocation The editor to search location.
-	 * @param graph          The graph to be created.
-	 * 
-	 * @return The list of found ongoing references
-	 * 
-	 * @throws ClassNotFoundException
-	 * @throws NoSuchMethodException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	@SuppressWarnings("unchecked")
-	public static List<IncomingReference> searchIncomingRef(URL editorLocation, Object graph)
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-
-		List<IncomingReference> incomingReferences = null;
-		
-		if (VersionUtil.isOxygenVersionNewer(23, 0)) {
-			Class<?> ditaAccess = Class.forName(DITA_ACCESS_CLASS_NAME);
-			if (graph == null) {
-				Method createReferencesGraph = ditaAccess
-						.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
-				graph = createReferencesGraph.invoke(null);
-			}
-			Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class,
-					Object.class);
-			incomingReferences = new ArrayList<>();
-			List<DocumentPositionedInfo> result;
-			result = (List<DocumentPositionedInfo>) searchReferences.invoke(null, editorLocation, graph);
-			for (DocumentPositionedInfo documentPositionedInfo : result) {
-				incomingReferences.add(new IncomingReference(documentPositionedInfo));
-			}
-			Collections.sort(incomingReferences);
-			for (int i = 1; i < incomingReferences.size(); i++) {
-				IncomingReference ref1 = incomingReferences.get(i - 1);
-				IncomingReference ref2 = incomingReferences.get(i);
-				if (ref1.getSystemId().equals(ref2.getSystemId())) {
-					ref1.setShowExtraLineNumberInformation();
-					ref2.setShowExtraLineNumberInformation();
-				}
-			}
-		}
-		
-		return incomingReferences;
 	}
 	
 	

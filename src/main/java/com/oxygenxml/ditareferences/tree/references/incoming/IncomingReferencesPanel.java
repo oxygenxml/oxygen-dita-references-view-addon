@@ -10,10 +10,7 @@ package com.oxygenxml.ditareferences.tree.references.incoming;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,9 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +38,7 @@ import ro.sync.ui.Icons;
  * @author mircea_badoi
  *
  */
-public class IncomingReferencesPanel extends JPanel {
+public class IncomingReferencesPanel extends JPanel implements ProgressStatusListener {
 	/**
 	 * For translation.
 	 */
@@ -61,11 +55,6 @@ public class IncomingReferencesPanel extends JPanel {
 	private final IncomingReferencesTree referenceTree;
 
 	/**
-	 * References graph
-	 */
-	private transient Object graph;
-
-	/**
 	 * The plugin workspace
 	 */
 	private final transient PluginWorkspace workspaceAccess;
@@ -74,11 +63,6 @@ public class IncomingReferencesPanel extends JPanel {
 	 * Timer for loading panel.
 	 */
 	private static final transient Timer loadingInProgressTimer = new Timer(false);
-
-	/**
-	 * Timer for loading panel.
-	 */
-	private static final Timer REFRESH_TIMER = new Timer(false);
 
 	/**
 	 * TimerTask for loading panel.
@@ -104,13 +88,6 @@ public class IncomingReferencesPanel extends JPanel {
 	 * Refresh action
 	 */
 	private final AbstractAction refreshAction;
-
-	/**
-	 * Contains initial references category and their children.
-	 */
-	private final transient EnumMap<ReferenceCategory, List<IncomingReference>> referencesMapCategory = new EnumMap<>(
-			ReferenceCategory.class);
-
 	
 	/**
 	 * Constructor
@@ -124,8 +101,7 @@ public class IncomingReferencesPanel extends JPanel {
 		this.setLayout(cards);
 
 		// add tree
-		referenceTree = new IncomingReferencesTree(workspaceAccess, REFRESH_TIMER, graph, referencesMapCategory);
-		ToolTipManager.sharedInstance().registerComponent(referenceTree);
+		referenceTree = new IncomingReferencesTree(workspaceAccess);
 		this.add(referenceTree, ReferenceType.INCOMING.toString());
 
 		// creating loading panel
@@ -144,8 +120,7 @@ public class IncomingReferencesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				graph = null;
-				refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
+				refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA), true);
 			}
 		};
 	}
@@ -158,7 +133,7 @@ public class IncomingReferencesPanel extends JPanel {
 	 */
 	public void setTabSelected(boolean selected) {
 		if (selected) {
-			refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA));
+			refresh(workspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA), false);
 		}
 	}
 
@@ -168,72 +143,16 @@ public class IncomingReferencesPanel extends JPanel {
 	 * 
 	 * @param workspaceAccess The WSEditor
 	 */
-	public synchronized void refresh(WSEditor workspaceAccess) {
+	public synchronized void refresh(WSEditor workspaceAccess, boolean clearCache) {
 		if (workspaceAccess != null) {
-
 			URL editorLocation = workspaceAccess.getEditorLocation();
-			refresh(editorLocation);
+			referenceTree.refresh(editorLocation, this, clearCache);
 		} else {
 			referenceTree.reset();
 		}
 	}
 
 	
-	/**
-	 * Refreshes the references in the given editor
-	 * 
-	 * @param editorLocation The location of the editor to be refreshed
-	 */
-	private synchronized void refresh(URL editorLocation) {
-		REFRESH_TIMER.schedule(new TimerTask() {
-
-			@SuppressWarnings("serial")
-			@Override
-			public void run() {
-				if (isShowing()) {
-					referencesMapCategory.clear();
-					List<IncomingReference> temp;
-					try {
-						updateInProgressStatus(true, 50);
-						temp = IncomingReferenceUtil.searchIncomingRef(editorLocation, graph);
-						DefaultMutableTreeNode root = new DefaultMutableTreeNode(
-								TRANSLATOR.getTranslation(Tags.INCOMING_REFERENCES));
-						DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
-							@Override
-							public boolean isLeaf(Object node) {
-								return false;
-							} // NOSONAR
-						};
-
-						if (temp != null) {
-							IncomingReferenceUtil.addReferencesCategoriesToNode(temp, referencesMapCategory, root);
-							
-							SwingUtilities.invokeLater(() -> {
-								if (root.getChildCount() == 0) {
-									DefaultTreeModel noRefModel = new DefaultTreeModel(root);
-									referenceTree.setModel(noRefModel);
-								} else {
-									referenceTree.setModel(referencesTreeModel);
-								}
-
-								IncomingReferenceUtil.expandFirstLevelOfTree(root, referenceTree);
-							});
-
-						}
-
-					} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
-							| InvocationTargetException e) {
-						LOGGER.error(e, e);
-					} finally {
-						updateInProgressStatus(false, 0);
-					}
-				}
-			}
-		}, 10);
-
-	}
-
-
 	/**
 	 * Install listeners to the tree
 	 * 
@@ -243,22 +162,14 @@ public class IncomingReferencesPanel extends JPanel {
 		workspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
 			@Override
 			public void editorSelected(URL editorLocation) {
-				graph = null;
-				refresh(editorLocation);
+				referenceTree.refresh(editorLocation, IncomingReferencesPanel.this, true);
 			}
 		}, PluginWorkspace.DITA_MAPS_EDITING_AREA);
 
 	}
-		
-
-	/**
-	 * If the list is in the loading process, a pending panel is displayed
-	 * 
-	 * @param inProgress <code>true</code> if the project is starting to load,
-	 *                   <code>false</code> if the project was loaded.
-	 * @param delay      after which the function to be executed
-	 */
-	private void updateInProgressStatus(final boolean inProgress, int delay) {
+	
+	@Override
+	public void updateInProgressStatus(final boolean inProgress, int delay) {
 		if (loadingInProgressTask != null) {
 			loadingInProgressTask.cancel();
 			loadingInProgressTask = null;

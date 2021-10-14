@@ -6,16 +6,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
-import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -29,7 +33,9 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 
+import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Tree;
 
@@ -39,21 +45,15 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
  * @author Alex_Smarandache
  */
 public class IncomingReferencesTree extends Tree {
-    
+	
+	/**
+	 * Constant used for java reflexion
+	 */
+	private static final String DITA_ACCESS_CLASS_NAME = "ro.sync.ecss.dita.DITAAccess";
 	/**
 	 * For translation.
 	 */
 	private static final DITAReferencesTranslator TRANSLATOR = new DITAReferencesTranslator();
-	
-	/**
-	 * Timer for loading panel.
-	 */
-	private final Timer refreshTimer;
-	
-	/**
-	 * Contains initial references category and their children.
-	 */
-	private Map<ReferenceCategory, List<IncomingReference>> referencesMapCategory;
 	
 	/**
 	 * Logger for logging.
@@ -63,27 +63,25 @@ public class IncomingReferencesTree extends Tree {
 	/**
 	 * The graph.
 	 */
-	private final transient Object graph;
+	private transient Object graph;
 	
+	/**
+	 * Timer for loading panel.
+	 */
+	private static final Timer REFRESH_TIMER = new Timer(false);
+
+	/**
+	 * Contains initial references category and their children.
+	 */
+	private final transient EnumMap<ReferenceCategory, List<IncomingReference>> referencesMapCategory = new EnumMap<>(
+			ReferenceCategory.class);
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param workspaceAccess           The Pluginworkspace.
-	 * @param refreshTimer              RefreshTimer.
-	 * @param graph                     The graph.
-	 * @param referencesMapCategory     Contains initial references category and their children.
 	 */
-	public IncomingReferencesTree(PluginWorkspace workspaceAccess, 
-			Timer refreshTimer,
-			Object graph,
-			Map<ReferenceCategory, List<IncomingReference>> referencesMapCategory) {
-		super();
-		
-		this.referencesMapCategory = referencesMapCategory;
-		this.graph = graph;
-		this.refreshTimer = refreshTimer;
-		
+	public IncomingReferencesTree(PluginWorkspace workspaceAccess) {
 		setToggleClickCount(0);
 		setRootVisible(false);
 	    setShowsRootHandles(true);
@@ -91,6 +89,8 @@ public class IncomingReferencesTree extends Tree {
 		setCellRenderer(new IncomingReferencesTreeCellRenderer(workspaceAccess.getImageUtilities()));
 		
 		installListeners(workspaceAccess);
+		
+		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	
 	
@@ -113,8 +113,8 @@ public class IncomingReferencesTree extends Tree {
 	 * @param workspaceAccess The plugin workspace
 	 */
 	private void installListeners(PluginWorkspace workspaceAccess) {
-		installInternalListeners(workspaceAccess);
-		installExtrnalListeners(workspaceAccess);
+		installExpansionListener(workspaceAccess);
+		installActionListeners(workspaceAccess);
 	}
 
 	
@@ -123,9 +123,8 @@ public class IncomingReferencesTree extends Tree {
 	 * 
 	 * @param workspaceAccess The workspace access
 	 */
-	private void installInternalListeners(PluginWorkspace workspaceAccess) {
-		JTree referenceTree = this;
-		referenceTree.addTreeWillExpandListener(new TreeWillExpandListener() {
+	private void installExpansionListener(PluginWorkspace workspaceAccess) {
+		addTreeWillExpandListener(new TreeWillExpandListener() {
 
 			/**
 			 * Add the children to current source node.
@@ -143,7 +142,7 @@ public class IncomingReferencesTree extends Tree {
 					IllegalAccessException, MalformedURLException {
 				List<IncomingReference> temp;
 				URL editorLocation = new URL(referenceInfo.getSystemId());
-				temp = IncomingReferenceUtil.searchIncomingRef(editorLocation, graph);
+				temp = searchIncomingRef(editorLocation);
 				for (IncomingReference currentChild : temp) {
 					source.add(new DefaultMutableTreeNode(currentChild));
 				}
@@ -192,7 +191,7 @@ public class IncomingReferencesTree extends Tree {
 			 * @return no of occurences for this reference.
 			 */
 			private int getReferenceOccurences(DefaultMutableTreeNode source, IncomingReference referenceInfo) {
-				TreeNode[] pathToRoot = ((DefaultTreeModel) referenceTree.getModel()).getPathToRoot(source);
+				TreeNode[] pathToRoot = ((DefaultTreeModel) IncomingReferencesTree.this.getModel()).getPathToRoot(source);
 				int occurencesCounter = 0;
 				String currentNodeSystemID = referenceInfo.getSystemId();
 
@@ -219,24 +218,23 @@ public class IncomingReferencesTree extends Tree {
 	 * 
 	 * @param workspaceAccess The workspace access
 	 */
-	private void installExtrnalListeners(PluginWorkspace workspaceAccess) {
-		JTree referenceTree = this; 
-		referenceTree.addKeyListener(new KeyAdapter() {
+	private void installActionListeners(PluginWorkspace workspaceAccess) {
+		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (KeyEvent.VK_ENTER == e.getKeyCode()) {
 					e.consume();
-					IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, referenceTree, refreshTimer);
+					IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, IncomingReferencesTree.this, REFRESH_TIMER);
 				}
 			}
 		});
 
-		referenceTree.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				e.consume();
 				if (e.getClickCount() == 2) {
-					IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, referenceTree, refreshTimer);
+					IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, IncomingReferencesTree.this, REFRESH_TIMER);
 				}
 			}
 
@@ -252,12 +250,12 @@ public class IncomingReferencesTree extends Tree {
 				e1.consume();
 				if (e1.isPopupTrigger()) {
 					// select the corresponding item from tree
-					int selRow = referenceTree.getRowForLocation(e1.getX(), e1.getY());
-					TreePath selPath = referenceTree.getPathForLocation(e1.getX(), e1.getY());
+					int selRow = IncomingReferencesTree.this.getRowForLocation(e1.getX(), e1.getY());
+					TreePath selPath = IncomingReferencesTree.this.getPathForLocation(e1.getX(), e1.getY());
 					if (selPath != null) {
-						referenceTree.setSelectionPath(selPath);
+						IncomingReferencesTree.this.setSelectionPath(selPath);
 						if (selRow > -1) {
-							referenceTree.setSelectionRow(selRow);
+							IncomingReferencesTree.this.setSelectionRow(selRow);
 						}
 					}
 					JPopupMenu menu = new JPopupMenu();
@@ -265,14 +263,14 @@ public class IncomingReferencesTree extends Tree {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, referenceTree, refreshTimer);
+							IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, IncomingReferencesTree.this, REFRESH_TIMER);
 						}
 					});
 					menu.add(new AbstractAction(TRANSLATOR.getTranslation(Tags.COPY_LOCATION)) {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							IncomingReferenceUtil.copyFileLocationToClipboard(referenceTree);
+							IncomingReferenceUtil.copyFileLocationToClipboard(IncomingReferencesTree.this);
 						}
 					});
 
@@ -282,5 +280,108 @@ public class IncomingReferencesTree extends Tree {
 		});
 	}
 
+	/**
+	 * Refreshes the references in the given editor
+	 * 
+	 * @param editorLocation The location of the editor to be refreshed
+	 */
+	synchronized void refresh(URL editorLocation, ProgressStatusListener progressStatus, boolean clearCache) {
+		if(clearCache) {
+			graph = null;
+		}
+		REFRESH_TIMER.schedule(new TimerTask() {
+
+			@SuppressWarnings("serial")
+			@Override
+			public void run() {
+				if (isShowing()) {
+					referencesMapCategory.clear();
+					List<IncomingReference> temp;
+					try {
+						progressStatus.updateInProgressStatus(true, 50);
+						temp = searchIncomingRef(editorLocation);
+						DefaultMutableTreeNode root = new DefaultMutableTreeNode(
+								TRANSLATOR.getTranslation(Tags.INCOMING_REFERENCES));
+						DefaultTreeModel referencesTreeModel = new DefaultTreeModel(root) {
+							@Override
+							public boolean isLeaf(Object node) {
+								return false;
+							} // NOSONAR
+						};
+
+						if (temp != null) {
+							IncomingReferenceUtil.addReferencesCategoriesToRoot(temp, referencesMapCategory, root);
+							
+							SwingUtilities.invokeLater(() -> {
+								if (root.getChildCount() == 0) {
+									DefaultTreeModel noRefModel = new DefaultTreeModel(root);
+									setModel(noRefModel);
+								} else {
+									setModel(referencesTreeModel);
+								}
+
+								IncomingReferenceUtil.expandFirstLevelOfTree(root, IncomingReferencesTree.this);
+							});
+
+						}
+
+					} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
+							| InvocationTargetException e) {
+						LOGGER.error(e, e);
+					} finally {
+						progressStatus.updateInProgressStatus(false, 0);
+					}
+				}
+			}
+		}, 10);
+
+	}
 	
+	/**
+	 * Search for ongoing references and compute the label for them
+	 * 
+	 * @param editorLocation The editor to search location.
+	 * @param graph          The graph to be created.
+	 * 
+	 * @return The list of found ongoing references
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws NoSuchMethodException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@SuppressWarnings("unchecked")
+	private List<IncomingReference> searchIncomingRef(URL editorLocation)
+			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+		List<IncomingReference> incomingReferences = null;
+		
+		if (VersionUtil.isOxygenVersionNewer(23, 0)) {
+			Class<?> ditaAccess = Class.forName(DITA_ACCESS_CLASS_NAME);
+			if (graph == null) {
+				Method createReferencesGraph = ditaAccess
+						.getDeclaredMethod(VersionUtil.METHOD_NAME_CREATE_REFERENCE_GRAPH);
+				graph = createReferencesGraph.invoke(null);
+			}
+			Method searchReferences = ditaAccess.getDeclaredMethod(VersionUtil.METHOD_NAME_SEARCH_REFERENCES, URL.class,
+					Object.class);
+			incomingReferences = new ArrayList<>();
+			List<DocumentPositionedInfo> result;
+			result = (List<DocumentPositionedInfo>) searchReferences.invoke(null, editorLocation, graph);
+			for (DocumentPositionedInfo documentPositionedInfo : result) {
+				incomingReferences.add(new IncomingReference(documentPositionedInfo));
+			}
+			Collections.sort(incomingReferences);
+			for (int i = 1; i < incomingReferences.size(); i++) {
+				IncomingReference ref1 = incomingReferences.get(i - 1);
+				IncomingReference ref2 = incomingReferences.get(i);
+				if (ref1.getSystemId().equals(ref2.getSystemId())) {
+					ref1.setShowExtraLineNumberInformation();
+					ref2.setShowExtraLineNumberInformation();
+				}
+			}
+		}
+		
+		return incomingReferences;
+	}
 }
