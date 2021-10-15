@@ -88,8 +88,8 @@ public class IncomingReferenceUtil {
 			refCateg.sort((a, b) -> Integer.compare(CATEGORY_COEFFICIENT.get(a), CATEGORY_COEFFICIENT.get(b)));
 			refCateg.forEach(
 					referenceCategory -> {
-						ReferenceCategoryMutableTreeNode referenceToAdd = new ReferenceCategoryMutableTreeNode(referenceCategory);
-						referenceToAdd.setChildren(referenceCategories.get(referenceCategory));
+						DefaultMutableTreeNode referenceToAdd = new DefaultMutableTreeNode(referenceCategory);
+						referenceCategories.get(referenceCategory).forEach(ref -> referenceToAdd.add(new DefaultMutableTreeNode(ref)));
 						rootNode.add(referenceToAdd);
 					});
 		}

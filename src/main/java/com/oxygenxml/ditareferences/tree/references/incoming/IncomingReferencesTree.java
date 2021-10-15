@@ -162,13 +162,8 @@ public class IncomingReferencesTree extends Tree {
 								| InvocationTargetException | MalformedURLException e1) {
 							LOGGER.error(e1, e1);
 						}
-					} else if (source.getUserObject() instanceof ReferenceCategory) {
-						ReferenceCategoryMutableTreeNode category = (ReferenceCategoryMutableTreeNode)source; 
-						category.getChildren()
-								.forEach(e -> source.add(new DefaultMutableTreeNode(e)));
-					}
+					} 
 				}
-
 			}
 
 			@Override
@@ -267,7 +262,20 @@ public class IncomingReferencesTree extends Tree {
 						}
 					});
 
-					menu.show(e1.getComponent(), e1.getX(), e1.getY());
+					boolean menuShouldBeShow = true;
+					if(selPath != null) {
+						DefaultMutableTreeNode source = (DefaultMutableTreeNode)selPath.getLastPathComponent();
+						if(source.getUserObject() instanceof ReferenceCategory) {
+							menuShouldBeShow = false;
+						}
+					}
+					
+					if(menuShouldBeShow) {
+						menu.show(e1.getComponent(), e1.getX(), e1.getY());
+					} else {
+						menu.setVisible(false);
+					}
+					
 				}
 			}
 		});
