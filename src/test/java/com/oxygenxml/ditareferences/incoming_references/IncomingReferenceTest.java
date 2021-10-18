@@ -3,6 +3,7 @@ package com.oxygenxml.ditareferences.incoming_references;
 import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReference;
 
 import junit.framework.TestCase;
+import ro.sync.util.URLUtil;
 
 /**
  * Test the /oxygen-dita-references-view/src/main/java/com/oxygenxml/ditareferences/tree/references/incoming/IncomingReference class.
@@ -24,8 +25,8 @@ public class IncomingReferenceTest extends TestCase {
 		IncomingReference incomingReference = new IncomingReference(dpi);
 		dpi.setMessage("My message");
 		
-		String toolTipTextExpected = "<html><p>C:/Users/alex_smarandache/Documents/GitHub/userguide-private/DITA/maps/chapter-installation.ditamap</p>file:/C:/Users/alex_smarandache/Documents/GitHub/userguide-private/DITA/maps/chapter-installation.ditamap[Line: 50, Column: 100]</p></html>";
-		assertEquals(toolTipTextExpected, incomingReference.getTooltipText().replace("\\", "/"));
+		String toolTipTextExpected = "<html><p>" +URLUtil.getDescription(systemID) + "</p>file:/C:/Users/alex_smarandache/Documents/GitHub/userguide-private/DITA/maps/chapter-installation.ditamap[Line: 50, Column: 100]</p></html>";
+		assertEquals(toolTipTextExpected, incomingReference.getTooltipText());
 		
 		String expectedRenderText = "chapter-installation.ditamap";
 		assertEquals(expectedRenderText, incomingReference.getRenderText());
