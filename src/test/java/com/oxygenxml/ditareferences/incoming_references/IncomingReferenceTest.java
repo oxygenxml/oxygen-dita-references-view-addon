@@ -12,6 +12,11 @@ import junit.framework.TestCase;
  */
 public class IncomingReferenceTest extends TestCase {
 
+	/**
+	 * @author alex_smarandache
+	 * 
+	 * @throws Exception
+	 */
 	public void testIncomingReference() throws Exception {
 		DPIForTest dpi = new DPIForTest();
 		String systemID = "file:/C:/Users/alex_smarandache/Documents/GitHub/userguide-private/DITA/maps/chapter-installation.ditamap";

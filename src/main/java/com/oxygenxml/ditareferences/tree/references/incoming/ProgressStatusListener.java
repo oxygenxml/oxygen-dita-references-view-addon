@@ -1,5 +1,11 @@
 package com.oxygenxml.ditareferences.tree.references.incoming;
 
+/**
+ * An interface for Progress Status.
+ * 
+ * @author alex_smarandache
+ *
+ */
 public interface ProgressStatusListener {
 
 	/**

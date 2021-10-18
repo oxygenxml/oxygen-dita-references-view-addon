@@ -17,6 +17,7 @@ import ro.sync.util.URLUtil;
 
 /**
  * Holds the data for an incoming reference
+ * 
  * @author mircea_badoi
  *
  */
