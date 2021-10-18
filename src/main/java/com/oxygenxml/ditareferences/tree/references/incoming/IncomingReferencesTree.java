@@ -117,87 +117,102 @@ public class IncomingReferencesTree extends Tree {
 	 * @param workspaceAccess The workspace access
 	 */
 	private void installExpansionListener(PluginWorkspace workspaceAccess) {
-		addTreeWillExpandListener(new TreeWillExpandListener() {
+	  TreeWillExpandListener expandListener = new TreeWillExpandListener() {
 
-			/**
-			 * Add the children to current source node.
-			 *
-			 * @param source        The node source.
-			 * @param referenceInfo The current IncomingReference instance.
-			 *
-			 * @throws ClassNotFoundException
-			 * @throws InvocationTargetException
-			 * @throws NoSuchMethodException
-			 * @throws IllegalAccessException
-			 */
-			private void addChildren(DefaultMutableTreeNode source, IncomingReference referenceInfo)
-					throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
-					IllegalAccessException, MalformedURLException {
-				List<IncomingReference> temp;
-				URL editorLocation = new URL(referenceInfo.getSystemId());
-				temp = searchIncomingRef(editorLocation);
-				for (IncomingReference currentChild : temp) {
-					source.add(new DefaultMutableTreeNode(currentChild));
-				}
+      /**
+       * Add the children to current source node.
+       *
+       * @param source        The node source.
+       * @param referenceInfo The current IncomingReference instance.
+       *
+       * @throws ClassNotFoundException
+       * @throws InvocationTargetException
+       * @throws NoSuchMethodException
+       * @throws IllegalAccessException
+       */
+      private void addChildren(DefaultMutableTreeNode source, IncomingReference referenceInfo)
+          throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+          IllegalAccessException, MalformedURLException {
+        List<IncomingReference> temp;
+        URL editorLocation = new URL(referenceInfo.getSystemId());
+        temp = searchIncomingRef(editorLocation);
+        for (IncomingReference currentChild : temp) {
+          source.add(new DefaultMutableTreeNode(currentChild));
+        }
 
-			}
+      }
 
-			@Override
-			public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-				DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+      @Override
+      public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+        DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
 
-				if (source != null && source.getChildCount() == 0) {
-					if (source.getUserObject() instanceof IncomingReference) {
-						try {
-							IncomingReference referenceInfo = (IncomingReference) (source.getUserObject());
-							int occurencesCounter = getReferenceOccurences(source, referenceInfo);
+        if (source != null 
+            && source.getChildCount() == 0 
+            && source.getUserObject() instanceof IncomingReference) {
+          expand(source);
+        }
+      }
 
-							if (occurencesCounter < 2) {
-								addChildren(source, referenceInfo);
-							} else {
-								// Avoid expanding the same system id on multiple levels in the same path
-							}
+      @Override
+      public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+        // not needed
+      }
 
-						} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
-								| InvocationTargetException | MalformedURLException e1) {
-							LOGGER.error(e1, e1);
-						}
-					} 
-				}
-			}
+      /**
+       * 
+       * @param source        The source node.
+       * @param referenceInfo The current reference.
+       * 
+       * @return no of occurences for this reference.
+       */
+      private int getReferenceOccurences(DefaultMutableTreeNode source, IncomingReference referenceInfo) {
+        TreeNode[] pathToRoot = ((DefaultTreeModel) IncomingReferencesTree.this.getModel()).getPathToRoot(source);
+        int occurencesCounter = 0;
+        String currentNodeSystemID = referenceInfo.getSystemId();
 
-			@Override
-			public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
-				// not needed
-			}
+        for (TreeNode treeNode : pathToRoot) {
+          DefaultMutableTreeNode nodeInPath = (DefaultMutableTreeNode) treeNode;
+          if (nodeInPath.getUserObject() instanceof IncomingReference) {
+            IncomingReference referenceInPath = (IncomingReference) nodeInPath.getUserObject();
+            if (currentNodeSystemID != null && currentNodeSystemID.equals(referenceInPath.getSystemId())) {
+              occurencesCounter++;
+            }
+          }
+        }
 
-			/**
-			 * 
-			 * @param source        The source node.
-			 * @param referenceInfo The current reference.
-			 * 
-			 * @return no of occurences for this reference.
-			 */
-			private int getReferenceOccurences(DefaultMutableTreeNode source, IncomingReference referenceInfo) {
-				TreeNode[] pathToRoot = ((DefaultTreeModel) IncomingReferencesTree.this.getModel()).getPathToRoot(source);
-				int occurencesCounter = 0;
-				String currentNodeSystemID = referenceInfo.getSystemId();
+        return occurencesCounter;
+      }
 
-				for (TreeNode treeNode : pathToRoot) {
-					DefaultMutableTreeNode nodeInPath = (DefaultMutableTreeNode) treeNode;
-					if (nodeInPath.getUserObject() instanceof IncomingReference) {
-						IncomingReference referenceInPath = (IncomingReference) nodeInPath.getUserObject();
-						if (currentNodeSystemID != null && currentNodeSystemID.equals(referenceInPath.getSystemId())) {
-							occurencesCounter++;
-						}
-					}
-				}
+      
+      /**
+       * Expands the source node.
+       * 
+       * @param source The source Node.
+       */
+      private void expand(DefaultMutableTreeNode source) {
+        try {
+          IncomingReference referenceInfo = (IncomingReference) (source.getUserObject());
+          int occurencesCounter = getReferenceOccurences(source, referenceInfo);
 
-				return occurencesCounter;
-			}
+          if (occurencesCounter < 2) {
+            addChildren(source, referenceInfo);
+          } else {
+            // Avoid expanding the same system id on multiple levels in the same path
+          }
 
-		});
-
+        } catch (ClassNotFoundException 
+            | NoSuchMethodException 
+            | IllegalAccessException
+            | InvocationTargetException 
+            | MalformedURLException e1) {
+          LOGGER.error(e1, e1);
+        }
+      }
+      
+    };
+    
+    
+		addTreeWillExpandListener(expandListener);
 	}
 
 	
@@ -245,37 +260,27 @@ public class IncomingReferencesTree extends Tree {
 						if (selRow > -1) {
 							IncomingReferencesTree.this.setSelectionRow(selRow);
 						}
-					}
-					JPopupMenu menu = new JPopupMenu();
-					menu.add(new AbstractAction(TRANSLATOR.getTranslation(Tags.OPEN_REFERENCE)) {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, IncomingReferencesTree.this, REFRESH_TIMER);
-						}
-					});
-					menu.add(new AbstractAction(TRANSLATOR.getTranslation(Tags.COPY_LOCATION)) {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							IncomingReferenceUtil.copyFileLocationToClipboard(IncomingReferencesTree.this);
-						}
-					});
-
-					boolean menuShouldBeShow = true;
-					if(selPath != null) {
 						DefaultMutableTreeNode source = (DefaultMutableTreeNode)selPath.getLastPathComponent();
-						if(source.getUserObject() instanceof ReferenceCategory) {
-							menuShouldBeShow = false;
+						boolean menuShouldBeShow = source.getUserObject() instanceof IncomingReference;
+						if(menuShouldBeShow) {
+						  JPopupMenu menu = new JPopupMenu();
+						  menu.add(new AbstractAction(TRANSLATOR.getTranslation(Tags.OPEN_REFERENCE)) {
+
+		            @Override
+		            public void actionPerformed(ActionEvent e) {
+		              IncomingReferenceUtil.openFileAndSelectReference(workspaceAccess, IncomingReferencesTree.this, REFRESH_TIMER);
+		            }
+		          });
+		          menu.add(new AbstractAction(TRANSLATOR.getTranslation(Tags.COPY_LOCATION)) {
+
+		            @Override
+		            public void actionPerformed(ActionEvent e) {
+		              IncomingReferenceUtil.copyFileLocationToClipboard(IncomingReferencesTree.this);
+		            }
+		          });
+		          menu.show(e1.getComponent(), e1.getX(), e1.getY());
 						}
 					}
-					
-					if(menuShouldBeShow) {
-						menu.show(e1.getComponent(), e1.getX(), e1.getY());
-					} else {
-						menu.setVisible(false);
-					}
-					
 				}
 			}
 		});
