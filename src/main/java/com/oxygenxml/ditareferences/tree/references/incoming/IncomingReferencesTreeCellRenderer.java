@@ -106,4 +106,5 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer {
 		return label;
 	}
 
+	
 }
