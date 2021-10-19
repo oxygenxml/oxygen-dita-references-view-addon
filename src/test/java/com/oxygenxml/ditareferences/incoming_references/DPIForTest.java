@@ -75,6 +75,6 @@ public class DPIForTest extends DocumentPositionedInfo {
 	
 	@Override
 	public String getMessage() {
-		return systemID;
+		return message;
 	}
 }

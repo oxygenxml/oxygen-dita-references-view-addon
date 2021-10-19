@@ -14,6 +14,8 @@ import ro.sync.util.URLUtil;
 public class IncomingReferenceTest extends TestCase {
 
 	/**
+	 * Test incoming reference methods.
+	 * 
 	 * @author alex_smarandache
 	 * 
 	 * @throws Exception
@@ -25,7 +27,7 @@ public class IncomingReferenceTest extends TestCase {
 		IncomingReference incomingReference = new IncomingReference(dpi);
 		dpi.setMessage("My message");
 		
-		String toolTipTextExpected = "<html><p>" +URLUtil.getDescription(systemID) + "</p>file:/C:/Users/alex_smarandache/Documents/GitHub/userguide-private/DITA/maps/chapter-installation.ditamap[Line: 50, Column: 100]</p></html>";
+		String toolTipTextExpected = "<html><p>" + URLUtil.getDescription(systemID) + "</p>My message[Line: 50, Column: 100]</p></html>";
 		assertEquals(toolTipTextExpected, incomingReference.getTooltipText());
 		
 		String expectedRenderText = "chapter-installation.ditamap";
