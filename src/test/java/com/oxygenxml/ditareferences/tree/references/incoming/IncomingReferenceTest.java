@@ -1,4 +1,4 @@
-package com.oxygenxml.ditareferences.incoming_references;
+package com.oxygenxml.ditareferences.tree.references.incoming;
 
 import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReference;
 

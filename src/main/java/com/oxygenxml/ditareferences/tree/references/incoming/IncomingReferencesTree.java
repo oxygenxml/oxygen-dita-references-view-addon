@@ -64,11 +64,12 @@ public class IncomingReferencesTree extends Tree {
 	 * Timer for loading panel.
 	 */
 	private static final Timer REFRESH_TIMER = new Timer(false);
+	
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param workspaceAccess           The Pluginworkspace.
+	 * @param workspaceAccess  The Pluginworkspace.
 	 */
 	public IncomingReferencesTree(PluginWorkspace workspaceAccess) {
 		setToggleClickCount(0);
@@ -229,6 +230,7 @@ public class IncomingReferencesTree extends Tree {
 
 	}
 	
+	
 	/**
 	 * Search for ongoing references and compute the label for them.
 	 * 
@@ -276,8 +278,6 @@ public class IncomingReferencesTree extends Tree {
 		
 		return incomingReferences;
 	}
-	
-	
 	
 	
 }
