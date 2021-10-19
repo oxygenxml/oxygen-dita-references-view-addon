@@ -14,8 +14,6 @@ import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
-import ro.sync.exml.workspace.api.PluginWorkspace;
-
 /**
  * A listener that manages the way the tree expands.
  * 
@@ -30,11 +28,6 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
 	private static final Logger LOGGER = Logger.getLogger(IncomingReferenceTreeWillExpandListener.class.getName());
 	
 	/**
-	 * The pluginworkspace.
-	 */
-	private final PluginWorkspace pluginWorkspace;
-	
-	/**
 	 * The tree where the listener is installed.
 	 */
 	private final IncomingReferencesTree tree;
@@ -46,9 +39,8 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
 	 * @param tree              The tree where the listener is installed.
 	 * @param pluginWorkspace   The pluginworkspace.
 	 */
-	public IncomingReferenceTreeWillExpandListener(IncomingReferencesTree tree, PluginWorkspace pluginWorkspace) {
+	public IncomingReferenceTreeWillExpandListener(IncomingReferencesTree tree) {
 		this.tree = tree;
-		this.pluginWorkspace = pluginWorkspace;
 	}
 	
 	

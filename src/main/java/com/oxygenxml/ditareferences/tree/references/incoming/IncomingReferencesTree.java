@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,12 +18,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.ExpandVetoException;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -109,7 +104,7 @@ public class IncomingReferencesTree extends Tree {
 	private void installListeners(PluginWorkspace workspaceAccess) {
 		
 		// add expansion listener
-		this.addTreeWillExpandListener(new IncomingReferenceTreeWillExpandListener());
+		this.addTreeWillExpandListener(new IncomingReferenceTreeWillExpandListener(this));
 		
 		//add action listeners
 		addKeyListener(new KeyAdapter() {
@@ -248,7 +243,7 @@ public class IncomingReferencesTree extends Tree {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings("unchecked")
-	private List<IncomingReference> searchIncomingRef(URL editorLocation)
+    List<IncomingReference> searchIncomingRef(URL editorLocation)
 			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 		List<IncomingReference> incomingReferences = null;
@@ -284,143 +279,5 @@ public class IncomingReferencesTree extends Tree {
 	
 	
 	
-	/**
-	 * Inner class for tree expansion listener.
-	 * 
-	 * @author alex_smarandache
-	 *
-	 */
-	private class IncomingReferenceTreeWillExpandListener implements TreeWillExpandListener {	 
-		
-		/**
-	       * Add the children to current source node.
-	       *
-	       * @param source        The node source.
-	       * @param referenceInfo The current IncomingReference instance.
-	       *
-	       * @throws ClassNotFoundException
-	       * @throws InvocationTargetException
-	       * @throws NoSuchMethodException
-	       * @throws IllegalAccessException
-	       */
-	      private void addChildren(DefaultMutableTreeNode source, IncomingReference referenceInfo)
-	          throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
-	          IllegalAccessException, MalformedURLException {
-	        List<IncomingReference> temp;
-	        URL editorLocation = new URL(referenceInfo.getSystemId());
-	        temp = searchIncomingRef(editorLocation);
-	        for (IncomingReference currentChild : temp) {
-	          DefaultMutableTreeNode currentChildNode = new DefaultMutableTreeNode(currentChild);
-	          source.add(currentChildNode);
-	          if(!isExpandable(currentChildNode)) {
-	        	  IncomingReferencesTree.this.expandPath(new TreePath(currentChildNode.getPath()));
-	          }
-	        }
-
-	      }
-
-	      @Override
-	      public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-	        DefaultMutableTreeNode source = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
-
-	        if (source != null 
-	            && source.getChildCount() == 0 
-	            && source.getUserObject() instanceof IncomingReference) {
-	          expand(source);
-	        }
-	      }
-
-	      @Override
-	      public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
-	        // not needed
-	      }
-
-	      /**
-	       * 
-	       * @param source        The source node.
-	       * @param referenceInfo The current reference.
-	       * 
-	       * @return no of occurences for this reference.
-	       */
-	      private int getReferenceOccurences(DefaultMutableTreeNode source, IncomingReference referenceInfo) {
-	        TreeNode[] pathToRoot = ((DefaultTreeModel) IncomingReferencesTree.this.getModel()).getPathToRoot(source);
-	        int occurencesCounter = 0;
-	        String currentNodeSystemID = referenceInfo.getSystemId();
-
-	        for (TreeNode treeNode : pathToRoot) {
-	          DefaultMutableTreeNode nodeInPath = (DefaultMutableTreeNode) treeNode;
-	          if (nodeInPath.getUserObject() instanceof IncomingReference) {
-	            IncomingReference referenceInPath = (IncomingReference) nodeInPath.getUserObject();
-	            if (currentNodeSystemID != null && currentNodeSystemID.equals(referenceInPath.getSystemId())) {
-	              occurencesCounter++;
-	            }
-	          }
-	        }
-
-	        return occurencesCounter;
-	      }
-
-	      
-	      /**
-	       * Expands the source node.
-	       * 
-	       * @param source The source Node.
-	       */
-	      private void expand(DefaultMutableTreeNode source) {
-	        try {
-	          IncomingReference referenceInfo = (IncomingReference) (source.getUserObject());
-	          int occurencesCounter = getReferenceOccurences(source, referenceInfo);
-
-	          if (occurencesCounter < 2) {
-	            addChildren(source, referenceInfo);
-	          } else {
-	            // Avoid expanding the same system id on multiple levels in the same path
-	          }
-
-	        } catch (ClassNotFoundException 
-	            | NoSuchMethodException 
-	            | IllegalAccessException
-	            | InvocationTargetException 
-	            | MalformedURLException e1) {
-	          LOGGER.error(e1, e1);
-	        }
-	      }
-	      
-	      
-	    /**  
-	     * Check if the node can be expanded.
-	     * 
-	     * @param source The current node.
-	     * 
-	     * @return <code>true</code> if the node can be expanded
-	     */
-		private boolean isExpandable(DefaultMutableTreeNode source) {
-	    	  boolean toReturn = true;
-	    	  try {
-	              IncomingReference referenceInfo = (IncomingReference) (source.getUserObject());
-	              int occurencesCounter = getReferenceOccurences(source, referenceInfo);
-
-	              if (occurencesCounter < 2) {
-	            	  URL editorLocation = new URL(referenceInfo.getSystemId());
-	                  List<IncomingReference> temp = searchIncomingRef(editorLocation);
-	                  if(temp != null && temp.isEmpty()) {
-	                	  toReturn = false;
-	                  }
-	              } else {
-	            	  toReturn = false;
-	              }
-
-	            } catch (ClassNotFoundException 
-	                | NoSuchMethodException 
-	                | IllegalAccessException
-	                | InvocationTargetException 
-	                | MalformedURLException e1) {
-	              LOGGER.error(e1, e1);
-	              toReturn = false;
-	            }
-	    	  
-	    	  return toReturn;
-	      }
-		
-	}
+	
 }
