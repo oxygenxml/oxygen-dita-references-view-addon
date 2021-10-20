@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
 
 import ro.sync.exml.workspace.api.images.ImageUtilities;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
@@ -36,7 +37,7 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer {
 	/**
 	 * For translation
 	 */
-	private static final DITAReferencesTranslator TRANSLATOR = new DITAReferencesTranslator();
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 
 	/**
 	 * Image utilities used to get icon for node

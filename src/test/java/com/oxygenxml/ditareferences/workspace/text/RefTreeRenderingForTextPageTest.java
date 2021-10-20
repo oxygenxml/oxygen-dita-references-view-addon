@@ -11,7 +11,6 @@ import javax.swing.tree.TreePath;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 import com.oxygenxml.ditareferences.workspace.WSEditorAdapterForTests;
@@ -29,8 +28,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  */
 public class RefTreeRenderingForTextPageTest extends TestCase {
 
-	final OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
-			new DITAReferencesTranslatorForTests());
+	final OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null);
 
 	final String ditaTopicAllRefsContent = "<topic id=\"sample\" class=\"- topic/topic \">\n"
 			+ "    <title class=\"- topic/title \">sample</title>\n" + "    <body>\n"

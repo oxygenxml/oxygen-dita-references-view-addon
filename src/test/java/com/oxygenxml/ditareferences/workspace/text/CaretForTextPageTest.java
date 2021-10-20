@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.NodeRange;
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 import com.oxygenxml.ditareferences.workspace.WSEditorAdapterForTests;
@@ -40,8 +39,7 @@ public class CaretForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void testCaretListener() {
-		OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
-				null, new DITAReferencesTranslatorForTests());
+		OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null);
 		tree.setShowing(true);
 
 		final String ditaContent = "<topic id=\"copyright\" class=\"- topic/topic \">\n"

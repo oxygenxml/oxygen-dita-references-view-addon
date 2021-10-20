@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
 
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.util.URLUtil;
@@ -26,7 +27,7 @@ public class IncomingReference implements Comparable<IncomingReference> {
   /**
    * For translation
    */
-  private static final DITAReferencesTranslator translator = new DITAReferencesTranslator();
+  private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
   
   /**
    * The document position info
@@ -99,11 +100,11 @@ public class IncomingReference implements Comparable<IncomingReference> {
     tooltip.append("</p>");
     tooltip.append(dpi.getMessage());
     tooltip.append("[");
-    tooltip.append(translator.getTranslation(Tags.LINE));
+    tooltip.append(TRANSLATOR.getTranslation(Tags.LINE));
     tooltip.append(": ");
     tooltip.append(dpi.getLine());
     tooltip.append(", ");
-    tooltip.append(translator.getTranslation(Tags.COLUMN));
+    tooltip.append(TRANSLATOR.getTranslation(Tags.COLUMN));
     tooltip.append(": ");
     tooltip.append(dpi.getColumn());
     tooltip.append("]");

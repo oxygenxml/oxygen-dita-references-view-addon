@@ -10,7 +10,6 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.i18n.Tags;
-import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorPageReferencesTreeCaretListener;
 import com.oxygenxml.ditareferences.workspace.authorpage.AuthorReferencesCollector;
@@ -69,10 +68,8 @@ public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 	 * 
 	 * @param pluginWorkspaceAccess The pluginWorkspaceAccess
 	 * @param keysProvider          The Map with the current DITA Map keys
-	 * @param translator            The translator
 	 */
-	public OutgoingReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider,
-			Translator translator) {
+	public OutgoingReferencesTree(StandalonePluginWorkspace pluginWorkspaceAccess, KeysProvider keysProvider) {
 
 		this.setRootVisible(false);
 		this.setShowsRootHandles(true);
@@ -83,7 +80,7 @@ public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 		this.setTransferHandler(new RefNodeTransferHandler());
 
 		// set cellRenderer for ReferencesTree
-		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), translator, keysProvider));
+		this.setCellRenderer(new ReferencesTreeCellRenderer(pluginWorkspaceAccess.getImageUtilities(), keysProvider));
 
 		// install toolTips on JTree.
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -120,11 +117,11 @@ public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 		
 
 		// popUp Menu for Leaf Nodes
-		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
+		this.refMouseAdapter = new ReferencesMouseAdapter(this, this.pluginWorkspaceAccess, keysProvider);
 		this.addMouseListener(this.refMouseAdapter);
 
 		// Key Adapter for Leaf Nodes when Enter Key is pressed
-		this.enterKeyAdapter = new ReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider, translator);
+		this.enterKeyAdapter = new ReferencesKeyAdapter(this, this.pluginWorkspaceAccess, keysProvider);
 		this.addKeyListener(this.enterKeyAdapter);
 		
 		// add Hierarchy Listener when side-view is not hidden

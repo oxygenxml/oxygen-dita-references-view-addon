@@ -7,6 +7,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
@@ -18,8 +19,19 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class ReferencesMouseAdapter extends MouseAdapter {
 
+	/**
+	 * The tree.
+	 */
 	private OutgoingReferencesTree refTree;
+	
+	/**
+	 * The workspace access.
+	 */
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	
+	/**
+	 * Editor access.
+	 */
 	private WSEditor editorAccess;
 
 	public void setEditorAccess(WSEditor editorAccess) {
@@ -27,7 +39,7 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	}
 
 	/* The translator of the PopUpMenu item. */
-	private Translator translator;
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 
 	private KeysProvider keysProvider;
 
@@ -40,12 +52,11 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	 * @param editorAccess          The editorAccess
 	 */
 	public ReferencesMouseAdapter(OutgoingReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
-			KeysProvider keysProvider, Translator translator) {
+			KeysProvider keysProvider) {
 		super();
 		this.refTree = refTree;
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.keysProvider = keysProvider;
-		this.translator = translator;
 	}
 
 	@Override
@@ -70,8 +81,8 @@ public class ReferencesMouseAdapter extends MouseAdapter {
 	private void handleContextMenu(MouseEvent releasedEvent) {
 		if (releasedEvent.isPopupTrigger()) {
 			processRightClick(releasedEvent, 
-					translator.getTranslation(Tags.OPEN_REFERENCE),
-					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
+					TRANSLATOR.getTranslation(Tags.OPEN_REFERENCE),
+					TRANSLATOR.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		}
 	}
 

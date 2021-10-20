@@ -11,19 +11,27 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  */
 public class DITAReferencesTranslator implements Translator {
 
-  public DITAReferencesTranslator() {
+   private DITAReferencesTranslator() {
 		// empty constructor
-	}
+   }
+  
+   private static class TranslatorHelper {
+	   public static final DITAReferencesTranslator INSTANCE = new DITAReferencesTranslator();
+   }
+   
+   public static Translator getInstance() {
+	   return TranslatorHelper.INSTANCE;
+   }
 	
-	@Override
-	public String getTranslation(String key) {
-		String toReturn = key;
-		if(PluginWorkspaceProvider.getPluginWorkspace() instanceof StandalonePluginWorkspace) {
-			toReturn = ((StandalonePluginWorkspace) PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle()
-					.getMessage(key);
-		}
-		
-		return toReturn;
-	}
+   @Override
+   public String getTranslation(String key) {
+	   String toReturn = key;
+	   if(PluginWorkspaceProvider.getPluginWorkspace() instanceof StandalonePluginWorkspace) {
+	    	toReturn = ((StandalonePluginWorkspace) PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle()
+				.getMessage(key);
+	   }
+	
+	   return toReturn;
+	}    
 
 }

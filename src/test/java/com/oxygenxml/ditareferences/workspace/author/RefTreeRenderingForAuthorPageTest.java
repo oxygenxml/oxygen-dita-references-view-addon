@@ -8,7 +8,6 @@ import javax.swing.tree.TreePath;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 
@@ -23,8 +22,7 @@ import junit.framework.TestCase;
 public class RefTreeRenderingForAuthorPageTest extends TestCase {
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
-	OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null,
-			new DITAReferencesTranslatorForTests());
+	OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null);
 
 	/**
 	 * DITA topic opened in Author Mode with image reference.

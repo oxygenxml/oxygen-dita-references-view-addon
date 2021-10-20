@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.tree.references.ReferenceType;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
@@ -33,7 +34,7 @@ import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
 import ro.sync.ui.Icons;
 
 /**
- * Present incoming references in a JTree
+ * Present incoming references in a JTree.
  * 
  * @author mircea_badoi
  *
@@ -42,7 +43,7 @@ public class IncomingReferencesPanel extends JPanel implements ProgressStatusLis
 	/**
 	 * For translation.
 	 */
-	private static final DITAReferencesTranslator TRANSLATOR = new DITAReferencesTranslator();
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 
 	/**
 	 * Logger for logging.
@@ -50,7 +51,7 @@ public class IncomingReferencesPanel extends JPanel implements ProgressStatusLis
 	private static final Logger LOGGER = Logger.getLogger(IncomingReferencesPanel.class.getName());
 
 	/**
-	 * JTree with ongoing references
+	 * JTree with ongoing references.
 	 */
 	private final IncomingReferencesTree referenceTree;
 
@@ -85,12 +86,13 @@ public class IncomingReferencesPanel extends JPanel implements ProgressStatusLis
 	private final JLabel loadingLabel;
 
 	/**
-	 * Refresh action
+	 * Refresh action.
 	 */
 	private final AbstractAction refreshAction;
 	
+	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param workspaceAccess The pluginworkspace
 	 */

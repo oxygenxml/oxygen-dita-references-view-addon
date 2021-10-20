@@ -12,6 +12,7 @@ import javax.swing.JTree;
 import javax.swing.JViewport;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.workspace.DITAConstants;
@@ -32,8 +33,11 @@ import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
  */
 @SuppressWarnings("serial")
 public class ReferencesTreeCellRenderer extends TreeCellRenderer {	
-	/* The translator of the DITA reference categories. */
-	private transient Translator translator;
+	
+	/**
+	 * For translation.
+	 */
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 
 	/* The keysProvider. */
 	private transient KeysProvider keysProvider;
@@ -52,11 +56,9 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 	 * category nodes corresponding their status: expanded/collapsed.
 	 * 
 	 * @param imageUtilities The imageUtilities
-	 * @param translator     The translator for categories
 	 */
-	public ReferencesTreeCellRenderer(ImageUtilities imageUtilities, Translator translator, KeysProvider keysProvider) {
+	public ReferencesTreeCellRenderer(ImageUtilities imageUtilities, KeysProvider keysProvider) {
 		super();
-		this.translator = translator;
 		this.keysProvider = keysProvider;
 
 		URL imageUrl = StandalonePluginWorkspace.class.getResource(Icons.IMAGE_REFERENCE);
@@ -187,17 +189,17 @@ public class ReferencesTreeCellRenderer extends TreeCellRenderer {
 		String toDisplayCategory = null;
 
 		if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.MEDIA_REFERENCES)) {
-			toDisplayCategory = translator.getTranslation(Tags.MEDIA_REFERENCES);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.MEDIA_REFERENCES);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CROSS_REFERENCES)) {
-			toDisplayCategory = translator.getTranslation(Tags.CROSS_REFERENCES);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.CROSS_REFERENCES);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.CONTENT_REFERENCES)) {
-			toDisplayCategory = translator.getTranslation(Tags.CONTENT_REFERENCES);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.CONTENT_REFERENCES);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.RELATED_LINKS)) {
-			toDisplayCategory = translator.getTranslation(Tags.RELATED_LINKS);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.RELATED_LINKS);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE)) {
-			toDisplayCategory = translator.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.OUTGOING_REFERENCES_NOT_AVAILABLE);
 		} else if (((DefaultMutableTreeNode) value).getUserObject().equals(Tags.NO_OUTGOING_REFERENCES_FOUND)) {
-			toDisplayCategory = translator.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
+			toDisplayCategory = TRANSLATOR.getTranslation(Tags.NO_OUTGOING_REFERENCES_FOUND);
 		}
 		label.setText(toDisplayCategory);
 	}

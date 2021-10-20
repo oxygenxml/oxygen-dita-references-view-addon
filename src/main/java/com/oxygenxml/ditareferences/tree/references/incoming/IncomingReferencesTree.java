@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.tree.references.VersionUtil;
 
 import ro.sync.document.DocumentPositionedInfo;
@@ -48,7 +49,7 @@ public class IncomingReferencesTree extends Tree {
 	/**
 	 * For translation.
 	 */
-	private static final DITAReferencesTranslator TRANSLATOR = new DITAReferencesTranslator();
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 	
 	/**
 	 * Logger for logging.
@@ -212,8 +213,9 @@ public class IncomingReferencesTree extends Tree {
 								} else {
 									setModel(referencesTreeModel);
 								}
-
+ 
 								IncomingReferenceUtil.expandFirstLevelOfTree(root, IncomingReferencesTree.this);
+								
 							});
 
 						}

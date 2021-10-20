@@ -9,6 +9,7 @@ import javax.swing.Timer;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
+import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.sideview.SideViewComponent;
 import com.oxygenxml.ditareferences.tree.references.incoming.IncomingReferencesPanel;
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
@@ -54,7 +55,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	private Timer updateTreeTimer = new Timer(TIMER_DELAY, timerListener);
 
 	/* The DITA references translator for the side-view label. */
-	private DITAReferencesTranslator translator = new DITAReferencesTranslator();
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
 
 	/* Document Listener to update the ReferencesTree for TextPage. */
 	private TextPageListener textPageDocumentListener = new TextPageListener(updateTreeTimer);
@@ -68,7 +69,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.refTreeOut = new OutgoingReferencesTree(pluginWorkspaceAccess, keysProvider, translator);
+		this.refTreeOut = new OutgoingReferencesTree(pluginWorkspaceAccess, keysProvider);
 		this.refTreeIn = new IncomingReferencesPanel(pluginWorkspaceAccess);
 
 		pluginWorkspaceAccess.addEditorChangeListener(new WSEditorChangeListener() {
@@ -178,7 +179,7 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 				viewInfo.setComponent(new SideViewComponent(refTreeOut, refTreeIn));
 
 				// set side-view Title
-				viewInfo.setTitle(translator.getTranslation(Tags.DITA_REFERENCES));
+				viewInfo.setTitle(TRANSLATOR.getTranslation(Tags.DITA_REFERENCES));
 
 				// set side-view Icon
 				URL iconURL = getClass().getResource(Icons.DITA_REFERENCES);

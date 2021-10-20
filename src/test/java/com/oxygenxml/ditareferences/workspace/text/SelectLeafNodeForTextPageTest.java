@@ -9,7 +9,6 @@ import javax.swing.tree.TreePath;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
 import com.oxygenxml.ditareferences.workspace.WSEditorAdapterForTests;
@@ -37,8 +36,7 @@ public class SelectLeafNodeForTextPageTest extends TestCase {
 	 */
 	@Test
 	public void test_SelectionInTreeTextPage() throws InterruptedException {
-		OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(),
-				null, new DITAReferencesTranslatorForTests());
+		OutgoingReferencesTree tree = new OutgoingReferencesTree(new StandalonePluginWorkspaceAccessForTests(), null);
 
 		WSEditorAdapterForTests editor = new WSEditorAdapterForTests() {
 			@Override

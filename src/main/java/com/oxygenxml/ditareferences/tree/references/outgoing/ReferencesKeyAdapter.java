@@ -8,6 +8,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.i18n.Translator;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
@@ -26,9 +27,46 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  */
 public class ReferencesKeyAdapter extends KeyAdapter {
 
+	/**
+	 * The tree.
+	 */
 	private OutgoingReferencesTree refTree;
+	
+	/**
+	 * The workspace access.
+	 */
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	
+	/**
+	 * EditorAccess.
+	 */
 	private WSEditor editorAccess;
+
+	/**
+	 * Keys Provider.
+	 */
+	private KeysProvider keysProvider;
+	
+	/**
+	 * For translation.
+	 */
+	private static final Translator TRANSLATOR = DITAReferencesTranslator.getInstance();
+
+	
+	/**
+	 * Construct the Key Adapter.
+	 * 
+	 * @param refTree               The ReferencesTree
+	 * @param pluginWorkspaceAccess The PluginWorkspaceAccess
+	 * @param keysProvider          The KeysProvider
+	 */
+	public ReferencesKeyAdapter(OutgoingReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
+			KeysProvider keysProvider) {
+		super();
+		this.refTree = refTree;
+		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
+		this.keysProvider = keysProvider;
+	}
 
 	/**
 	 * Set the editorAccess.
@@ -38,27 +76,7 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	public void setEditorAccess(WSEditor editorAccess) {
 		this.editorAccess = editorAccess;
 	}
-
-	private KeysProvider keysProvider;
-	private Translator translator;
-
-	/**
-	 * Construct the Key Adapter.
-	 * 
-	 * @param refTree               The ReferencesTree
-	 * @param pluginWorkspaceAccess The PluginWorkspaceAccess
-	 * @param keysProvider          The KeysProvider
-	 * @param editorAccess          The EditorAccess
-	 */
-	public ReferencesKeyAdapter(OutgoingReferencesTree refTree, StandalonePluginWorkspace pluginWorkspaceAccess,
-			KeysProvider keysProvider, Translator translator) {
-		super();
-		this.refTree = refTree;
-		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
-		this.keysProvider = keysProvider;
-		this.translator = translator;
-	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -69,8 +87,8 @@ public class ReferencesKeyAdapter extends KeyAdapter {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_CONTEXT_MENU) {
-			handleContextMenuButton(translator.getTranslation(Tags.OPEN_REFERENCE),
-					translator.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
+			handleContextMenuButton(TRANSLATOR.getTranslation(Tags.OPEN_REFERENCE),
+					TRANSLATOR.getTranslation(Tags.SHOW_DEFINITION_LOCATION));
 		}
 	}
 

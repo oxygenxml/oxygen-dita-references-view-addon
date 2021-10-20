@@ -125,7 +125,7 @@ public class RelLinksTest extends TestCase{
 		}
 	};
 
-	OutgoingReferencesTree tree = new OutgoingReferencesTree(pluginWorkspaceAccess, null, new DITAReferencesTranslatorForTests());
+	OutgoingReferencesTree tree = new OutgoingReferencesTree(pluginWorkspaceAccess, null);
 
 	@Test
 	public void test_RenderingRelLink() {

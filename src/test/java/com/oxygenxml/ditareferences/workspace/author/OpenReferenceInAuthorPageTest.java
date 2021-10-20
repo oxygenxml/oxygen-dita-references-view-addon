@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
-import com.oxygenxml.ditareferences.workspace.DITAReferencesTranslatorForTests;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
 import com.oxygenxml.ditareferences.workspace.StandalonePluginWorkspaceAccessForTests;
 import com.oxygenxml.ditareferences.workspace.TestUtil;
@@ -95,7 +94,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 			}
 			return null;
 		}
-	}, new DITAReferencesTranslatorForTests());
+	});
 	
 	/**
 	 * Open image reference from ReferencesTree.
