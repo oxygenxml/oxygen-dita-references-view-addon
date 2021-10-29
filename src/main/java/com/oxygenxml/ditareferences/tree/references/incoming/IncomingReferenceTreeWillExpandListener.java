@@ -10,7 +10,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
@@ -64,9 +63,6 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
         for (IncomingReference currentChild : temp) {
           DefaultMutableTreeNode currentChildNode = new DefaultMutableTreeNode(currentChild);
           source.add(currentChildNode);
-          if(!isExpandable(currentChildNode)) {
-        	  tree.expandPath(new TreePath(currentChildNode.getPath()));
-          }
         }
 
       }
@@ -136,42 +132,6 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
             | MalformedURLException e1) {
           LOGGER.error(e1, e1);
         }
-      }
-      
-      
-    /**  
-     * Check if the node can be expanded.
-     * 
-     * @param source The current node.
-     * 
-     * @return <code>true</code> if the node can be expanded
-     */
-	private boolean isExpandable(DefaultMutableTreeNode source) {
-    	  boolean toReturn = true;
-    	  try {
-              IncomingReference referenceInfo = (IncomingReference) (source.getUserObject());
-              int occurencesCounter = getReferenceOccurences(source, referenceInfo);
-
-              if (occurencesCounter < 2) {
-            	  URL editorLocation = new URL(referenceInfo.getSystemId());
-                  List<IncomingReference> temp = tree.searchIncomingRef(editorLocation);
-                  if(temp != null && temp.isEmpty()) {
-                	  toReturn = false;
-                  }
-              } else {
-            	  toReturn = false;
-              }
-
-            } catch (ClassNotFoundException 
-                | NoSuchMethodException 
-                | IllegalAccessException
-                | InvocationTargetException 
-                | MalformedURLException e1) {
-              LOGGER.error(e1, e1);
-              toReturn = false;
-            }
-    	  
-    	  return toReturn;
       }
 	
 }
