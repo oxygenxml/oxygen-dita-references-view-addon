@@ -141,11 +141,6 @@ public class IncomingReferenceTreeTest extends TestCase {
 		
 		IncomingReferencesTree incomingReferencesTree = new IncomingReferencesTree(new StandalonePluginWorkspaceAccessForTests()) {
 			
-			/**
-			 * Count no calls for searchIncomingRef(URL editorLocation).
-			 */
-			private int noCalls = 0;
-			
 		    @Override
 			List<IncomingReference> searchIncomingRef(URL editorLocation)
 					throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -155,11 +150,7 @@ public class IncomingReferenceTreeTest extends TestCase {
 		    	}
 		    	
 		    	// because for adding a node are two calls, first to check if the node are expandable and second to expand node
-		        if(editorLocation == null || noCalls % 2 == 1) {
-		        	indexCounter[0]++;
-		        }
-		        
-		        noCalls++;
+		    	indexCounter[0]++;
 		        
 		    	return references;
 		    }
@@ -187,7 +178,7 @@ public class IncomingReferenceTreeTest extends TestCase {
 		incomingReferencesTree.refresh(null, null, true);
 		
 		// The model is set on AWT, a sleep is required to update the data.
-		TimeUnit.MILLISECONDS.sleep(100);
+		TimeUnit.MILLISECONDS.sleep(300);
 		
 		assertEquals(1, ((DefaultMutableTreeNode)incomingReferencesTree.getModel().getRoot()).getChildCount());
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)incomingReferencesTree.getModel().getRoot();
@@ -246,12 +237,8 @@ public class IncomingReferenceTreeTest extends TestCase {
 		    	} else {
 		    		if(indexCounter[0] < incomingReferences.size()) {
 			    		references.add(incomingReferences.get(indexCounter[0]));
+			    		indexCounter[0]++; 
 			    	}
-			    	
-			    	// because for adding a node are two calls, first to check if the node are expandable and second to expand node
-			        if(editorLocation == null || noCalls % 2 == 0 && indexCounter[0] < incomingReferences.size()) {
-			        	indexCounter[0]++;
-			        }
 		    	}
 		    	
 		        
@@ -283,7 +270,7 @@ public class IncomingReferenceTreeTest extends TestCase {
 		incomingReferencesTree.refresh(null, null, true);
 		
 		// The model is set on AWT, a sleep is required to update the data.
-		TimeUnit.MILLISECONDS.sleep(100);
+		TimeUnit.MILLISECONDS.sleep(500);
 		
 		assertEquals(3, ((DefaultMutableTreeNode)incomingReferencesTree.getModel().getRoot()).getChildCount());
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)incomingReferencesTree.getModel().getRoot();
@@ -306,7 +293,7 @@ public class IncomingReferenceTreeTest extends TestCase {
 		assertEquals(1, child.getChildCount());
 		
 		mapChild = (DefaultMutableTreeNode)child.getChildAt(0);
-		assertEquals(incomingReferences.get(indexCounter[0]), mapChild.getUserObject());
+		assertEquals(incomingReferences.get(indexCounter[0] - 1), mapChild.getUserObject());
 		incomingReferencesTree.expandPath(new TreePath(mapChild.getPath()));
 		assertEquals(0, mapChild.getChildCount());
 		
@@ -345,12 +332,7 @@ public class IncomingReferenceTreeTest extends TestCase {
 		contentChild = (DefaultMutableTreeNode)child.getChildAt(0);
 		assertEquals(incomingReferences.get(indexCounter[0] - 1), contentChild.getUserObject());
 		incomingReferencesTree.expandPath(new TreePath(contentChild.getPath()));
-		assertEquals(1, contentChild.getChildCount());
-		
-		child = (DefaultMutableTreeNode)contentChild.getChildAt(0);
-		assertEquals(incomingReferences.get(indexCounter[0] - 1), child.getUserObject());
-		incomingReferencesTree.expandPath(new TreePath(child.getPath()));
-		assertEquals(0, child.getChildCount());
+		assertEquals(0, contentChild.getChildCount());
 	}
 	
 	
