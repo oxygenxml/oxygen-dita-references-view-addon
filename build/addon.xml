@@ -6,8 +6,8 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.dita.references">
-        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/2.0.0/oxygen-dita-outgoing-references-view-2.0.0-plugin.jar"/>
-        <xt:version>2.0.0</xt:version>
+        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/2.0.1/oxygen-dita-outgoing-references-view-2.0.1-plugin.jar"/>
+        <xt:version>2.0.1</xt:version>
         <xt:oxy_version>19.1+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Syncro Soft</xt:author>
@@ -24,6 +24,14 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                         >https://github.com/oxygenxml/oxygen-dita-outgoing-references-view</a>
                     </p>
                 </div>
+                <div>
+					<h3>What's new in version 2.0.1</h3>
+					<ol>
+					  <li>Incoming references are now grouped into three categories: Map, Cross, and Content.</li>
+					  <li>You can copy the location of the reference target by using Ctrl/Cmd+C on the reference.</li>
+					  <li>Fixed an issue where an infinite incoming reference loop was created when a peer map reference was used.</li>
+					</ol>
+				</div>
 				<div>
 					<h3>What's new in version 2.0.0</h3>
 					<ol>
