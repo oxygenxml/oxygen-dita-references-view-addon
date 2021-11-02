@@ -21,15 +21,21 @@ Features of the side view:
 * Double click or ENTER on a reference to open the target location.
 
 
-How to install
---------------
-1. In Oxygen, go to **Help->Install new add-ons** to open an add-on selection dialog box.
-1. Enter or paste https://raw.githubusercontent.com/oxygenxml/oxygen-dita-outgoing-references-view/master/build/addon.xml in the **Show add-ons** from field.
-1. Select the **DITA Outgoing References View** add-on and click **Next**.
-1. Read the end-user license agreement. Then select the **I accept all terms of the end-user license agreement** option and click **Finish**.
-1. Restart the application.
+## Installation
+
+To install the add-on, follow these instructions:
+
+1. Go to **Help > Install new add-ons...** to open an add-on selection dialog box.
+2. Enter or paste https://www.oxygenxml.com/InstData/Addons/default/updateSite.xml in the **Show add-ons from** field.
+3. Select the **DITA References View** add-on and click **Next**.
+4. Read the end-user license agreement. Then select the **I accept all terms of the end-user license agreement** option and click **Install**.
+5. Restart the application.
 
 Result: A **DITA References** side-view will now be available. This side-view includes actions in the contextual menu to open the selected outgoing reference or show the definition location in case of a related link defined in a relationship table in DITA Map.
+
+The add-on can also be installed using the following alternative procedure:
+1. Go to the [Releases page](https://github.com/oxygenxml/oxygen-dita-references-view/releases/latest) and download the `oxygen-dita-outgoing-references-view-{version}-plugin.jar` file.
+2. Unzip it inside `{oXygenInstallDir}/plugins`. Make sure you don't create any intermediate folders. After unzipping the archive, the file system should look like this: `{oXygenInstallDir}/plugins/oxygen-dita-outgoing-references-view-{version}`, and inside this folder, there should be a `plugin.xml`file.
 
 Copyright and License
 ---------------------
