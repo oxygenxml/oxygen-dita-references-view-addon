@@ -8,8 +8,8 @@
     <version>24.1-SNAPSHOT</version>
  </parent>
   
-  <artifactId>oxygen-dita-outgoing-references-view-addon</artifactId>
-  <version>1.0</version>
+  <artifactId>oxygen-dita-references-view-addon</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   
   <developers>
     <developer>
