@@ -1,49 +1,55 @@
-<!-- This is used to install the plugin as an add-on:
-https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deploying-addons.html#packing-and-deploying-addons
- -->
-<xt:extensions xmlns:xt="http://www.oxygenxml.com/ns/extension"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
-    <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
-        id="com.oxygenxml.dita.references">
-        <xt:location href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view/releases/download/${project.version}/${project.build.finalName}-plugin.jar"/>
-        <xt:version>${project.nosnapshot.version}</xt:version>
-        <xt:oxy_version>19.1+</xt:oxy_version>
-        <xt:type>plugin</xt:type>
-        <xt:author>Syncro Soft</xt:author>
-        <xt:name>DITA References View</xt:name>
-        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
-            <head>
-                <title>Oxygen DITA References View plugin</title>
-            </head>
-            <body>
-                <div>
-                    <p>Side view in Oxygen XML Editor which shows all outgoing references (image references, links, content references) for the current opened DITA topic.</p>
-                    <p>For more details see <a
-                        href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view"
-                        >https://github.com/oxygenxml/oxygen-dita-outgoing-references-view</a>
-                    </p>
-                </div>
-                <div>
+<xt:extension
+	xmlns:xt="http://www.oxygenxml.com/ns/extension"
+	id="com.oxygenxml.dita.references">
+	<xt:location href="${project.build.finalName}-plugin.jar" />
+	<xt:version>${project.nosnapshot.version}</xt:version>
+	<xt:oxy_version>19.1+</xt:oxy_version>
+	<xt:type>plugin</xt:type>
+	<xt:author>Syncro Soft</xt:author>
+	<xt:name>DITA References View</xt:name>
+	<xt:description>
+		<html xmlns="http://www.w3.org/1999/xhtml">
+			<head>
+				<title>Oxygen DITA References View plugin</title>
+			</head>
+			<body>
+				<div>
+					<p>Side view in Oxygen XML Editor which shows all outgoing
+						references (image references, links, content references) for the
+						current opened DITA topic.</p>
+					<p>
+						For more details see
+						<a
+							href="https://github.com/oxygenxml/oxygen-dita-outgoing-references-view">
+							https://github.com/oxygenxml/oxygen-dita-outgoing-references-view
+						</a>
+					</p>
+				</div>
+				<div>
 					<h3>What's new in version 2.0.1</h3>
 					<ol>
-					  <li>Incoming references are now grouped into three categories: Map, Cross, and Content.</li>
-					  <li>You can copy the location of the reference target by using Ctrl/Cmd+C on the reference.</li>
-					  <li>Fixed an issue where an infinite incoming reference loop was created when a peer map reference was used.</li>
+						<li>Incoming references are now grouped into three categories:
+							Map, Cross, and Content.</li>
+						<li>You can copy the location of the reference target by using
+							Ctrl/Cmd+C on the reference.</li>
+						<li>Fixed an issue where an infinite incoming reference loop was
+							created when a peer map reference was used.</li>
 					</ol>
 				</div>
 				<div>
 					<h3>What's new in version 2.0.0</h3>
 					<ol>
-					  <li>Added a new tab where incoming references are presented for the current DITA topic (Oxygen 23 or newer).</li>
-					  <li>Added support for translating the view's user interface in English, German, French, Japanese, or Dutch.</li>
-					  <li>Fixed various small bugs.</li>
+						<li>Added a new tab where incoming references are presented for
+							the current DITA topic (Oxygen 23 or newer).</li>
+						<li>Added support for translating the view's user interface in
+							English, German, French, Japanese, or Dutch.</li>
+						<li>Fixed various small bugs.</li>
 					</ol>
 				</div>
-            </body>
-        </html>
-        </xt:description>
-     	<xt:license><![CDATA[ Copyright 2021 Syncro Soft SRL
+			</body>
+		</html>
+	</xt:description>
+	<xt:license><![CDATA[ Copyright 2021 Syncro Soft SRL
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -57,7 +63,7 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
    See the License for the specific language governing permissions and
    limitations under the License.
 ]]></xt:license>
-    </xt:extension>
-</xt:extensions>
+</xt:extension>
+
 
 
