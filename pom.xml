@@ -48,41 +48,39 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
-  <build>
-    <finalName>${project.artifactId}-${project.version}</finalName>
-    <plugins>
-      
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<configuration>
-			<source>${java.version}</source>
-			<target>${java.version}</target>
-		</configuration>
-	</plugin>
 
-	<plugin>
-		<artifactId>maven-assembly-plugin</artifactId>
-		<executions>
-			<execution>
-				<id>make-assembly</id>
-				<phase>package</phase>
-				<goals>
-					<goal>single</goal>
-				</goals>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<archiveBaseDirectory>${project.basedir}</archiveBaseDirectory>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
 				</configuration>
-			</execution>
-		</executions>
-	</plugin>
-      
-    </plugins>
-  </build>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<source>${java.version}</source>
+							<target>${java.version}</target>
+							<archiveBaseDirectory>${project.basedir}</archiveBaseDirectory>
+							<descriptors>
+								<descriptor>assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>
