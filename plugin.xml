@@ -6,7 +6,7 @@
  id="com.oxygenxml.dita.references"
  name="DITA References View"
  description="This side-view shows all outgoing references for the current opened DITA topic."
- version="${project.version}"
+ version="${project.nosnapshot.version}"
  vendor="Syncro Soft"
  class="com.oxygenxml.ditareferences.workspace.WorkspaceAccessPlugin"
  classLoaderType="preferReferencedResources">
