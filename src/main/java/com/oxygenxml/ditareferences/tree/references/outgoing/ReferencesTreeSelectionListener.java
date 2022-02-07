@@ -8,14 +8,15 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 
 public class ReferencesTreeSelectionListener implements TreeSelectionListener, TreeSelectionInhibitor {
-	private static final Logger LOGGER = Logger.getLogger(ReferencesTreeSelectionListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReferencesTreeSelectionListener.class);
 
 	/* The referencesTree. */
 	private OutgoingReferencesTree refTree;

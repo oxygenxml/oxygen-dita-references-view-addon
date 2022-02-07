@@ -18,7 +18,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspace;
@@ -37,7 +38,7 @@ public class IncomingReferenceUtil {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(IncomingReferenceUtil.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(IncomingReferenceUtil.class.getName());
 	
 	/**
 	 * Contains the coefficient for each type of incoming reference. 
@@ -177,7 +178,7 @@ public class IncomingReferenceUtil {
 						}
 					}
 				} catch (MalformedURLException e1) {
-					LOGGER.error(e1, e1);
+					LOGGER.error(String.valueOf(e1), e1);
 				}
 			}
 		}
@@ -197,7 +198,7 @@ public class IncomingReferenceUtil {
 				int[] startEndOffsets = authorPage.getStartEndOffsets(dpi.getDPI());
 				authorPage.select(startEndOffsets[0], startEndOffsets[1]);
 			} catch (BadLocationException e) {
-				LOGGER.error(e, e);
+				LOGGER.error(String.valueOf(e), e);
 			}
 		}
 	}

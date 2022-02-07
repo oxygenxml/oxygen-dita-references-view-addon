@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.tree.references.RefUtilities;
 import com.oxygenxml.ditareferences.workspace.DITAConstants;
@@ -23,7 +24,7 @@ public abstract class NodeRange {
 	/**
 	 * The Logger.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(NodeRange.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NodeRange.class);
 	
 	/**
 	 * Get the attribute value, returns <code>null</code> if there is no such
@@ -87,7 +88,7 @@ public abstract class NodeRange {
 	      try {
 	        toReturn = RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
 	      } catch (MalformedURLException e) {
-	        LOGGER.debug(e, e);
+	        LOGGER.debug(String.valueOf(e), e);
 	      }
 	    }
 	  } else if((attribute = this.getAttributeValue(DITAConstants.DATAKEYREF)) != null) {
@@ -96,7 +97,7 @@ public abstract class NodeRange {
 	      try {
 	        toReturn =  RefUtilities.getURLForHTTPHost(formatAttr, value.getHrefValue(), value.getHrefLocation()).toString();
 	      } catch (MalformedURLException e) {
-	        LOGGER.debug(e, e);
+	        LOGGER.debug(String.valueOf(e), e);
 	      }
 	    }
 	  } else if((attribute = this.getAttributeValue(DITAConstants.CONKEYREF)) != null) {

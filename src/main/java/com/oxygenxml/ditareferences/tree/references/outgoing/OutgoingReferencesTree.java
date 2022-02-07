@@ -7,7 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.workspace.KeysProvider;
@@ -31,7 +32,7 @@ public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 	/**
 	 * The ReferencesTree Logger.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(OutgoingReferencesTree.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OutgoingReferencesTree.class);
 
 	/**
 	 * The pluginWorkspaceAccess.
@@ -186,7 +187,7 @@ public class OutgoingReferencesTree extends Tree { //NOSONAR parent
 			}
 		} catch (Exception e) {
 			if(LOGGER.isDebugEnabled()) {
-				LOGGER.debug(e, e);
+				LOGGER.debug(String.valueOf(e), e);
 			}
 			this.setNoRefsAvailableTree();
 		} 

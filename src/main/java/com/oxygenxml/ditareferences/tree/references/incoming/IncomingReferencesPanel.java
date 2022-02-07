@@ -21,7 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
@@ -48,7 +49,7 @@ public class IncomingReferencesPanel extends JPanel implements ProgressStatusLis
 	/**
 	 * Logger for logging.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(IncomingReferencesPanel.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(IncomingReferencesPanel.class.getName());
 
 	/**
 	 * JTree with ongoing references.
@@ -193,7 +194,7 @@ public class IncomingReferencesPanel extends JPanel implements ProgressStatusLis
 
 					});
 				} catch (Exception e) {
-					LOGGER.error(e, e);
+					LOGGER.error(String.valueOf(e), e);
 				}
 			}
 		};

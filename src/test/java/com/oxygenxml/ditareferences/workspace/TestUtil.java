@@ -20,7 +20,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -38,7 +39,7 @@ import ro.sync.util.URLUtil;
 
 
 public class TestUtil {	
-	private final static Logger LOGGER = Logger.getLogger(TestUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(TestUtil.class);
 			
 	/**
 	 * The XPath expression with all possible references available in the current
@@ -66,7 +67,7 @@ public class TestUtil {
 			}
 			return nodes;
 		} catch (XPathExpressionException e) {
-			LOGGER.debug(e, e);
+			LOGGER.debug(String.valueOf(e), e);
 		}
 		return null;
 	}

@@ -16,7 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
@@ -47,7 +48,7 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer {
 	/**
 	 * Logger for logging.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(IncomingReferencesTreeCellRenderer.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(IncomingReferencesTreeCellRenderer.class.getName());
 
 	/**
 	 * Parametrized constructor
@@ -88,7 +89,7 @@ public class IncomingReferencesTreeCellRenderer extends TreeCellRenderer {
 						label.setIcon(iconDecoration);
 					}
 				} catch (MalformedURLException e) {
-					LOGGER.error(e, e);
+					LOGGER.error(String.valueOf(e), e);
 				}
 			} else if (node.getUserObject() instanceof ReferenceCategory) {
 				ReferenceCategory referenceCategory = (ReferenceCategory) node.getUserObject();

@@ -5,7 +5,8 @@ import java.net.URL;
 
 import javax.swing.text.BadLocationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -24,7 +25,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextNodeRange;
 public class TextPageNodeRange extends NodeRange {
 
 	/* The referencesTree Logger. */
-	private static final Logger LOGGER = Logger.getLogger(TextPageNodeRange.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TextPageNodeRange.class);
 
 	/* The XML element. */
 	private Element element;
@@ -66,7 +67,7 @@ public class TextPageNodeRange extends NodeRange {
 		    return finalOffsets;
 
 		  } catch (BadLocationException e) {
-		    LOGGER.debug(e, e);
+		    LOGGER.debug(String.valueOf(e), e);
 		  }
 		}
 		return finalOffsets;

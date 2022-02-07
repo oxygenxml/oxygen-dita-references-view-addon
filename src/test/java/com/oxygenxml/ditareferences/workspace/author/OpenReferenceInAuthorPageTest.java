@@ -9,7 +9,8 @@ import java.util.LinkedHashMap;
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
@@ -31,7 +32,7 @@ import ro.sync.exml.workspace.api.util.UtilAccess;
  *
  */
 public class OpenReferenceInAuthorPageTest extends TestCase {
-	private static final Logger LOGGER = Logger.getLogger(OpenReferenceInAuthorPageTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenReferenceInAuthorPageTest.class);
 	
 	AuthorElementAdapter[] elemArray = TestUtil.createAuthorElementArray();
 
@@ -90,7 +91,7 @@ public class OpenReferenceInAuthorPageTest extends TestCase {
 				return keyMap;
 				
 			} catch (MalformedURLException e) {
-				LOGGER.debug(e, e);
+				LOGGER.debug(String.valueOf(e), e);
 			}
 			return null;
 		}

@@ -7,7 +7,8 @@ import java.util.LinkedHashMap;
 
 import javax.swing.AbstractAction;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 
 import com.oxygenxml.ditareferences.tree.references.RefUtilities;
@@ -27,7 +28,7 @@ public class OpenReferenceAction extends AbstractAction {
 	private static final String APPLICATION_IMAGE = "application/image";
 
   /* The OpenReferenceAction Logger. */
-	private static final Logger LOGGER = Logger.getLogger(OpenReferenceAction.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenReferenceAction.class);
 
 	private transient NodeRange nodeRange;
 	private transient WSEditor editorAccess;
@@ -126,7 +127,7 @@ public class OpenReferenceAction extends AbstractAction {
 		  }
 
 		} catch (MalformedURLException e1) {
-			LOGGER.debug(e1, e1);
+			LOGGER.debug(String.valueOf(e1), e1);
 		}
 	}
 

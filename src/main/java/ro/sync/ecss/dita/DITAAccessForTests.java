@@ -6,14 +6,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLink;
 import com.oxygenxml.ditareferences.workspace.rellinks.RelLinkImpl;
 
 public class DITAAccessForTests{
 	/* The DITAAccessForTests Logger. */
-	private static final Logger LOGGER = Logger.getLogger(DITAAccessForTests.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DITAAccessForTests.class);
 	
 	private DITAAccessForTests() {
 		//private constructor
@@ -39,7 +40,7 @@ public class DITAAccessForTests{
 					new File("test/source1.dita").toURI().toURL(), 
 					new URL("http://www.google.com"), "html", "external", new File("test/defLocation3.dita").toURI().toURL()));
 		} catch (MalformedURLException e) {
-			LOGGER.debug(e, e);
+			LOGGER.debug(String.valueOf(e), e);
 		}
 		return links;
 	}

@@ -5,12 +5,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ro.sync.ecss.dita.DITAAccessForTests;
 
 public class RelLinksAccessor {
-	private static final Logger LOGGER = Logger.getLogger(RelLinksAccessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RelLinksAccessor.class);
 
 	private RelLinksAccessor() {
 		// private constructor
@@ -35,7 +36,7 @@ public class RelLinksAccessor {
 		    Method getRelLinks = ditaAccessClass.getDeclaredMethod("getRelatedLinksFromReltable", URL.class);
 		    allLinks = (List<?>) getRelLinks.invoke(null, topicURL);
 		  } catch (Exception e) {
-		    LOGGER.debug(e, e);
+		    LOGGER.debug(String.valueOf(e), e);
 		  }
 		}
 		try {
@@ -70,7 +71,7 @@ public class RelLinksAccessor {
 		    }
 		  }
 		} catch (Exception e) {
-	      LOGGER.debug(e, e);
+	      LOGGER.debug(String.valueOf(e), e);
 	    }
 		
 

@@ -11,7 +11,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A listener that manages the way the tree expands.
@@ -24,7 +25,7 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
 	/**
 	 * Logger for logging.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(IncomingReferenceTreeWillExpandListener.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(IncomingReferenceTreeWillExpandListener.class.getName());
 	
 	/**
 	 * The tree where the listener is installed.
@@ -130,7 +131,7 @@ public class IncomingReferenceTreeWillExpandListener implements TreeWillExpandLi
             | IllegalAccessException
             | InvocationTargetException 
             | MalformedURLException e1) {
-          LOGGER.error(e1, e1);
+          LOGGER.error(String.valueOf(e1), e1);
         }
       }
 	

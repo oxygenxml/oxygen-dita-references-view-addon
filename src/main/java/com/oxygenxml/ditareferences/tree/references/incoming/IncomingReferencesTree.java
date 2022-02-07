@@ -23,7 +23,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
@@ -54,7 +55,7 @@ public class IncomingReferencesTree extends Tree {
 	/**
 	 * Logger for logging.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(IncomingReferencesTree.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(IncomingReferencesTree.class.getName());
 	
 	/**
 	 * The graph.
@@ -222,7 +223,7 @@ public class IncomingReferencesTree extends Tree {
 
 					} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
 							| InvocationTargetException e) {
-						LOGGER.error(e, e);
+						LOGGER.error(String.valueOf(e), e);
 					} finally {
 						progressStatus.updateInProgressStatus(false, 0);
 					}

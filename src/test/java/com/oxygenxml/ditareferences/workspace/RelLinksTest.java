@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 
 import com.oxygenxml.ditareferences.tree.references.outgoing.OutgoingReferencesTree;
@@ -33,7 +34,7 @@ import ro.sync.util.URLUtil;
  */
 public class RelLinksTest extends TestCase{
 
-	private static final Logger LOGGER = Logger.getLogger(RelLinksTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RelLinksTest.class);
 	
 	final String ditaTopic = "<topic id=\"sample\" class=\"- topic/topic \">\n"
 			+ "    <title class=\"- topic/title \">sample</title>\n"
@@ -75,7 +76,7 @@ public class RelLinksTest extends TestCase{
 									// ro.sync.ecss.dita.DITAAccessForTests.getRelatedLinksFromReltable(URL).
 									editorLocationUrl = new File("test/source1.dita").toURI().toURL();
 								} catch (MalformedURLException e) {
-									LOGGER.debug(e, e);
+									LOGGER.debug(String.valueOf(e), e);
 								}
 								return editorLocationUrl;
 

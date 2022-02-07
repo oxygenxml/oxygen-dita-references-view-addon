@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.workspace.DITAConstants;
@@ -24,7 +25,7 @@ import ro.sync.exml.workspace.api.editor.page.text.xml.XPathException;
  */
 public abstract class ReferencesCollector {
 
-	private static final Logger LOGGER = Logger.getLogger(ReferencesCollector.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReferencesCollector.class);
 
 	/**
 	 * The XPath expression with all possible references available in current
