@@ -7,6 +7,9 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oxygenxml.ditareferences.i18n.DITAReferencesTranslator;
 import com.oxygenxml.ditareferences.i18n.Tags;
 import com.oxygenxml.ditareferences.i18n.Translator;
@@ -33,6 +36,10 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  * @author Alexandra_Dinisor
  */
 public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
+  /**
+   * Logger for logging.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(DITAReferencesWorkspaceAccessPluginExtension.class.getName());
 
 	/* View Id; defined in plugin.xml. */
 	private static final String DITA_REFERENCES_WORKSPACE_ACCESS_ID = "DITAReferencesView";
@@ -209,13 +216,18 @@ public class DITAReferencesWorkspaceAccessPluginExtension implements WorkspaceAc
 	 * @param editorLocation The editorLocation
 	 */
 	protected void bindTreeWithEditor(URL editorLocation) {
-		WSEditor editorAccess = null;
+	  WSEditor editorAccess = null;
 		if (editorLocation != null) {
 			editorAccess = pluginWorkspaceAccess.getEditorAccess(editorLocation,
 					PluginWorkspace.MAIN_EDITING_AREA);
 		} else {
 			editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
 		}
+		
+		if(logger.isDebugEnabled()) {
+      logger.debug("Refresh references for {}", editorLocation);
+    }
+		
 		  refTreeIn.refresh(editorAccess, false);
 			refTreeOut.refresh(editorAccess);
 	}
