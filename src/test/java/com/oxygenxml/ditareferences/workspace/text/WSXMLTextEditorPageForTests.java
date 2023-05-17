@@ -11,6 +11,8 @@ import ro.sync.exml.view.graphics.Point;
 import ro.sync.exml.view.graphics.Rectangle;
 import ro.sync.exml.workspace.api.editor.ReadOnlyReason;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.exml.workspace.api.editor.page.Anchor;
+import ro.sync.exml.workspace.api.editor.page.text.ExternalContentCompletionProvider;
 import ro.sync.exml.workspace.api.editor.page.text.TextPopupMenuCustomizer;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextXMLSchemaManager;
 import ro.sync.exml.workspace.api.editor.page.text.actions.TextActionsProvider;
@@ -188,5 +190,41 @@ public class WSXMLTextEditorPageForTests implements WSXMLTextEditorPage {
 
 		return null;
 	}
+
+  @Override
+  public void addExternalContentCompletionProvider(ExternalContentCompletionProvider ccProvider) {
+    //  Auto-generated method stub
+    
+  }
+
+  @Override
+  public void removeExternalContentCompletionProvider(ExternalContentCompletionProvider ccProvider) {
+    //  Auto-generated method stub
+    
+  }
+
+  @Override
+  public Anchor createAnchor(int offset) throws BadLocationException {
+    //  Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int getOffsetForAnchor(Anchor anchor) throws BadLocationException {
+    //  Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public void requestFocus() {
+    //  Auto-generated method stub
+    
+  }
+
+  @Override
+  public boolean hasFocus() {
+    //  Auto-generated method stub
+    return false;
+  }
 
 }

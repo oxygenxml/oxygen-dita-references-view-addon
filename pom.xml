@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.oxygenxml</groupId>
     <artifactId>oxygen-addons-superpom</artifactId>
-    <version>24.1-SNAPSHOT</version>
+    <version>25.1-SNAPSHOT</version>
  </parent>
   
   <artifactId>oxygen-dita-references-view-addon</artifactId>
@@ -25,7 +25,7 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <oxygen.version>19.1.0.3</oxygen.version>
+        <oxygen.version>25.1-SNAPSHOT</oxygen.version>
     </properties>
 	
 	<repositories>
@@ -46,7 +46,7 @@
 	<dependency>
 		<groupId>com.oxygenxml</groupId>
 		<artifactId>oxygen-sdk</artifactId>
-		<version>19.1.0.3</version>
+		<version>${oxygen.version}</version>
 		<scope>provided</scope>
 		<exclusions>
 			<exclusion>

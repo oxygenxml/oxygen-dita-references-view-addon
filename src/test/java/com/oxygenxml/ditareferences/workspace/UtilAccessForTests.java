@@ -119,4 +119,9 @@ public class UtilAccessForTests implements UtilAccess {
     return null;
   }
 
+  @Override
+  public String getContentType(String systemID) {
+    return null;
+  }
+
 }

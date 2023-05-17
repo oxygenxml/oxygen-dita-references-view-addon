@@ -5,6 +5,7 @@ package com.oxygenxml.ditareferences.workspace.author;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.text.BadLocationException;
 
@@ -28,11 +29,14 @@ import ro.sync.ecss.extensions.api.highlights.AuthorHighlighter;
 import ro.sync.ecss.extensions.api.highlights.AuthorPersistentHighlighter;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
+import ro.sync.ecss.extensions.api.node.AuthorParentNode;
 import ro.sync.ecss.extensions.api.structure.AuthorPopupMenuCustomizer;
 import ro.sync.exml.view.graphics.Point;
 import ro.sync.exml.view.graphics.Rectangle;
 import ro.sync.exml.workspace.api.editor.ReadOnlyReason;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.exml.workspace.api.editor.page.Anchor;
+import ro.sync.exml.workspace.api.editor.page.author.PseudoElementDescriptor;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.exml.workspace.api.editor.page.author.actions.AuthorActionsProvider;
 import ro.sync.exml.workspace.api.editor.page.author.fold.AuthorFoldManager;
@@ -418,5 +422,30 @@ public class WSAuthorEditorPageForTests implements WSAuthorEditorPage {
 
 		return null;
 	}
+
+  @Override
+  public Map<PseudoElementDescriptor, Styles> getPseudoElementStyles(AuthorParentNode node) {
+    return null;
+  }
+
+  @Override
+  public Anchor createAnchor(int offset) throws BadLocationException {
+    return null;
+  }
+
+  @Override
+  public int getOffsetForAnchor(Anchor anchor) throws BadLocationException {
+    return 0;
+  }
+
+  @Override
+  public void requestFocus() {
+    
+  }
+
+  @Override
+  public boolean hasFocus() {
+    return false;
+  }
 
 }

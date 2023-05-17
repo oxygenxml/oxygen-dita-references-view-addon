@@ -2,6 +2,7 @@ package com.oxygenxml.ditareferences.workspace;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,9 @@ import ro.sync.diff.merge.api.MergedFileState;
 import ro.sync.ecss.extensions.api.OptionListener;
 import ro.sync.ecss.extensions.api.component.AuthorComponentException;
 import ro.sync.ecss.extensions.api.component.EditorComponentProvider;
+import ro.sync.ecss.extensions.api.node.AuthorDocumentProvider;
+import ro.sync.exml.plugin.PluginExtension;
+import ro.sync.exml.workspace.api.OperationStatus;
 import ro.sync.exml.workspace.api.Platform;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.application.ApplicationType;
@@ -46,6 +50,7 @@ import ro.sync.exml.workspace.api.util.ImageInverter;
 import ro.sync.exml.workspace.api.util.RelativeReferenceResolver;
 import ro.sync.exml.workspace.api.util.UtilAccess;
 import ro.sync.exml.workspace.api.util.XMLUtilAccess;
+import ro.sync.exml.workspace.api.util.validation.ValidationUtilAccess;
 
 public class StandalonePluginWorkspaceAccessForTests implements StandalonePluginWorkspace {
 
@@ -551,6 +556,53 @@ public class StandalonePluginWorkspaceAccessForTests implements StandalonePlugin
 
   public boolean isViewAvailable(String viewID) {
     return false;
+  }
+
+  @Override
+  public ValidationUtilAccess getValidationUtilAccess() {
+    return null;
+  }
+
+  @Override
+  public AuthorDocumentProvider createAuthorDocumentProvider(URL systemId, Reader documentReader) throws IOException {
+    return null;
+  }
+
+  @Override
+  public AuthorDocumentProvider createAuthorDocumentProvider(URL systemId, Reader documentReader,
+      boolean expandReferences) throws IOException {
+    return null;
+  }
+
+  @Override
+  public URL chooseURL(String title, String[] allowedExtensions, String filterDescr, String initialURL, String urlLabel,
+      String okLabel) {
+    return null;
+  }
+
+  @Override
+  public void showStatusMessage(String statusMessage, OperationStatus status) {
+  }
+
+  @Override
+  public ProcessController createProcess(ProcessListener processListener, String name, File workingDirectory,
+      String cmdLine, boolean showConsole) {
+    return null;
+  }
+
+  @Override
+  public Object openDiffFilesApplication(String leftLabelText, URL leftURL, String rightLabelText, URL rightURL) {
+    return null;
+  }
+
+  @Override
+  public Object openDiffFilesApplication(String leftLabelText, URL leftURL, String rightLabelText, URL rightURL,
+      URL ancestorURL, boolean showAncestorURLPanel) {
+    return null;
+  }
+
+  @Override
+  public void addPluginExtension(String extensionType, PluginExtension pluginExtension) {
   }
 
 }

@@ -15,6 +15,7 @@ import ro.sync.ecss.extensions.api.AuthorDocumentType;
 import ro.sync.ecss.extensions.api.AuthorListener;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.ecss.extensions.api.AuthorSchemaManager;
+import ro.sync.ecss.extensions.api.AuthorXPathExpressionBuilder;
 import ro.sync.ecss.extensions.api.SelectionInterpretationMode;
 import ro.sync.ecss.extensions.api.UniqueAttributesProcessor;
 import ro.sync.ecss.extensions.api.XPathVersion;
@@ -576,5 +577,40 @@ public class AuthorDocumentControllerForTests implements AuthorDocumentControlle
 			SelectionInterpretationMode oldSelectionType) {
 	 
 	}
+
+  @Override
+  public AuthorDocumentFragment createDocumentFragment(int startOffset, int endOffset, boolean preserveTrackChange)
+      throws BadLocationException {
+    return null;
+  }
+
+  @Override
+  public void setPseudoClassUndoable(String pseudoClass, AuthorElement element) {
+  }
+
+  @Override
+  public void removePseudoClassUndoable(String pseudoClass, AuthorElement element) {
+  }
+
+  @Override
+  public AuthorNode getStrictCommonAncestor(AuthorNode[] nodes) {
+    return null;
+  }
+
+  @Override
+  public CharSequence getContentCharSequence() {
+    return null;
+  }
+
+  @Override
+  public SchemaAwareHandlerResult insertXMLFragmentSchemaAware(String xmlFragment, String xpathLocation,
+      String relativePosition, boolean insertEvenIfInvalid) throws AuthorOperationException {
+    return null;
+  }
+
+  @Override
+  public AuthorXPathExpressionBuilder getXPathExpressionBuilder(int offset) throws BadLocationException {
+    return null;
+  }
 
 }
